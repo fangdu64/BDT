@@ -1,0 +1,7 @@
+#
+# Select an installation base directory. The directory will be created
+# if it does not exist.
+#
+BDT_Install		?=/home/student/fdu1/BDT-1.0.0/install
+R_BinDir		?=/dcs01/gcode/fdu1/BDT/R/R-3.1/bin
+
