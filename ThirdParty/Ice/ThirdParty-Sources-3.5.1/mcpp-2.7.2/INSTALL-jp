@@ -1,468 +1,468 @@
-  ‚±‚±‚Å‚ÍAMCPP ‚Ìƒ\[ƒX‚ðƒRƒ“ƒpƒCƒ‹‚µ‚ÄŽÀsƒvƒƒOƒ‰ƒ€‚ð¶¬‚·‚é•û–@‚ð
-à–¾‚µ‚Ü‚·BÚ×‚Í‚³‚ç‚É mcpp-porting.html ‚ðŒ©‚Ä‚­‚¾‚³‚¢B
+  ¤³¤³¤Ç¤Ï¡¢MCPP ¤Î¥½¡¼¥¹¤ò¥³¥ó¥Ñ¥¤¥ë¤·¤Æ¼Â¹Ô¥×¥í¥°¥é¥à¤òÀ¸À®¤¹¤ëÊýË¡¤ò
+ÀâÌÀ¤·¤Þ¤¹¡£¾ÜºÙ¤Ï¤µ¤é¤Ë mcpp-porting.html ¤ò¸«¤Æ¤¯¤À¤µ¤¤¡£
 
-1AŽÀsƒvƒƒOƒ‰ƒ€‚ÌŽí—Þ
+1¡¢¼Â¹Ô¥×¥í¥°¥é¥à¤Î¼ïÎà
 
-  MCPP ‚ÌŽÀsƒvƒƒOƒ‰ƒ€‚Í build ‚·‚é•û–@‚É‰ž‚¶‚Ä‰½Ží—Þ‚©‚ ‚è‚Ü‚·BBuild
-‚·‚é•û–@‚É‚ÍŽŸ‚Ì‚Q‚Â‚ÌŽŸŒ³‚ª‚ ‚è‚Ü‚·B
+  MCPP ¤Î¼Â¹Ô¥×¥í¥°¥é¥à¤Ï build ¤¹¤ëÊýË¡¤Ë±þ¤¸¤Æ²¿¼ïÎà¤«¤¢¤ê¤Þ¤¹¡£Build
+¤¹¤ëÊýË¡¤Ë¤Ï¼¡¤Î£²¤Ä¤Î¼¡¸µ¤¬¤¢¤ê¤Þ¤¹¡£
 
     1. stand-alone-build vs subroutine-build
     2. compiler-independent-build vs compiler-specific-build
 
-stand-alone-build: ‚P‚Â‚ÌƒRƒ}ƒ“ƒh‚Æ‚µ‚Ä’P‘Ì‚Å“®‚­ƒvƒŠƒvƒƒZƒbƒT‚Å‚·Bˆ
-    —Œn‚ÌƒRƒ“ƒpƒCƒ‰Eƒhƒ‰ƒCƒo‚©‚çŒÄ‚Ño‚³‚ê‚é‚à‚Ì‚à‚ ‚è‚Ü‚·B
-subroutine-build: ‘¼‚ÌƒƒCƒ“ƒvƒƒOƒ‰ƒ€‚Ì’†‚©‚çƒTƒuƒ‹[ƒ`ƒ“‚Æ‚µ‚Äi•K—v‚È
-    ‚çŒJ‚è•Ô‚µjŒÄ‚Ño‚³‚ê‚é‚à‚Ì‚Å‚·B
+stand-alone-build: £±¤Ä¤Î¥³¥Þ¥ó¥É¤È¤·¤ÆÃ±ÂÎ¤ÇÆ°¤¯¥×¥ê¥×¥í¥»¥Ã¥µ¤Ç¤¹¡£½è
+    Íý·Ï¤Î¥³¥ó¥Ñ¥¤¥é¡¦¥É¥é¥¤¥Ð¤«¤é¸Æ¤Ó½Ð¤µ¤ì¤ë¤â¤Î¤â¤¢¤ê¤Þ¤¹¡£
+subroutine-build: Â¾¤Î¥á¥¤¥ó¥×¥í¥°¥é¥à¤ÎÃæ¤«¤é¥µ¥Ö¥ë¡¼¥Á¥ó¤È¤·¤Æ¡ÊÉ¬Í×¤Ê
+    ¤é·«¤êÊÖ¤·¡Ë¸Æ¤Ó½Ð¤µ¤ì¤ë¤â¤Î¤Ç¤¹¡£
 
-compiler-independent-build: ˆ—Œn‚©‚ç‚Í“Æ—§‚µ‚Ä“®‚­ƒvƒŠƒvƒƒZƒbƒT‚Å‚·B
-    ŽÀsŽžƒIƒvƒVƒ‡ƒ“‚È‚Ç‚ÌŽd—l‚Íˆ—Œn‚Ì‚¢‚©‚ñ‚É‚æ‚ç‚¸ˆê’è‚Å‚·BƒvƒŠƒvƒ
-    ƒZƒX‚¾‚¯‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·‚ªAˆ—Œn‚Ìˆê•”‚Æ‚µ‚Ä“®ì‚·‚é‚±‚Æ‚Í‚Å‚«‚Ü
-    ‚¹‚ñB
-compiler-specific-build: “Á’è‚Ìˆ—Œn‚ÌƒvƒŠƒvƒƒZƒbƒT‚ði‚à‚µ‰Â”\‚È‚çj
-    ‘ã‘Ö‚·‚é‚½‚ß‚Ì‚à‚Ì‚Å‚·B‚»‚Ìˆ—Œn‚Éê—p‚ÌŽd—l‚ðŽ‚¿A‚»‚Ìˆ—Œn‚Ìê
-    —p‚ÌƒfƒBƒŒƒNƒgƒŠ‚ÉƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ü‚·B
+compiler-independent-build: ½èÍý·Ï¤«¤é¤ÏÆÈÎ©¤·¤ÆÆ°¤¯¥×¥ê¥×¥í¥»¥Ã¥µ¤Ç¤¹¡£
+    ¼Â¹Ô»þ¥ª¥×¥·¥ç¥ó¤Ê¤É¤Î»ÅÍÍ¤Ï½èÍý·Ï¤Î¤¤¤«¤ó¤Ë¤è¤é¤º°ìÄê¤Ç¤¹¡£¥×¥ê¥×¥í
+    ¥»¥¹¤À¤±¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¤¬¡¢½èÍý·Ï¤Î°ìÉô¤È¤·¤ÆÆ°ºî¤¹¤ë¤³¤È¤Ï¤Ç¤­¤Þ
+    ¤»¤ó¡£
+compiler-specific-build: ÆÃÄê¤Î½èÍý·Ï¤Î¥×¥ê¥×¥í¥»¥Ã¥µ¤ò¡Ê¤â¤·²ÄÇ½¤Ê¤é¡Ë
+    ÂåÂØ¤¹¤ë¤¿¤á¤Î¤â¤Î¤Ç¤¹¡£¤½¤Î½èÍý·Ï¤ËÀìÍÑ¤Î»ÅÍÍ¤ò»ý¤Á¡¢¤½¤Î½èÍý·Ï¤ÎÀì
+    ÍÑ¤Î¥Ç¥£¥ì¥¯¥È¥ê¤Ë¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤Þ¤¹¡£
 
-  Subroutine-build ‚É‚Â‚¢‚Ä‚Í‚±‚±‚Å‚Íà–¾‚Í—ª‚µ‚Ü‚·Bmcpp-porting.html 3.
-12 ‚ðŒ©‚Ä‚­‚¾‚³‚¢BˆÈ‰º‚Í‚·‚×‚Ä stand-alone-build ‚É‚Â‚¢‚Ä‚Ìà–¾‚Å‚·B
+  Subroutine-build ¤Ë¤Ä¤¤¤Æ¤Ï¤³¤³¤Ç¤ÏÀâÌÀ¤ÏÎ¬¤·¤Þ¤¹¡£mcpp-porting.html 3.
+12 ¤ò¸«¤Æ¤¯¤À¤µ¤¤¡£°Ê²¼¤Ï¤¹¤Ù¤Æ stand-alone-build ¤Ë¤Ä¤¤¤Æ¤ÎÀâÌÀ¤Ç¤¹¡£
 
-2Aconfigure ‚Æ make
+2¡¢configure ¤È make
 
-  MCPP ‚ðƒRƒ“ƒpƒCƒ‹‚·‚é‚É‚ÍAUNIX Œn‚ÌƒVƒXƒeƒ€‚¨‚æ‚Ñ CygWIN, MinGW ‚Å‚Í
-configure ƒXƒNƒŠƒvƒg‚ðŽg‚¤‚±‚Æ‚ª‚Å‚«‚Ü‚·Bconfigure ‚Æ make ‚Í”CˆÓ‚ÌƒfƒB
-ƒŒƒNƒgƒŠ‚ÅŽÀs‚Å‚«‚Ü‚·BˆÈ‰º‚Ìà–¾‚Å‚Í mcpp-${VERSION} ƒfƒBƒŒƒNƒgƒŠ‚Ì‚ 
-‚é path ‚ð ${mcpp-dir} ‚Æ•\‹L‚µ‚Ü‚·B${VERSION} ‚Í 2.6.4, 2.7.1 “™‚Ì
-MCPP ‚Ìƒo[ƒWƒ‡ƒ“‚Å‚·B
+  MCPP ¤ò¥³¥ó¥Ñ¥¤¥ë¤¹¤ë¤Ë¤Ï¡¢UNIX ·Ï¤Î¥·¥¹¥Æ¥à¤ª¤è¤Ó CygWIN, MinGW ¤Ç¤Ï
+configure ¥¹¥¯¥ê¥×¥È¤ò»È¤¦¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£configure ¤È make ¤ÏÇ¤°Õ¤Î¥Ç¥£
+¥ì¥¯¥È¥ê¤Ç¼Â¹Ô¤Ç¤­¤Þ¤¹¡£°Ê²¼¤ÎÀâÌÀ¤Ç¤Ï mcpp-${VERSION} ¥Ç¥£¥ì¥¯¥È¥ê¤Î¤¢
+¤ë path ¤ò ${mcpp-dir} ¤ÈÉ½µ­¤·¤Þ¤¹¡£${VERSION} ¤Ï 2.6.4, 2.7.1 Åù¤Î
+MCPP ¤Î¥Ð¡¼¥¸¥ç¥ó¤Ç¤¹¡£
 
-Configure ‚ÍƒRƒ“ƒpƒCƒ‰‚ð cc (c++) ‚Ü‚½‚Í gcc (g++) ‚Æ‚¢‚¤–¼‘O‚ÅAŠÂ‹«•Ï
-” $PATH ‚ÉƒZƒbƒg‚³‚ê‚½ path list ‚Ì‡‚ÉƒT[ƒ`‚µ‚Ü‚·B‚µ‚½‚ª‚Á‚ÄAgcc-4.
-3.0, g++-4.3.0 ‚Æ‚¢‚Á‚½–¼‘O‚ÌƒRƒ“ƒpƒCƒ‰‚ðŽg‚¤‚È‚çAconfigure ‚·‚é‘O‚É‚»
-‚ê‚ðŠÂ‹«•Ï” CC, CXX ‚ÅŽw’è‚·‚é‚©A‚Ü‚½‚Í gcc, g++ ‚ÉƒŠƒ“ƒN‚µ‚Ä‚¨‚¢‚Ä‚­
-‚¾‚³‚¢B‚à‚µApath list ã‚ÅÅ‰‚ÉƒT[ƒ`‚³‚ê‚éƒRƒ“ƒpƒCƒ‰ˆÈŠO‚ÌƒRƒ“ƒpƒCƒ‰
-‚ðŽg‚¤‚È‚çA$PATH ‚ðŽŸ‚Ì‚æ‚¤‚É•ÏX‚µ‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñB
+Configure ¤Ï¥³¥ó¥Ñ¥¤¥é¤ò cc (c++) ¤Þ¤¿¤Ï gcc (g++) ¤È¤¤¤¦Ì¾Á°¤Ç¡¢´Ä¶­ÊÑ
+¿ô $PATH ¤Ë¥»¥Ã¥È¤µ¤ì¤¿ path list ¤Î½ç¤Ë¥µ¡¼¥Á¤·¤Þ¤¹¡£¤·¤¿¤¬¤Ã¤Æ¡¢gcc-4.
+3.0, g++-4.3.0 ¤È¤¤¤Ã¤¿Ì¾Á°¤Î¥³¥ó¥Ñ¥¤¥é¤ò»È¤¦¤Ê¤é¡¢configure ¤¹¤ëÁ°¤Ë¤½
+¤ì¤ò´Ä¶­ÊÑ¿ô CC, CXX ¤Ç»ØÄê¤¹¤ë¤«¡¢¤Þ¤¿¤Ï gcc, g++ ¤Ë¥ê¥ó¥¯¤·¤Æ¤ª¤¤¤Æ¤¯
+¤À¤µ¤¤¡£¤â¤·¡¢path list ¾å¤ÇºÇ½é¤Ë¥µ¡¼¥Á¤µ¤ì¤ë¥³¥ó¥Ñ¥¤¥é°Ê³°¤Î¥³¥ó¥Ñ¥¤¥é
+¤ò»È¤¦¤Ê¤é¡¢$PATH ¤ò¼¡¤Î¤è¤¦¤ËÊÑ¹¹¤·¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó¡£
 
     export PATH=/my/gcc/bin:$PATH
 
-‚±‚ÌÝ’è‚Í make ‚ªI‚í‚é‚Ü‚ÅˆÛŽ‚µ‚Ä‚­‚¾‚³‚¢BPath list ã‚ÅÅ‰‚ÉƒT[ƒ`
-‚³‚ê‚éƒRƒ“ƒpƒCƒ‰ˆÈŠO‚ÌƒRƒ“ƒpƒCƒ‰‚ð CC, CXX ‚ÅŽw’è‚µ‚Ä‚Í‚¢‚¯‚Ü‚¹‚ñB‚½‚Æ
-‚¦â‘ÎƒpƒX‚ÅŽw’è‚µ‚Ä‚àƒ_ƒ‚Å‚·BPath list ‚Í configure ‚Ì‚·‚×‚Ä‚É‰e‹¿‚ð
-—^‚¦‚é‚©‚ç‚Å‚·B
+¤³¤ÎÀßÄê¤Ï make ¤¬½ª¤ï¤ë¤Þ¤Ç°Ý»ý¤·¤Æ¤¯¤À¤µ¤¤¡£Path list ¾å¤ÇºÇ½é¤Ë¥µ¡¼¥Á
+¤µ¤ì¤ë¥³¥ó¥Ñ¥¤¥é°Ê³°¤Î¥³¥ó¥Ñ¥¤¥é¤ò CC, CXX ¤Ç»ØÄê¤·¤Æ¤Ï¤¤¤±¤Þ¤»¤ó¡£¤¿¤È
+¤¨ÀäÂÐ¥Ñ¥¹¤Ç»ØÄê¤·¤Æ¤â¥À¥á¤Ç¤¹¡£Path list ¤Ï configure ¤Î¤¹¤Ù¤Æ¤Ë±Æ¶Á¤ò
+Í¿¤¨¤ë¤«¤é¤Ç¤¹¡£
 
-2A1Acompiler-independent-build
+2¡¢1¡¢compiler-independent-build
 
     ${mcpp-dir}/configure; make; make install
 
-‚Æ‚·‚é‚ÆAcompiler-independent ”Å‚ÌŽÀsƒvƒƒOƒ‰ƒ€‚ª¶¬‚³‚ê‚Ä mcpp ‚Æ‚¢
-‚¤–¼‘O‚ÅƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ü‚·Bˆê•”‚ÌƒhƒLƒ…ƒƒ“ƒg‚àƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ü‚·B
+¤È¤¹¤ë¤È¡¢compiler-independent ÈÇ¤Î¼Â¹Ô¥×¥í¥°¥é¥à¤¬À¸À®¤µ¤ì¤Æ mcpp ¤È¤¤
+¤¦Ì¾Á°¤Ç¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤Þ¤¹¡£°ìÉô¤Î¥É¥­¥å¥á¥ó¥È¤â¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤Þ¤¹¡£
 
     ${mcpp-dir}/configure --prefix=/usr; make; make install
 
-“™‚Æ‚µ‚½ê‡‚ÍAprefix ‚ÅŽw’è‚³‚ê‚½ƒfƒBƒŒƒNƒgƒŠ‚Ì’†‚Ì bin ƒfƒBƒŒƒNƒgƒŠ‚É
-ƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ü‚·B‚±‚ê‚ðŽw’è‚µ‚È‚¢‚Æ /usr/local ‚ðŽw’è‚µ‚½‚Ì‚Æ“¯‚¶‚±
-‚Æ‚É‚È‚è‚Ü‚·B
-  make install ‚É‚Í’Êí‚Í root Œ ŒÀ‚ª•K—v‚È‚Ì‚ÅA
+Åù¤È¤·¤¿¾ì¹ç¤Ï¡¢prefix ¤Ç»ØÄê¤µ¤ì¤¿¥Ç¥£¥ì¥¯¥È¥ê¤ÎÃæ¤Î bin ¥Ç¥£¥ì¥¯¥È¥ê¤Ë
+¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤Þ¤¹¡£¤³¤ì¤ò»ØÄê¤·¤Ê¤¤¤È /usr/local ¤ò»ØÄê¤·¤¿¤Î¤ÈÆ±¤¸¤³
+¤È¤Ë¤Ê¤ê¤Þ¤¹¡£
+  make install ¤Ë¤ÏÄÌ¾ï¤Ï root ¸¢¸Â¤¬É¬Í×¤Ê¤Î¤Ç¡¢
 
     sudo make install
 
-‚Æ‚µ‚Ü‚·B‚ ‚é‚¢‚Í su ‚µ‚Ä‚©‚ç configure; make; make install ‚Æ‚µ‚Ü‚·B
-‚È‚¨AFreeBSD ‚Å‚Í make ‚Å‚Í‚È‚­ gmake ‚ðŽg‚Á‚Ä‚­‚¾‚³‚¢B
-  ŽÀsƒvƒƒOƒ‰ƒ€‚ð strip ‚·‚é‚É‚ÍAmake install ‚Ì‚©‚í‚è‚É
+¤È¤·¤Þ¤¹¡£¤¢¤ë¤¤¤Ï su ¤·¤Æ¤«¤é configure; make; make install ¤È¤·¤Þ¤¹¡£
+¤Ê¤ª¡¢FreeBSD ¤Ç¤Ï make ¤Ç¤Ï¤Ê¤¯ gmake ¤ò»È¤Ã¤Æ¤¯¤À¤µ¤¤¡£
+  ¼Â¹Ô¥×¥í¥°¥é¥à¤ò strip ¤¹¤ë¤Ë¤Ï¡¢make install ¤Î¤«¤ï¤ê¤Ë
 
     make install-strip
 
-‚Æ‚µ‚Ü‚·B
+¤È¤·¤Þ¤¹¡£
 
     make uninstall
 
-‚Æ‚·‚é‚ÆAMCPP ‚ÌŽÀsƒvƒƒOƒ‰ƒ€‚Ííœ‚³‚ê‚Ü‚·B
+¤È¤¹¤ë¤È¡¢MCPP ¤Î¼Â¹Ô¥×¥í¥°¥é¥à¤Ïºï½ü¤µ¤ì¤Þ¤¹¡£
 
-  make (un)install ‚Å‚Í DESTDIR=DIR ‚Æ‚¢‚¤ƒIƒvƒVƒ‡ƒ“‚ðŽw’è‚·‚é‚ÆADIR ˆÈ
-‰º‚ÌƒfƒBƒŒƒNƒgƒŠ‚ÉƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ü‚·B—á‚¦‚ÎA
+  make (un)install ¤Ç¤Ï DESTDIR=DIR ¤È¤¤¤¦¥ª¥×¥·¥ç¥ó¤ò»ØÄê¤¹¤ë¤È¡¢DIR °Ê
+²¼¤Î¥Ç¥£¥ì¥¯¥È¥ê¤Ë¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤Þ¤¹¡£Îã¤¨¤Ð¡¢
 
     make DESTDIR=/tmp/mcpp install
 
-‚Æ‚·‚é‚ÆA/tmp/mcpp/usr/local/bin/ ‚É MCPP ‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ü‚·i‘¶Ý
-‚µ‚È‚¢ƒfƒBƒŒƒNƒgƒŠ‚Íì¬‚³‚ê‚éBconfigure ‚Å --prefix=DIR ƒIƒvƒVƒ‡ƒ“‚ðŽw
-’è‚µ‚Ä‚¢‚é‚Æ '/usr/local' ‚Ì•”•ª‚ª 'DIR' ‚É’u‚«Š·‚í‚éjBƒoƒCƒiƒŠEƒpƒb
-ƒP[ƒW‚ðì‚é‚É‚Í‚±‚Ì•û–@‚ðŽg‚¢‚Ü‚·B
+¤È¤¹¤ë¤È¡¢/tmp/mcpp/usr/local/bin/ ¤Ë MCPP ¤¬¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤Þ¤¹¡ÊÂ¸ºß
+¤·¤Ê¤¤¥Ç¥£¥ì¥¯¥È¥ê¤ÏºîÀ®¤µ¤ì¤ë¡£configure ¤Ç --prefix=DIR ¥ª¥×¥·¥ç¥ó¤ò»Ø
+Äê¤·¤Æ¤¤¤ë¤È '/usr/local' ¤ÎÉôÊ¬¤¬ 'DIR' ¤ËÃÖ¤­´¹¤ï¤ë¡Ë¡£¥Ð¥¤¥Ê¥ê¡¦¥Ñ¥Ã
+¥±¡¼¥¸¤òºî¤ë¤Ë¤Ï¤³¤ÎÊýË¡¤ò»È¤¤¤Þ¤¹¡£
 
-  GCC 4.1 ˆÈ~‚É‚Í -fstack-protector (-fstack-protector-all) ‚Æ‚¢‚¤ƒIƒv
-ƒVƒ‡ƒ“‚ª‚ ‚è‚Ü‚·‚ªAmake ‚Å CFLAGS+='-fstack-protector' ‚Æ‚¢‚¤ƒIƒvƒVƒ‡ƒ“
-‚ðŽw’è‚·‚é‚±‚Æ‚Å‚±‚ê‚ð—LŒø‚É‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚±‚ê‚Í GCC-specific-
-build ‚Å‚à“¯—l‚Å‚·BMCPP ‚ð gdb ‚ÅƒfƒoƒbƒO‚·‚éŽž‚É‚Í CFLAGS+='-ggdb -O0'
-‚Æ‚µ‚Ü‚·B
+  GCC 4.1 °Ê¹ß¤Ë¤Ï -fstack-protector (-fstack-protector-all) ¤È¤¤¤¦¥ª¥×
+¥·¥ç¥ó¤¬¤¢¤ê¤Þ¤¹¤¬¡¢make ¤Ç CFLAGS+='-fstack-protector' ¤È¤¤¤¦¥ª¥×¥·¥ç¥ó
+¤ò»ØÄê¤¹¤ë¤³¤È¤Ç¤³¤ì¤òÍ­¸ú¤Ë¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£¤³¤ì¤Ï GCC-specific-
+build ¤Ç¤âÆ±ÍÍ¤Ç¤¹¡£MCPP ¤ò gdb ¤Ç¥Ç¥Ð¥Ã¥°¤¹¤ë»þ¤Ë¤Ï CFLAGS+='-ggdb -O0'
+¤È¤·¤Þ¤¹¡£
 
-  compiler-independent-build ‚Å‚Í make install ‚ÅÅ¬ŒÀ‚ÌƒhƒLƒ…ƒƒ“ƒg‚ª
-ƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚é‚æ‚¤‚É‚µ‚Ü‚µ‚½B‚±‚ê‚ÍƒoƒCƒiƒŠEƒpƒbƒP[ƒW‚ðì‚é‚Â‚²‚¤
-‚É‡‚í‚¹‚½‚à‚Ì‚Å‚·B
+  compiler-independent-build ¤Ç¤Ï make install ¤ÇºÇ¾®¸Â¤Î¥É¥­¥å¥á¥ó¥È¤¬
+¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤ë¤è¤¦¤Ë¤·¤Þ¤·¤¿¡£¤³¤ì¤Ï¥Ð¥¤¥Ê¥ê¡¦¥Ñ¥Ã¥±¡¼¥¸¤òºî¤ë¤Ä¤´¤¦
+¤Ë¹ç¤ï¤»¤¿¤â¤Î¤Ç¤¹¡£
 
-  Linux, Mac OS X, CygWIN, MinGW ‚Å‚ÍƒVƒXƒeƒ€‚Ì•W€ƒwƒbƒ_‚ÉŒ‡Š×‚ª‚ ‚é‚Ì
-‚ÅAcompiler-independent-build ‚Ì MCPP ‚Å‚Í‚»‚Ì‘Îô‚ª•K—v‚Å‚·B‚±‚Ì–â‘è
-‚É‚Â‚¢‚Ä‚Í mcpp-manual.html 3.9.9 ‚ðŒ©‚Ä‚­‚¾‚³‚¢B
+  Linux, Mac OS X, CygWIN, MinGW ¤Ç¤Ï¥·¥¹¥Æ¥à¤ÎÉ¸½à¥Ø¥Ã¥À¤Ë·ç´Ù¤¬¤¢¤ë¤Î
+¤Ç¡¢compiler-independent-build ¤Î MCPP ¤Ç¤Ï¤½¤ÎÂÐºö¤¬É¬Í×¤Ç¤¹¡£¤³¤ÎÌäÂê
+¤Ë¤Ä¤¤¤Æ¤Ï mcpp-manual.html 3.9.9 ¤ò¸«¤Æ¤¯¤À¤µ¤¤¡£
 
-2A2Acompiler-specific-build
+2¡¢2¡¢compiler-specific-build
 
     ${mcpp-dir}/configure --enable-replace-cpp; make; make install
 
-‚Æ‚·‚é‚ÆAcompiler-specific ”Å‚ÌŽÀsƒvƒƒOƒ‰ƒ€‚ª¶¬‚³‚ê‚ÄA‚»‚Ìˆ—Œn‚Ì
-ê—p‚ÌƒfƒBƒŒƒNƒgƒŠ‚ÉƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ü‚·B
-  make install-strip, make uninstall ‚Í compiler-independent-build ‚Æ“¯
-‚¶‚Å‚·B
-  prefix ƒfƒBƒŒƒNƒgƒŠ‚Í GCC ‚Ì path ‚©‚çŽ©“®“I‚ÉÝ’è‚³‚ê‚Ü‚·B—á‚¦‚Î GCC
-‚Ì path ‚ª /usr/local/bin/gcc ‚Å‚ ‚ê‚ÎA/usr/local ‚ð prefix ‚Æ‚µ‚Ü‚·B
-configure ‚Ì --prefix ƒIƒvƒVƒ‡ƒ“‚ðŽw’è‚µ‚Ä‚àA‚»‚ê‚ª GCC ‚Ì path ‚Æ–µ‚
-‚µ‚Ä‚¢‚ê‚Î–³Ž‹‚³‚ê‚Ü‚·B‚Ü‚½Amake ‚Å‚Ì DESTDIR ƒIƒvƒVƒ‡ƒ“‚àAŽÀsƒvƒƒO
-ƒ‰ƒ€‚ÌƒCƒ“ƒXƒg[ƒ‹‚É‚ÍŠÖŒW‚µ‚Ü‚¹‚ñB
+¤È¤¹¤ë¤È¡¢compiler-specific ÈÇ¤Î¼Â¹Ô¥×¥í¥°¥é¥à¤¬À¸À®¤µ¤ì¤Æ¡¢¤½¤Î½èÍý·Ï¤Î
+ÀìÍÑ¤Î¥Ç¥£¥ì¥¯¥È¥ê¤Ë¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤Þ¤¹¡£
+  make install-strip, make uninstall ¤Ï compiler-independent-build ¤ÈÆ±
+¤¸¤Ç¤¹¡£
+  prefix ¥Ç¥£¥ì¥¯¥È¥ê¤Ï GCC ¤Î path ¤«¤é¼«Æ°Åª¤ËÀßÄê¤µ¤ì¤Þ¤¹¡£Îã¤¨¤Ð GCC
+¤Î path ¤¬ /usr/local/bin/gcc ¤Ç¤¢¤ì¤Ð¡¢/usr/local ¤ò prefix ¤È¤·¤Þ¤¹¡£
+configure ¤Î --prefix ¥ª¥×¥·¥ç¥ó¤ò»ØÄê¤·¤Æ¤â¡¢¤½¤ì¤¬ GCC ¤Î path ¤ÈÌ·½â
+¤·¤Æ¤¤¤ì¤ÐÌµ»ë¤µ¤ì¤Þ¤¹¡£¤Þ¤¿¡¢make ¤Ç¤Î DESTDIR ¥ª¥×¥·¥ç¥ó¤â¡¢¼Â¹Ô¥×¥í¥°
+¥é¥à¤Î¥¤¥ó¥¹¥È¡¼¥ë¤Ë¤Ï´Ø·¸¤·¤Þ¤»¤ó¡£
 
-  ‚½‚¾‚µAGCC ˆÈŠO‚Ìˆ—Œn‚Å‚Íæ‚ÉˆÚAì‹Æ‚ðs‚¢Aconfigure ‚Å‚³‚ç‚É‚¢‚­
-‚Â‚©‚ÌƒIƒvƒVƒ‡ƒ“‚ðŽw’è‚µ‚È‚¢‚ÆA“KØ‚ÈƒRƒ“ƒpƒCƒ‹‚ÆƒCƒ“ƒXƒg[ƒ‹‚ª‚³‚ê‚Ü‚¹
-‚ñB
+  ¤¿¤À¤·¡¢GCC °Ê³°¤Î½èÍý·Ï¤Ç¤ÏÀè¤Ë°Ü¿¢ºî¶È¤ò¹Ô¤¤¡¢configure ¤Ç¤µ¤é¤Ë¤¤¤¯
+¤Ä¤«¤Î¥ª¥×¥·¥ç¥ó¤ò»ØÄê¤·¤Ê¤¤¤È¡¢Å¬ÀÚ¤Ê¥³¥ó¥Ñ¥¤¥ë¤È¥¤¥ó¥¹¥È¡¼¥ë¤¬¤µ¤ì¤Þ¤»
+¤ó¡£
 
-2A2A1Aˆ—Œn‚ª GCC ‚Ìê‡
+2¡¢2¡¢1¡¢½èÍý·Ï¤¬ GCC ¤Î¾ì¹ç
 
-2A2A1A1Amake install
-  --enable-replace-cpp ƒIƒvƒVƒ‡ƒ“‚Å configure ‚µ‚½ê‡Amake install ‚Å
-‚ÍƒRƒ“ƒpƒCƒ‰‚Ì’u‚©‚ê‚éƒfƒBƒŒƒNƒgƒŠi/usr/libexec, /usr/lib/gcc-lib/i686-
-pc-linux-gnu/VERSION “™j‚ÉŽÀsƒvƒƒOƒ‰ƒ€‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ü‚·B‚±‚ê‚Í
-gcc ‚ÌŒÄ‚Ño‚· cc1 (cpp0) ‚ª’u‚©‚ê‚Ä‚¢‚éƒfƒBƒŒƒNƒgƒŠ‚Å‚·Bmake install
-‚Í GCC / cc1, cc1plus (cpp0) ‚ð•Û‘¶‚µ‚½ã‚ÅAgcc, g++ ‚©‚ç MCPP ‚ªŒÄ‚Ño
-‚³‚ê‚é‚æ‚¤‚É“KØ‚ÈÝ’è‚ð‚µ‚Ü‚·B‚±‚ÌÝ’è‚Í GCC ‚ª V.2.* ‚Å‚ ‚é‚© V.3.*,
-4.* ‚Å‚ ‚é‚©‚É‚æ‚Á‚Äˆá‚Á‚Ä‚¢‚Ü‚·imcpp-manual.html 3.9.5, 3.9.7 ‚ðŽQÆ‚Ì
-‚±‚ÆjB‚Ü‚½AGCC ‚Ìƒo[ƒWƒ‡ƒ“‚É‰ž‚¶‚½ƒwƒbƒ_ƒtƒ@ƒCƒ‹‚ª compiler-specific
-‚È include directory ‚Ì’†‚Ì mcpp-gcc* ‚Æ‚¢‚¤ƒfƒBƒŒƒNƒgƒŠ‚É¶¬‚³‚ê‚Ü‚·B
+2¡¢2¡¢1¡¢1¡¢make install
+  --enable-replace-cpp ¥ª¥×¥·¥ç¥ó¤Ç configure ¤·¤¿¾ì¹ç¡¢make install ¤Ç
+¤Ï¥³¥ó¥Ñ¥¤¥é¤ÎÃÖ¤«¤ì¤ë¥Ç¥£¥ì¥¯¥È¥ê¡Ê/usr/libexec, /usr/lib/gcc-lib/i686-
+pc-linux-gnu/VERSION Åù¡Ë¤Ë¼Â¹Ô¥×¥í¥°¥é¥à¤¬¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤Þ¤¹¡£¤³¤ì¤Ï
+gcc ¤Î¸Æ¤Ó½Ð¤¹ cc1 (cpp0) ¤¬ÃÖ¤«¤ì¤Æ¤¤¤ë¥Ç¥£¥ì¥¯¥È¥ê¤Ç¤¹¡£make install
+¤Ï GCC / cc1, cc1plus (cpp0) ¤òÊÝÂ¸¤·¤¿¾å¤Ç¡¢gcc, g++ ¤«¤é MCPP ¤¬¸Æ¤Ó½Ð
+¤µ¤ì¤ë¤è¤¦¤ËÅ¬ÀÚ¤ÊÀßÄê¤ò¤·¤Þ¤¹¡£¤³¤ÎÀßÄê¤Ï GCC ¤¬ V.2.* ¤Ç¤¢¤ë¤« V.3.*,
+4.* ¤Ç¤¢¤ë¤«¤Ë¤è¤Ã¤Æ°ã¤Ã¤Æ¤¤¤Þ¤¹¡Êmcpp-manual.html 3.9.5, 3.9.7 ¤ò»²¾È¤Î
+¤³¤È¡Ë¡£¤Þ¤¿¡¢GCC ¤Î¥Ð¡¼¥¸¥ç¥ó¤Ë±þ¤¸¤¿¥Ø¥Ã¥À¥Õ¥¡¥¤¥ë¤¬ compiler-specific
+¤Ê include directory ¤ÎÃæ¤Î mcpp-gcc* ¤È¤¤¤¦¥Ç¥£¥ì¥¯¥È¥ê¤ËÀ¸À®¤µ¤ì¤Þ¤¹¡£
 
-2A2A1A2Amake check
-  MCPP ‚ÌŒŸØƒZƒbƒg‚É‚Í GCC ‚Ì testsuite ‚É‘Î‰ž‚µ‚½ edition ‚ª‚ ‚è‚Ü‚·B
-GCC / testsuite ‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚éê‡‚ÍAmake check ‚É‚æ‚Á‚Ä‚±‚Ì
-testsuite ”ÅŒŸØƒZƒbƒg‚Å MCPP ‚Ì Standard ƒ‚[ƒh‚ÌƒeƒXƒg‚ð‚·‚é‚±‚Æ‚ª‚Å‚«
-‚Ü‚·BTestsuite ”ÅŒŸØƒZƒbƒg‚Í GCC / testsuite ‚Ìˆê•”‚Æ‚µ‚ÄŽg‚¤‚æ‚¤‚É‚È
-‚Á‚Ä‚¢‚é‚Ì‚ÅA‚ ‚ç‚©‚¶‚ß GCC / testsuite ‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚êŽÀs‚Å‚«‚éó
-‘Ô‚É‚È‚Á‚Ä‚¢‚é‚±‚Æ‚ª•K—v‚Å‚·BGCC / testsuite ‚Í’Êí‚Í GCC ‚Ìƒ\[ƒX‚Ìˆê
-•”‚Æ‚È‚Á‚Ä‚¢‚Ü‚·i•Ê‚ÌƒpƒbƒP[ƒW‚Æ‚È‚Á‚Ä‚¢‚éê‡‚à‚ ‚éjBGCC V.2.95.*
-ˆÈ~‚Ì testsuite ‚ªŽg‚¦‚Ü‚·‚ªAV.4.3.* ‚Ì‚à‚Ì‚É‚ÍŽáŠ±‚Ì–â‘è‚ª‚ ‚é‚Ì‚ÅAV.
-4.2.* ‚Ü‚Å‚Ì‚à‚Ì‚ðŽg‚Á‚Ä‚­‚¾‚³‚¢B
-  ‚Ü‚½Aconfigure ‚·‚éŽž‚É GCC / testsuite ‚Ì’u‚©‚ê‚Ä‚¢‚éƒfƒBƒŒƒNƒgƒŠ‚ð
-Žw’è‚µ‚Ä‚¨‚­•K—v‚ª‚ ‚è‚Ü‚·B‚»‚Ì‚½‚ß‚É‚ÍŽŸ‚Ì‚æ‚¤‚É‚µ‚Ü‚·B
+2¡¢2¡¢1¡¢2¡¢make check
+  MCPP ¤Î¸¡¾Ú¥»¥Ã¥È¤Ë¤Ï GCC ¤Î testsuite ¤ËÂÐ±þ¤·¤¿ edition ¤¬¤¢¤ê¤Þ¤¹¡£
+GCC / testsuite ¤¬¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤Æ¤¤¤ë¾ì¹ç¤Ï¡¢make check ¤Ë¤è¤Ã¤Æ¤³¤Î
+testsuite ÈÇ¸¡¾Ú¥»¥Ã¥È¤Ç MCPP ¤Î Standard ¥â¡¼¥É¤Î¥Æ¥¹¥È¤ò¤¹¤ë¤³¤È¤¬¤Ç¤­
+¤Þ¤¹¡£Testsuite ÈÇ¸¡¾Ú¥»¥Ã¥È¤Ï GCC / testsuite ¤Î°ìÉô¤È¤·¤Æ»È¤¦¤è¤¦¤Ë¤Ê
+¤Ã¤Æ¤¤¤ë¤Î¤Ç¡¢¤¢¤é¤«¤¸¤á GCC / testsuite ¤¬¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¼Â¹Ô¤Ç¤­¤ë¾õ
+ÂÖ¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤³¤È¤¬É¬Í×¤Ç¤¹¡£GCC / testsuite ¤ÏÄÌ¾ï¤Ï GCC ¤Î¥½¡¼¥¹¤Î°ì
+Éô¤È¤Ê¤Ã¤Æ¤¤¤Þ¤¹¡ÊÊÌ¤Î¥Ñ¥Ã¥±¡¼¥¸¤È¤Ê¤Ã¤Æ¤¤¤ë¾ì¹ç¤â¤¢¤ë¡Ë¡£GCC V.2.95.*
+°Ê¹ß¤Î testsuite ¤¬»È¤¨¤Þ¤¹¤¬¡¢V.4.3.* ¤Î¤â¤Î¤Ë¤Ï¼ã´³¤ÎÌäÂê¤¬¤¢¤ë¤Î¤Ç¡¢V.
+4.2.* ¤Þ¤Ç¤Î¤â¤Î¤ò»È¤Ã¤Æ¤¯¤À¤µ¤¤¡£
+  ¤Þ¤¿¡¢configure ¤¹¤ë»þ¤Ë GCC / testsuite ¤ÎÃÖ¤«¤ì¤Æ¤¤¤ë¥Ç¥£¥ì¥¯¥È¥ê¤ò
+»ØÄê¤·¤Æ¤ª¤¯É¬Í×¤¬¤¢¤ê¤Þ¤¹¡£¤½¤Î¤¿¤á¤Ë¤Ï¼¡¤Î¤è¤¦¤Ë¤·¤Þ¤¹¡£
 
     ${mcpp-dir}/configure --with-gcc-testsuite-dir=DIR  \
             --enable-replace-cpp
 
-‚±‚Ì 'DIR' ‚Í GCC ‚Ìƒ\[ƒX‚ª’u‚©‚ê‚Ä‚¢‚éƒfƒBƒŒƒNƒgƒŠ‚ð ${gcc-source} ‚Æ
-‚·‚é‚ÆA
+¤³¤Î 'DIR' ¤Ï GCC ¤Î¥½¡¼¥¹¤¬ÃÖ¤«¤ì¤Æ¤¤¤ë¥Ç¥£¥ì¥¯¥È¥ê¤ò ${gcc-source} ¤È
+¤¹¤ë¤È¡¢
 
     ${gcc-source}/gcc/testsuite
 
-‚Æ‚È‚é‚Í‚¸‚Å‚·B
-  ‚±‚¤‚µ‚Ä configure ‚µ‚Ä‚¨‚¢‚ÄAmake; make install ‚µ‚½Œã‚Å
+¤È¤Ê¤ë¤Ï¤º¤Ç¤¹¡£
+  ¤³¤¦¤·¤Æ configure ¤·¤Æ¤ª¤¤¤Æ¡¢make; make install ¤·¤¿¸å¤Ç
 
     make check
 
-‚Æ‚·‚é‚ÆAŒŸØƒZƒbƒg‚Ì testsuite ”Å‚ª GCC / testsuite ‚Ì’†‚ÉƒRƒs[‚³‚êA
-GCC ‚ª V.2.* ‚Å‚ ‚é‚©‚»‚ê‚Æ‚à V.3.*, 4.* ‚Å‚ ‚é‚©‚É‰ž‚¶‚Ä•K—v‚ÈÝ’è‚ª‚³
-‚ê‚Ü‚·BTestsuite ‚Å‚Í gcc ‚Ì–¼‘O‚Í•¶Žš’Ê‚è 'gcc' ‚Å‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñ‚ªA
-MCPP ‚ðƒCƒ“ƒXƒg[ƒ‹‚µ‚½ gcc ‚Ì–¼‘O‚ªˆá‚Á‚Ä‚¢‚éê‡‚ÍAgcc ‚Æ‚¢‚¤–¼‘O‚ªˆê
-Žž“I‚É‚»‚Ì–¼‘O‚É symbolic link ‚³‚ê‚Ü‚·B‚»‚µ‚Ä testsuite ‚ªŽÀs‚³‚ê‚Ü‚·B
-’Êí‚Ìƒ\ƒtƒgƒEƒFƒA‚Å‚Í make install ‚Ì‘O‚É make check ‚µ‚Ü‚·‚ªAMCPP ‚Ì
-ê‡‚Í‡˜‚ª‹t‚É‚È‚è‚Ü‚·Bgcc ‚©‚ç MCPP ‚ªŒÄ‚Ño‚³‚ê‚é‚æ‚¤‚É‚µ‚Ä‚¨‚©‚È‚¢
-‚Æ testsuite ‚ª MCPP ‚É“K—p‚Å‚«‚È‚¢‚©‚ç‚Å‚·B‚Ü‚½A‚±‚Ì‚½‚ß --enable-
-replace-cpp ƒIƒvƒVƒ‡ƒ“‚à•K—v‚Å‚·B
-  ${gcc-source} ‚Ì‚ ‚è‚©‚É‚æ‚Á‚Ä‚Í make check ‚Í sudo make check ‚Æ‚µ‚È
-‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñ‚ªA‚»‚Ìê‡‚Í root ‚ÆŒ»ƒ†[ƒU‚Æ‚Å 'which gcc' ‚ÌŒ‹‰Ê‚ª
-ˆê’v‚µ‚Ä‚¢‚È‚¯‚ê‚Î‚È‚ç‚È‚¢‚±‚Æ‚É’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢B
-  Testsuite ”ÅŒŸØƒZƒbƒg‚Í MCPP ‚¾‚¯‚Å‚È‚­AGCC V.2.95 ˆÈ~‚Ì cc1,
-cc1plus (cpp0) ‚É‚à“K—p‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·icpp-test.html 3.2.3 ŽQÆjB
+¤È¤¹¤ë¤È¡¢¸¡¾Ú¥»¥Ã¥È¤Î testsuite ÈÇ¤¬ GCC / testsuite ¤ÎÃæ¤Ë¥³¥Ô¡¼¤µ¤ì¡¢
+GCC ¤¬ V.2.* ¤Ç¤¢¤ë¤«¤½¤ì¤È¤â V.3.*, 4.* ¤Ç¤¢¤ë¤«¤Ë±þ¤¸¤ÆÉ¬Í×¤ÊÀßÄê¤¬¤µ
+¤ì¤Þ¤¹¡£Testsuite ¤Ç¤Ï gcc ¤ÎÌ¾Á°¤ÏÊ¸»úÄÌ¤ê 'gcc' ¤Ç¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó¤¬¡¢
+MCPP ¤ò¥¤¥ó¥¹¥È¡¼¥ë¤·¤¿ gcc ¤ÎÌ¾Á°¤¬°ã¤Ã¤Æ¤¤¤ë¾ì¹ç¤Ï¡¢gcc ¤È¤¤¤¦Ì¾Á°¤¬°ì
+»þÅª¤Ë¤½¤ÎÌ¾Á°¤Ë symbolic link ¤µ¤ì¤Þ¤¹¡£¤½¤·¤Æ testsuite ¤¬¼Â¹Ô¤µ¤ì¤Þ¤¹¡£
+ÄÌ¾ï¤Î¥½¥Õ¥È¥¦¥§¥¢¤Ç¤Ï make install ¤ÎÁ°¤Ë make check ¤·¤Þ¤¹¤¬¡¢MCPP ¤Î
+¾ì¹ç¤Ï½ç½ø¤¬µÕ¤Ë¤Ê¤ê¤Þ¤¹¡£gcc ¤«¤é MCPP ¤¬¸Æ¤Ó½Ð¤µ¤ì¤ë¤è¤¦¤Ë¤·¤Æ¤ª¤«¤Ê¤¤
+¤È testsuite ¤¬ MCPP ¤ËÅ¬ÍÑ¤Ç¤­¤Ê¤¤¤«¤é¤Ç¤¹¡£¤Þ¤¿¡¢¤³¤Î¤¿¤á --enable-
+replace-cpp ¥ª¥×¥·¥ç¥ó¤âÉ¬Í×¤Ç¤¹¡£
+  ${gcc-source} ¤Î¤¢¤ê¤«¤Ë¤è¤Ã¤Æ¤Ï make check ¤Ï sudo make check ¤È¤·¤Ê
+¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó¤¬¡¢¤½¤Î¾ì¹ç¤Ï root ¤È¸½¥æ¡¼¥¶¤È¤Ç 'which gcc' ¤Î·ë²Ì¤¬
+°ìÃ×¤·¤Æ¤¤¤Ê¤±¤ì¤Ð¤Ê¤é¤Ê¤¤¤³¤È¤ËÃí°Õ¤·¤Æ¤¯¤À¤µ¤¤¡£
+  Testsuite ÈÇ¸¡¾Ú¥»¥Ã¥È¤Ï MCPP ¤À¤±¤Ç¤Ê¤¯¡¢GCC V.2.95 °Ê¹ß¤Î cc1,
+cc1plus (cpp0) ¤Ë¤âÅ¬ÍÑ¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡Êcpp-test.html 3.2.3 »²¾È¡Ë¡£
 
-2A2A1A3Amake uninstall
-  make uninstall ‚Æ‚·‚é‚ÆAMCPP ‚ÌŽÀsƒvƒƒOƒ‰ƒ€‚Ííœ‚³‚ê‚Ü‚·B
-mcpp-gcc* ƒfƒBƒŒƒNƒgƒŠ‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹‚àíœ‚³‚ê‚Ü‚·Bgcc, cc1, cc1plus
-(cpp0) ‚ÌÝ’è‚Í‰Šúó‘Ô‚É–ß‚è‚Ü‚·B‰½‚©‚Ì‚Â‚²‚¤‚Å make install ‚µ‚½Œã‚Å
-configure ‚ðÄŽÀs‚·‚éê‡‚ÍA‚»‚Ì‘O‚É make uninstall ‚µ‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹
-‚ñBConfigure ‚ª’²¸‚·‚×‚«‚È‚Ì‚Í GCC ‚Å‚ ‚è MCPP ‚Å‚Í‚È‚¢‚©‚ç‚Å‚·B
-  GCC / testsuite ‚Ì’†‚ÉŒŸØƒZƒbƒg‚ªƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ä‚¢‚ê‚ÎA‚»‚ê‚à
-make uninstall ‚Åíœ‚³‚ê‚Ü‚·BGCC ‚ÉŒŸØƒZƒbƒg‚ð“K—p‚·‚é‚É‚ÍAŽè“®‚ÅŒŸ
-ØƒZƒbƒg‚ðƒRƒs[‚µ‚Ä‚­‚¾‚³‚¢B
-  GCC-specific-build ‚Ì configure ‚Å¶¬‚³‚ê‚½‰½–{‚©‚Ì Makefile ‚Í MCPP
-‚ð uninstall ‚·‚é‚Æ‚«‚É•K—v‚È‚Ì‚ÅA‚»‚Ì‚Ü‚ÜŽc‚µ‚Ä‚¨‚¢‚Ä‚­‚¾‚³‚¢Bmake
-distclean ‚·‚éê‡‚ÍA‚»‚Ì‘O‚É make uninstall ‚ðŽÀs‚µ‚Ä‚­‚¾‚³‚¢BŽè“®‚Å
-uninstall ‚·‚é‚Ì‚Í­‚µŽèŠÔ‚ª‚©‚©‚é‚©‚ç‚Å‚·B“¯—l‚ÉAconfigure ‚â
-Makefile.in ‚ªXV‚³‚ê‚éê‡‚ÍA‚»‚Ì‘O‚É make uninstall; make distclean
-‚µ‚Ä‚¨‚©‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñBMCPP ‚ð update ‚·‚éê‡‚Í’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢B
+2¡¢2¡¢1¡¢3¡¢make uninstall
+  make uninstall ¤È¤¹¤ë¤È¡¢MCPP ¤Î¼Â¹Ô¥×¥í¥°¥é¥à¤Ïºï½ü¤µ¤ì¤Þ¤¹¡£
+mcpp-gcc* ¥Ç¥£¥ì¥¯¥È¥ê¤Î¥Ø¥Ã¥À¥Õ¥¡¥¤¥ë¤âºï½ü¤µ¤ì¤Þ¤¹¡£gcc, cc1, cc1plus
+(cpp0) ¤ÎÀßÄê¤Ï½é´ü¾õÂÖ¤ËÌá¤ê¤Þ¤¹¡£²¿¤«¤Î¤Ä¤´¤¦¤Ç make install ¤·¤¿¸å¤Ç
+configure ¤òºÆ¼Â¹Ô¤¹¤ë¾ì¹ç¤Ï¡¢¤½¤ÎÁ°¤Ë make uninstall ¤·¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»
+¤ó¡£Configure ¤¬Ä´ºº¤¹¤Ù¤­¤Ê¤Î¤Ï GCC ¤Ç¤¢¤ê MCPP ¤Ç¤Ï¤Ê¤¤¤«¤é¤Ç¤¹¡£
+  GCC / testsuite ¤ÎÃæ¤Ë¸¡¾Ú¥»¥Ã¥È¤¬¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤Æ¤¤¤ì¤Ð¡¢¤½¤ì¤â
+make uninstall ¤Çºï½ü¤µ¤ì¤Þ¤¹¡£GCC ¤Ë¸¡¾Ú¥»¥Ã¥È¤òÅ¬ÍÑ¤¹¤ë¤Ë¤Ï¡¢¼êÆ°¤Ç¸¡
+¾Ú¥»¥Ã¥È¤ò¥³¥Ô¡¼¤·¤Æ¤¯¤À¤µ¤¤¡£
+  GCC-specific-build ¤Î configure ¤ÇÀ¸À®¤µ¤ì¤¿²¿ËÜ¤«¤Î Makefile ¤Ï MCPP
+¤ò uninstall ¤¹¤ë¤È¤­¤ËÉ¬Í×¤Ê¤Î¤Ç¡¢¤½¤Î¤Þ¤Þ»Ä¤·¤Æ¤ª¤¤¤Æ¤¯¤À¤µ¤¤¡£make
+distclean ¤¹¤ë¾ì¹ç¤Ï¡¢¤½¤ÎÁ°¤Ë make uninstall ¤ò¼Â¹Ô¤·¤Æ¤¯¤À¤µ¤¤¡£¼êÆ°¤Ç
+uninstall ¤¹¤ë¤Î¤Ï¾¯¤·¼ê´Ö¤¬¤«¤«¤ë¤«¤é¤Ç¤¹¡£Æ±ÍÍ¤Ë¡¢configure ¤ä
+Makefile.in ¤¬¹¹¿·¤µ¤ì¤ë¾ì¹ç¤Ï¡¢¤½¤ÎÁ°¤Ë make uninstall; make distclean
+¤·¤Æ¤ª¤«¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó¡£MCPP ¤ò update ¤¹¤ë¾ì¹ç¤ÏÃí°Õ¤·¤Æ¤¯¤À¤µ¤¤¡£
 
-2A2A2Aˆ—Œn‚ª Mac OS X ‚Ì Apple-GCC ‚Ìê‡
+2¡¢2¡¢2¡¢½èÍý·Ï¤¬ Mac OS X ¤Î Apple-GCC ¤Î¾ì¹ç
 
-  Mac OS X ‚Í UNIX Œn‚Æ‚ÍŒ¾‚¦Aframework directory “™‚Ì“ÆŽ©‚Ì—v‘f‚ðŽ‚Á
-‚Ä‚¢‚Ü‚·BGCC ‚à Apple ‚É‚æ‚é‘½‚­‚ÌŠg’£‚ðŽ{‚³‚ê‚½‚à‚Ì‚ªƒVƒXƒeƒ€ƒRƒ“ƒpƒC
-ƒ‰‚É‚È‚Á‚Ä‚¢‚Ü‚·B‚³‚ç‚É Intel-Mac ‚Ì“oêˆÈ~‚ÍAx86 —p‚ÌƒRƒ“ƒpƒCƒ‰ƒVƒX
-ƒeƒ€‚Æ powerpc —p‚ÌƒRƒ“ƒpƒCƒ‰ƒVƒXƒeƒ€‚Æ‚ªi•Ð•û‚ÍƒlƒCƒeƒBƒuƒRƒ“ƒpƒCƒ‰‚Å
-‘¼•û‚ÍƒNƒƒXƒRƒ“ƒpƒCƒ‰‚Å‚·‚ªj“¯ˆêƒ}ƒVƒ“‚É‹¤‘¶‚·‚é‚æ‚¤‚É‚È‚èAx86 —p‚ÌŽÀ
-sƒvƒƒOƒ‰ƒ€‚Æ powerpc —p‚ÌŽÀsƒvƒƒOƒ‰ƒ€‚ð‚P‚Â‚É‘©‚Ë‚Ä‚Ç‚¿‚ç‚Ìƒ}ƒVƒ“‚Å
-‚à“®‚­‚æ‚¤‚É‚µ‚½ universal binary ‚Æ‚¢‚¤‚à‚Ì‚Ü‚Åì‚ç‚ê‚é‚æ‚¤‚É‚È‚Á‚Ä‚«‚Ä
-‚¢‚é‚Ì‚ÅA‚©‚È‚è•¡ŽG‚È\¬‚É‚È‚Á‚Ä‚¢‚Ü‚·B
-  ‚±‚Ì•¡ŽG‚ÈƒVƒXƒeƒ€‚É MCPP ‚ðƒCƒ“ƒXƒg[ƒ‹‚·‚é‚Ì‚ÍA2A2A1A‚Ì•û–@‚¾‚¯
-‚Å‚Í‘«‚è‚Ü‚¹‚ñB‚»‚±‚ÅAMac OS X / Apple-GCC ‚Ìê‡‚ðA•Ê‚É‚Æ‚è‚ ‚°‚Äà
-–¾‚µ‚Ü‚·BŽ„‚Í Intel-Mac ‚Ì Mac OS X Leopard ‚ðŽg‚Á‚Ä‚¢‚é‚Ì‚Å‚»‚ê‚ð—á‚É
-‚Æ‚è‚Ü‚·‚ªAPowerpc-Mac ‚Å‚Í i686 ‚Æ powerpc ‚ð‹t‚É‚µ‚Ä“Ç‚ñ‚Å‚­‚¾‚³‚¢B
-‚Ü‚½ATiger ‚Å‚Í darwin9 ‚ð darwin8 ‚É“Ç‚Ý‘Ö‚¦‚Ä‚­‚¾‚³‚¢B
-  ‚È‚¨A‚±‚±‚Å‚Æ‚è‚ ‚°‚é‚Ì‚Í GCC 4.0.1 ‚Å‚·B‚»‚Ì‚Ù‚© GCC 3.3 ‚à Apple
-‚É‚æ‚Á‚Ä—pˆÓ‚³‚ê‚Ä‚¢‚Ü‚·‚ªA­‚È‚­‚Æ‚à Leopard ã‚Ì‚à‚Ì‚Í³‚µ‚­ƒRƒ“ƒpƒC
-ƒ‹‚³‚ê‚Ä‚¢‚È‚¢‚Ì‚ÅA‚Æ‚è‚ ‚°‚Ü‚¹‚ñB
+  Mac OS X ¤Ï UNIX ·Ï¤È¤Ï¸À¤¨¡¢framework directory Åù¤ÎÆÈ¼«¤ÎÍ×ÁÇ¤ò»ý¤Ã
+¤Æ¤¤¤Þ¤¹¡£GCC ¤â Apple ¤Ë¤è¤ëÂ¿¤¯¤Î³ÈÄ¥¤ò»Ü¤µ¤ì¤¿¤â¤Î¤¬¥·¥¹¥Æ¥à¥³¥ó¥Ñ¥¤
+¥é¤Ë¤Ê¤Ã¤Æ¤¤¤Þ¤¹¡£¤µ¤é¤Ë Intel-Mac ¤ÎÅÐ¾ì°Ê¹ß¤Ï¡¢x86 ÍÑ¤Î¥³¥ó¥Ñ¥¤¥é¥·¥¹
+¥Æ¥à¤È powerpc ÍÑ¤Î¥³¥ó¥Ñ¥¤¥é¥·¥¹¥Æ¥à¤È¤¬¡ÊÊÒÊý¤Ï¥Í¥¤¥Æ¥£¥Ö¥³¥ó¥Ñ¥¤¥é¤Ç
+Â¾Êý¤Ï¥¯¥í¥¹¥³¥ó¥Ñ¥¤¥é¤Ç¤¹¤¬¡ËÆ±°ì¥Þ¥·¥ó¤Ë¶¦Â¸¤¹¤ë¤è¤¦¤Ë¤Ê¤ê¡¢x86 ÍÑ¤Î¼Â
+¹Ô¥×¥í¥°¥é¥à¤È powerpc ÍÑ¤Î¼Â¹Ô¥×¥í¥°¥é¥à¤ò£±¤Ä¤ËÂ«¤Í¤Æ¤É¤Á¤é¤Î¥Þ¥·¥ó¤Ç
+¤âÆ°¤¯¤è¤¦¤Ë¤·¤¿ universal binary ¤È¤¤¤¦¤â¤Î¤Þ¤Çºî¤é¤ì¤ë¤è¤¦¤Ë¤Ê¤Ã¤Æ¤­¤Æ
+¤¤¤ë¤Î¤Ç¡¢¤«¤Ê¤êÊ£»¨¤Ê¹½À®¤Ë¤Ê¤Ã¤Æ¤¤¤Þ¤¹¡£
+  ¤³¤ÎÊ£»¨¤Ê¥·¥¹¥Æ¥à¤Ë MCPP ¤ò¥¤¥ó¥¹¥È¡¼¥ë¤¹¤ë¤Î¤Ï¡¢2¡¢2¡¢1¡¢¤ÎÊýË¡¤À¤±
+¤Ç¤ÏÂ­¤ê¤Þ¤»¤ó¡£¤½¤³¤Ç¡¢Mac OS X / Apple-GCC ¤Î¾ì¹ç¤ò¡¢ÊÌ¤Ë¤È¤ê¤¢¤²¤ÆÀâ
+ÌÀ¤·¤Þ¤¹¡£»ä¤Ï Intel-Mac ¤Î Mac OS X Leopard ¤ò»È¤Ã¤Æ¤¤¤ë¤Î¤Ç¤½¤ì¤òÎã¤Ë
+¤È¤ê¤Þ¤¹¤¬¡¢Powerpc-Mac ¤Ç¤Ï i686 ¤È powerpc ¤òµÕ¤Ë¤·¤ÆÆÉ¤ó¤Ç¤¯¤À¤µ¤¤¡£
+¤Þ¤¿¡¢Tiger ¤Ç¤Ï darwin9 ¤ò darwin8 ¤ËÆÉ¤ßÂØ¤¨¤Æ¤¯¤À¤µ¤¤¡£
+  ¤Ê¤ª¡¢¤³¤³¤Ç¤È¤ê¤¢¤²¤ë¤Î¤Ï GCC 4.0.1 ¤Ç¤¹¡£¤½¤Î¤Û¤« GCC 3.3 ¤â Apple
+¤Ë¤è¤Ã¤ÆÍÑ°Õ¤µ¤ì¤Æ¤¤¤Þ¤¹¤¬¡¢¾¯¤Ê¤¯¤È¤â Leopard ¾å¤Î¤â¤Î¤ÏÀµ¤·¤¯¥³¥ó¥Ñ¥¤
+¥ë¤µ¤ì¤Æ¤¤¤Ê¤¤¤Î¤Ç¡¢¤È¤ê¤¢¤²¤Þ¤»¤ó¡£
 
-2A2A2A1AƒlƒCƒeƒBƒuƒRƒ“ƒpƒCƒ‰‚ÆƒNƒƒXƒRƒ“ƒpƒCƒ‰
+2¡¢2¡¢2¡¢1¡¢¥Í¥¤¥Æ¥£¥Ö¥³¥ó¥Ñ¥¤¥é¤È¥¯¥í¥¹¥³¥ó¥Ñ¥¤¥é
 
-  ‚Ü‚¸Anative ƒRƒ“ƒpƒCƒ‰iIntel-Mac ‚È‚ç i686 —p GCCj—p‚Ì MCPP ‚ðƒCƒ“
-ƒXƒg[ƒ‹‚Ì‚ÍŠÈ’P‚ÅA2A2A1A‚Ì•û–@‚Å‚·‚Ý‚Ü‚·B
-  ‚µ‚©‚µAƒNƒƒXƒRƒ“ƒpƒCƒ‰—p‚Ì MCPP ‚ðƒCƒ“ƒXƒg[ƒ‹‚·‚é‚Ì‚ÍA‚»‚¤ŠÈ’P‚Å‚Í
-‚ ‚è‚Ü‚¹‚ñBMCPP ‚Ì configure ‚Íˆê”Ê‚É‚ÍƒNƒƒXƒRƒ“ƒpƒCƒŠƒ“ƒO‚É‘Î‰ž‚µ‚Ä‚¢
-‚Ü‚¹‚ñBƒTƒ“ƒvƒ‹ƒvƒƒOƒ‰ƒ€‚ðƒRƒ“ƒpƒCƒ‹‚µ‚Ä run ‚³‚¹‚éƒeƒXƒg‚ª‚¢‚­‚Â‚©ŠÜ
-‚Ü‚ê‚Ä‚¢‚é‚©‚ç‚Å‚·Bƒ^[ƒQƒbƒgŠÂ‹«—p‚ÌƒoƒCƒiƒŠ‚ðƒrƒ‹ƒhŠÂ‹«‚ÅŽÀs‚·‚é‚±‚Æ
-‚ÍA•’Ê‚Í‚Å‚«‚Ü‚¹‚ñB‚Ü‚½Aƒrƒ‹ƒhŠÂ‹«‚ÌƒeƒXƒg‚ð‚µ‚Ä‚àA‚»‚ÌŒ‹‰Ê‚Íƒ^[ƒQ
-ƒbƒgŠÂ‹«‚Æ‚Íˆá‚Á‚Ä‚¢‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB
-  ‚µ‚©‚µAMac OS X ‚Ìê‡‚Í—áŠO“I‚ÉAƒNƒƒXƒRƒ“ƒpƒCƒ‹‚É‘Î‰ž‚Å‚«‚éê‡‚ª
-‘½‚­‚ ‚è‚Ü‚·B‚Ü‚¸AIntel-Mac ‚Í ppc —p‚ÌƒoƒCƒiƒŠ‚ðƒGƒ~ƒ…ƒŒ[ƒ^‚ÅŽ©“®ŽÀ
-s‚³‚¹‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚Ü‚·B‚Ü‚½ACPU ‚ªˆá‚Á‚Ä‚à OS ‚Æ‚»‚Ìƒo[ƒWƒ‡ƒ“‚à
-GCC ‚Ìƒo[ƒWƒ‡ƒ“‚à“¯‚¶‚Å‚ ‚ê‚ÎAƒrƒ‹ƒhŠÂ‹«‚Å‚ÌƒeƒXƒg‚Åƒ^[ƒQƒbƒgŠÂ‹«‚Ìƒe
-ƒXƒg‚Ì‘½‚­‚ð‘ã—p‚Å‚«‚Ü‚·B
-  Intel-Mac ã‚Å‚Ì compiler-independent-build ‚Å‚Í‚Ü‚¸ACC, CXX ‚Æ‚¢‚¤ŠÂ
-‹«•Ï”‚Å C ƒRƒ“ƒpƒCƒ‰‚Æ C++ ƒRƒ“ƒpƒCƒ‰‚ðŽw’è‚µ‚Ü‚·BMac OS X ‚Ì /usr/bin
-‚É‚Í‚¢‚­‚Â‚à‚Ì gcc ‚â g++ ‚ª‚ ‚è‚Ü‚·‚ªAIntel-Mac ‚Ì Mac OS X Leopard ‚Å
-‚Í powerpc-apple-darwin9-gcc-4.0.1, powerpc-apple-darwin9-g++-4.0.1 ‚Æ‚¢
-‚¤‚Ì‚ª powerpc —p‚Ì C ƒRƒ“ƒpƒCƒ‰‚Æ C++ ƒRƒ“ƒpƒCƒ‰‚Å‚·iŽÀÛ‚É‚Í /usr/bin
-‚Ì gcc, g++ ‚Í‚·‚×‚Ä i386, ppc ‘o•û‚ÌƒoƒCƒiƒŠ‚ð‡‚í‚¹‚½ universal binary
-‚Å‚·‚ªjB‚³‚ç‚ÉAƒ^[ƒQƒbƒgƒVƒXƒeƒ€‚ð --target ƒIƒvƒVƒ‡ƒ“‚ÅŽw’è‚µ‚Ü‚·B
-‚±‚Ìê‡‚ÍƒRƒ“ƒpƒCƒ‰‚Ì–¼‘O‚©‚ç -gcc-4.0.1 “™‚Ì•”•ª‚ðíœ‚µ‚½ powerpc-
-apple-darwin9 ‚ðŽg‚¢‚Ü‚·BŒ‹‹ÇA‚±‚¤‚È‚è‚Ü‚·B
+  ¤Þ¤º¡¢native ¥³¥ó¥Ñ¥¤¥é¡ÊIntel-Mac ¤Ê¤é i686 ÍÑ GCC¡ËÍÑ¤Î MCPP ¤ò¥¤¥ó
+¥¹¥È¡¼¥ë¤Î¤Ï´ÊÃ±¤Ç¡¢2¡¢2¡¢1¡¢¤ÎÊýË¡¤Ç¤¹¤ß¤Þ¤¹¡£
+  ¤·¤«¤·¡¢¥¯¥í¥¹¥³¥ó¥Ñ¥¤¥éÍÑ¤Î MCPP ¤ò¥¤¥ó¥¹¥È¡¼¥ë¤¹¤ë¤Î¤Ï¡¢¤½¤¦´ÊÃ±¤Ç¤Ï
+¤¢¤ê¤Þ¤»¤ó¡£MCPP ¤Î configure ¤Ï°ìÈÌ¤Ë¤Ï¥¯¥í¥¹¥³¥ó¥Ñ¥¤¥ê¥ó¥°¤ËÂÐ±þ¤·¤Æ¤¤
+¤Þ¤»¤ó¡£¥µ¥ó¥×¥ë¥×¥í¥°¥é¥à¤ò¥³¥ó¥Ñ¥¤¥ë¤·¤Æ run ¤µ¤»¤ë¥Æ¥¹¥È¤¬¤¤¤¯¤Ä¤«´Þ
+¤Þ¤ì¤Æ¤¤¤ë¤«¤é¤Ç¤¹¡£¥¿¡¼¥²¥Ã¥È´Ä¶­ÍÑ¤Î¥Ð¥¤¥Ê¥ê¤ò¥Ó¥ë¥É´Ä¶­¤Ç¼Â¹Ô¤¹¤ë¤³¤È
+¤Ï¡¢ÉáÄÌ¤Ï¤Ç¤­¤Þ¤»¤ó¡£¤Þ¤¿¡¢¥Ó¥ë¥É´Ä¶­¤Î¥Æ¥¹¥È¤ò¤·¤Æ¤â¡¢¤½¤Î·ë²Ì¤Ï¥¿¡¼¥²
+¥Ã¥È´Ä¶­¤È¤Ï°ã¤Ã¤Æ¤¤¤ë¤«¤â¤·¤ì¤Þ¤»¤ó¡£
+  ¤·¤«¤·¡¢Mac OS X ¤Î¾ì¹ç¤ÏÎã³°Åª¤Ë¡¢¥¯¥í¥¹¥³¥ó¥Ñ¥¤¥ë¤ËÂÐ±þ¤Ç¤­¤ë¾ì¹ç¤¬
+Â¿¤¯¤¢¤ê¤Þ¤¹¡£¤Þ¤º¡¢Intel-Mac ¤Ï ppc ÍÑ¤Î¥Ð¥¤¥Ê¥ê¤ò¥¨¥ß¥å¥ì¡¼¥¿¤Ç¼«Æ°¼Â
+¹Ô¤µ¤»¤ë¤è¤¦¤Ë¤Ê¤Ã¤Æ¤¤¤Þ¤¹¡£¤Þ¤¿¡¢CPU ¤¬°ã¤Ã¤Æ¤â OS ¤È¤½¤Î¥Ð¡¼¥¸¥ç¥ó¤â
+GCC ¤Î¥Ð¡¼¥¸¥ç¥ó¤âÆ±¤¸¤Ç¤¢¤ì¤Ð¡¢¥Ó¥ë¥É´Ä¶­¤Ç¤Î¥Æ¥¹¥È¤Ç¥¿¡¼¥²¥Ã¥È´Ä¶­¤Î¥Æ
+¥¹¥È¤ÎÂ¿¤¯¤òÂåÍÑ¤Ç¤­¤Þ¤¹¡£
+  Intel-Mac ¾å¤Ç¤Î compiler-independent-build ¤Ç¤Ï¤Þ¤º¡¢CC, CXX ¤È¤¤¤¦´Ä
+¶­ÊÑ¿ô¤Ç C ¥³¥ó¥Ñ¥¤¥é¤È C++ ¥³¥ó¥Ñ¥¤¥é¤ò»ØÄê¤·¤Þ¤¹¡£Mac OS X ¤Î /usr/bin
+¤Ë¤Ï¤¤¤¯¤Ä¤â¤Î gcc ¤ä g++ ¤¬¤¢¤ê¤Þ¤¹¤¬¡¢Intel-Mac ¤Î Mac OS X Leopard ¤Ç
+¤Ï powerpc-apple-darwin9-gcc-4.0.1, powerpc-apple-darwin9-g++-4.0.1 ¤È¤¤
+¤¦¤Î¤¬ powerpc ÍÑ¤Î C ¥³¥ó¥Ñ¥¤¥é¤È C++ ¥³¥ó¥Ñ¥¤¥é¤Ç¤¹¡Ê¼ÂºÝ¤Ë¤Ï /usr/bin
+¤Î gcc, g++ ¤Ï¤¹¤Ù¤Æ i386, ppc ÁÐÊý¤Î¥Ð¥¤¥Ê¥ê¤ò¹ç¤ï¤»¤¿ universal binary
+¤Ç¤¹¤¬¡Ë¡£¤µ¤é¤Ë¡¢¥¿¡¼¥²¥Ã¥È¥·¥¹¥Æ¥à¤ò --target ¥ª¥×¥·¥ç¥ó¤Ç»ØÄê¤·¤Þ¤¹¡£
+¤³¤Î¾ì¹ç¤Ï¥³¥ó¥Ñ¥¤¥é¤ÎÌ¾Á°¤«¤é -gcc-4.0.1 Åù¤ÎÉôÊ¬¤òºï½ü¤·¤¿ powerpc-
+apple-darwin9 ¤ò»È¤¤¤Þ¤¹¡£·ë¶É¡¢¤³¤¦¤Ê¤ê¤Þ¤¹¡£
 
     ${mcpp-dir}/configure --target=powerpc-apple-darwin9    \
             CC=powerpc-apple-darwin9-gcc-4.0.1  \
             CXX=powerpc-apple-darwin9-g++-4.0.1
 
-  ‘¼•û‚Å ppc-Mac ‚Å‚Í x86 ‚ÌƒoƒCƒiƒŠ‚ðŽÀs‚Å‚«‚È‚¢‚Ì‚ÅA‚±‚Ì configure
-‚Å‚Í compiler-independent-build ‚ÌƒNƒƒXƒRƒ“ƒpƒCƒ‹‚Í‚Å‚«‚Ü‚¹‚ñB·•ªƒtƒ@
-ƒCƒ‹‚Æ mac_osx.mak ‚ðŽg‚Á‚½Žè“®ƒRƒ“ƒpƒCƒ‹‚Å‚ ‚ê‚ÎƒNƒƒXƒRƒ“ƒpƒCƒ‹‚à‚Å‚«
-‚é‚Ì‚ÅA•K—v‚È‚ç mcpp-porting.html#3.1.4, #3.11 ‚ðŒ©‚Ä‚­‚¾‚³‚¢B‚Ü‚½A
-configure ‚Å‚àŽŸß‚Ì•û–@‚ðŽg‚¦‚ÎAppc-Mac ‚Ì native compiler ‚Å
-universal binary ‚ðì‚é‚±‚Æ‚Í‚Å‚«‚Ü‚·B
-  GCC-specific-build ‚Å‚Í CC, CXX ‚ÍŽg‚í‚¸AŽŸ‚Ì‚æ‚¤‚É --with-target-cc=
-‚Æ‚¢‚¤ƒIƒvƒVƒ‡ƒ“‚Å C ƒRƒ“ƒpƒCƒ‰‚ðŽw’è‚µ‚Ü‚·i‚»‚Ì–¼‘O‚Ì gcc ‚ð g++ ‚É•Ï
-‚¦‚½‚à‚Ì‚ð C++ ƒRƒ“ƒpƒCƒ‰‚Æ‰ðŽß‚µ‚Ü‚·jB
+  Â¾Êý¤Ç ppc-Mac ¤Ç¤Ï x86 ¤Î¥Ð¥¤¥Ê¥ê¤ò¼Â¹Ô¤Ç¤­¤Ê¤¤¤Î¤Ç¡¢¤³¤Î configure
+¤Ç¤Ï compiler-independent-build ¤Î¥¯¥í¥¹¥³¥ó¥Ñ¥¤¥ë¤Ï¤Ç¤­¤Þ¤»¤ó¡£º¹Ê¬¥Õ¥¡
+¥¤¥ë¤È mac_osx.mak ¤ò»È¤Ã¤¿¼êÆ°¥³¥ó¥Ñ¥¤¥ë¤Ç¤¢¤ì¤Ð¥¯¥í¥¹¥³¥ó¥Ñ¥¤¥ë¤â¤Ç¤­
+¤ë¤Î¤Ç¡¢É¬Í×¤Ê¤é mcpp-porting.html#3.1.4, #3.11 ¤ò¸«¤Æ¤¯¤À¤µ¤¤¡£¤Þ¤¿¡¢
+configure ¤Ç¤â¼¡Àá¤ÎÊýË¡¤ò»È¤¨¤Ð¡¢ppc-Mac ¤Î native compiler ¤Ç
+universal binary ¤òºî¤ë¤³¤È¤Ï¤Ç¤­¤Þ¤¹¡£
+  GCC-specific-build ¤Ç¤Ï CC, CXX ¤Ï»È¤ï¤º¡¢¼¡¤Î¤è¤¦¤Ë --with-target-cc=
+¤È¤¤¤¦¥ª¥×¥·¥ç¥ó¤Ç C ¥³¥ó¥Ñ¥¤¥é¤ò»ØÄê¤·¤Þ¤¹¡Ê¤½¤ÎÌ¾Á°¤Î gcc ¤ò g++ ¤ËÊÑ
+¤¨¤¿¤â¤Î¤ò C++ ¥³¥ó¥Ñ¥¤¥é¤È²ò¼á¤·¤Þ¤¹¡Ë¡£
 
     ${mcpp-dir}/configure --target=powerpc-apple-darwin9    \
             --with-target-cc=powerpc-apple-darwin9-gcc-4.0.1    \
             --enable-replace-cpp
 
-  ‚±‚ê‚Íƒ^[ƒQƒbƒgŠÂ‹«‚ÌŽÀsƒeƒXƒg‚ÍŠÜ‚Ü‚È‚¢‚Ì‚ÅApowerpc ‚ð i686 ‚É’u‚«
-Š·‚¦‚ê‚Î ppcMac ‚ÅŽg‚¦‚é‚Í‚¸‚Å‚·B
-  ƒfƒtƒHƒ‹ƒg‚ÌƒlƒCƒeƒBƒuƒRƒ“ƒpƒCƒ‰igcc, g++j‚Æ --with-target-cc= ‚ÅŽw
-’è‚·‚éƒNƒƒXƒRƒ“ƒpƒCƒ‰‚Æ‚Å‘å‚«‚­ƒo[ƒWƒ‡ƒ“‚ªˆá‚Á‚Ä‚¢‚éê‡‚ÍA‚»‚ÌƒNƒƒX
-ƒRƒ“ƒpƒCƒ‰‚É‚È‚é‚×‚­‹ß‚¢ƒo[ƒWƒ‡ƒ“‚ÌƒlƒCƒeƒBƒuƒRƒ“ƒpƒCƒ‰‚ðŠÂ‹«•Ï” CC,
-CXX ‚ÅŽw’è‚µ‚Ä‚­‚¾‚³‚¢BCC (CXX) ‚ÅŽw’è‚·‚é‚Ì‚Í MCPP ‚ðƒrƒ‹ƒh‚·‚é‚½‚ß‚Ì
-ƒRƒ“ƒpƒCƒ‰‚Å‚ ‚èA--with-target-cc= ‚ÅŽw’è‚·‚é‚Ì‚Í MCPP ‚ðƒCƒ“ƒXƒg[ƒ‹‚·
-‚éƒ^[ƒQƒbƒg‚ÌƒRƒ“ƒpƒCƒ‰‚Å‚·B
-  ƒNƒƒXƒRƒ“ƒpƒCƒ‰‚ÍƒlƒCƒeƒBƒuƒRƒ“ƒpƒCƒ‰‚Æ‚Í libexec directory, compiler-
-specific include directory, Ž–‘O’è‹`ƒ}ƒNƒ“™‚ªˆÙ‚È‚è‚Ü‚·‚ªA‚»‚ê‚ç‚ª‚±‚Ì
-ƒIƒvƒVƒ‡ƒ“Žw’è‚É‚æ‚Á‚Ä“KØ‚ÉÝ’è‚³‚ê‚Ü‚·B‚±‚ê‚ç‚ÌƒIƒvƒVƒ‡ƒ“‚Í make ‚Å‚Í
-‚È‚­ configure ‚ÅŽw’è‚·‚é•K—v‚ª‚ ‚è‚Ü‚·B
-  ‚È‚¨AƒNƒƒXƒRƒ“ƒpƒCƒ‰‚ÍƒzƒXƒgƒVƒXƒeƒ€ã‚Å“®ì‚·‚é‚à‚Ì‚È‚Ì‚ÅA‚»‚ÌuƒN
-ƒƒXƒRƒ“ƒpƒCƒ‰‚ÉvƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚é compiler-specific-build ‚Ì MCPP ‚à
-“¯—l‚Å‚·B‘¼•û‚ÅuƒNƒƒXƒRƒ“ƒpƒCƒ‰‚ÅvƒRƒ“ƒpƒCƒ‹‚³‚ê‚½ compiler-
-independent-build ‚Ì MCPP ‚ÍAƒ^[ƒQƒbƒgƒVƒXƒeƒ€‚Å“®‚­‚à‚Ì‚É‚È‚è‚Ü‚·B‚Ü
-‚½AGCC-specific-build ‚ÍƒlƒCƒeƒBƒuƒRƒ“ƒpƒCƒ‰‚ÉƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚é‚à‚Ì‚à
-ƒNƒƒXƒRƒ“ƒpƒCƒ‰‚ÉƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚é‚à‚Ì‚àA‚Æ‚à‚ÉƒlƒCƒeƒBƒuƒRƒ“ƒpƒCƒ‰‚Å
-ƒRƒ“ƒpƒCƒ‹‚³‚ê‚Ü‚·B‚±‚Ì‚½‚ßA‚±‚Ì‘o•û‚ðƒCƒ“ƒXƒg[ƒ‹‚·‚éê‡‚ÍAƒNƒƒXƒR
-ƒ“ƒpƒCƒ‰—p‚ðæ‚ÉƒCƒ“ƒXƒg[ƒ‹‚·‚é•K—v‚ª‚ ‚è‚Ü‚·B
+  ¤³¤ì¤Ï¥¿¡¼¥²¥Ã¥È´Ä¶­¤Î¼Â¹Ô¥Æ¥¹¥È¤Ï´Þ¤Þ¤Ê¤¤¤Î¤Ç¡¢powerpc ¤ò i686 ¤ËÃÖ¤­
+´¹¤¨¤ì¤Ð ppcMac ¤Ç»È¤¨¤ë¤Ï¤º¤Ç¤¹¡£
+  ¥Ç¥Õ¥©¥ë¥È¤Î¥Í¥¤¥Æ¥£¥Ö¥³¥ó¥Ñ¥¤¥é¡Êgcc, g++¡Ë¤È --with-target-cc= ¤Ç»Ø
+Äê¤¹¤ë¥¯¥í¥¹¥³¥ó¥Ñ¥¤¥é¤È¤ÇÂç¤­¤¯¥Ð¡¼¥¸¥ç¥ó¤¬°ã¤Ã¤Æ¤¤¤ë¾ì¹ç¤Ï¡¢¤½¤Î¥¯¥í¥¹
+¥³¥ó¥Ñ¥¤¥é¤Ë¤Ê¤ë¤Ù¤¯¶á¤¤¥Ð¡¼¥¸¥ç¥ó¤Î¥Í¥¤¥Æ¥£¥Ö¥³¥ó¥Ñ¥¤¥é¤ò´Ä¶­ÊÑ¿ô CC,
+CXX ¤Ç»ØÄê¤·¤Æ¤¯¤À¤µ¤¤¡£CC (CXX) ¤Ç»ØÄê¤¹¤ë¤Î¤Ï MCPP ¤ò¥Ó¥ë¥É¤¹¤ë¤¿¤á¤Î
+¥³¥ó¥Ñ¥¤¥é¤Ç¤¢¤ê¡¢--with-target-cc= ¤Ç»ØÄê¤¹¤ë¤Î¤Ï MCPP ¤ò¥¤¥ó¥¹¥È¡¼¥ë¤¹
+¤ë¥¿¡¼¥²¥Ã¥È¤Î¥³¥ó¥Ñ¥¤¥é¤Ç¤¹¡£
+  ¥¯¥í¥¹¥³¥ó¥Ñ¥¤¥é¤Ï¥Í¥¤¥Æ¥£¥Ö¥³¥ó¥Ñ¥¤¥é¤È¤Ï libexec directory, compiler-
+specific include directory, »öÁ°ÄêµÁ¥Þ¥¯¥íÅù¤¬°Û¤Ê¤ê¤Þ¤¹¤¬¡¢¤½¤ì¤é¤¬¤³¤Î
+¥ª¥×¥·¥ç¥ó»ØÄê¤Ë¤è¤Ã¤ÆÅ¬ÀÚ¤ËÀßÄê¤µ¤ì¤Þ¤¹¡£¤³¤ì¤é¤Î¥ª¥×¥·¥ç¥ó¤Ï make ¤Ç¤Ï
+¤Ê¤¯ configure ¤Ç»ØÄê¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
+  ¤Ê¤ª¡¢¥¯¥í¥¹¥³¥ó¥Ñ¥¤¥é¤Ï¥Û¥¹¥È¥·¥¹¥Æ¥à¾å¤ÇÆ°ºî¤¹¤ë¤â¤Î¤Ê¤Î¤Ç¡¢¤½¤Î¡Ö¥¯
+¥í¥¹¥³¥ó¥Ñ¥¤¥é¤Ë¡×¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤ë compiler-specific-build ¤Î MCPP ¤â
+Æ±ÍÍ¤Ç¤¹¡£Â¾Êý¤Ç¡Ö¥¯¥í¥¹¥³¥ó¥Ñ¥¤¥é¤Ç¡×¥³¥ó¥Ñ¥¤¥ë¤µ¤ì¤¿ compiler-
+independent-build ¤Î MCPP ¤Ï¡¢¥¿¡¼¥²¥Ã¥È¥·¥¹¥Æ¥à¤ÇÆ°¤¯¤â¤Î¤Ë¤Ê¤ê¤Þ¤¹¡£¤Þ
+¤¿¡¢GCC-specific-build ¤Ï¥Í¥¤¥Æ¥£¥Ö¥³¥ó¥Ñ¥¤¥é¤Ë¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤ë¤â¤Î¤â
+¥¯¥í¥¹¥³¥ó¥Ñ¥¤¥é¤Ë¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤ë¤â¤Î¤â¡¢¤È¤â¤Ë¥Í¥¤¥Æ¥£¥Ö¥³¥ó¥Ñ¥¤¥é¤Ç
+¥³¥ó¥Ñ¥¤¥ë¤µ¤ì¤Þ¤¹¡£¤³¤Î¤¿¤á¡¢¤³¤ÎÁÐÊý¤ò¥¤¥ó¥¹¥È¡¼¥ë¤¹¤ë¾ì¹ç¤Ï¡¢¥¯¥í¥¹¥³
+¥ó¥Ñ¥¤¥éÍÑ¤òÀè¤Ë¥¤¥ó¥¹¥È¡¼¥ë¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
 
-2A2A2A2AUniversal binary ‚Ì make
+2¡¢2¡¢2¡¢2¡¢Universal binary ¤Î make
 
-  Universal binary ‚ðì‚é‚É‚ÍAmake ‚·‚éŽž‚É CFLAGS+='-arch i386 -arch
-ppc' ‚Æ‚¢‚¤‚æ‚¤‚ÉA‘ÎÛ‚Æ‚·‚é CPU ‚ð -arch ƒIƒvƒVƒ‡ƒ“‚ÅŽw’è‚µ‚Ü‚·BŽw’è
-‚Å‚«‚é CPU ‚Í i386, x86_64, ppc, ppc64 ‚Ì‚SŽí—Þ‚Å‚·Bmake CFLAGS+='-arch
-i386 -arch x86_64 -arch ppc -arch ppc64' ‚Æ‚·‚é‚Æ‚SŽí‚Ì CPU ‚É‘Î‰ž‚µ‚½‚à
-‚Ì‚ª‚Å‚«‚Ü‚·Bconfigure ‚Í universal binary ‚Å‚È‚¢ê‡‚Æ“¯‚¶‚ÅA“Á•Ê‚ÈƒI
-ƒvƒVƒ‡ƒ“‚Í•K—v‚ ‚è‚Ü‚¹‚ñB
-  GCC ‚É‚Í -isysroot DIRi‚Ü‚½‚Í --sysroot=DIRj‚Æ‚¢‚¤ƒIƒvƒVƒ‡ƒ“‚ª‚ ‚è‚Ü
-‚·B‚±‚ê‚ªŽw’è‚³‚ê‚é‚ÆAƒVƒXƒeƒ€ƒwƒbƒ_‚Ì include directory ‚Æ‚µ‚ÄƒfƒtƒH
-ƒ‹ƒg‚Ì include directory ‚É DIR ‚ð“ª‚É•t‚¯‚½‚à‚Ì‚ªŽg‚í‚ê‚Ü‚·B‚±‚ÌƒIƒvƒV
-ƒ‡ƒ“‚Í Mac OS ‚ÉŒÀ‚Á‚½‚à‚Ì‚Å‚Í‚ ‚è‚Ü‚¹‚ñ‚ªAMac OS ‚Å‚Í universal binary
-‚ÌƒRƒ“ƒpƒCƒ‹‚É‚±‚ê‚ªŽg‚í‚ê‚Ä‚¢‚Ü‚·BMac OS ‚Ìƒo[ƒWƒ‡ƒ“ŠÔ‚ÌŒÝŠ·«‚Ì”ÍˆÍ
-‚ðL‚°‚é‚½‚ß‚Å‚·B—á‚¦‚ÎA-isysroot /Developer/SDKs/MacOSX10.4u.sdk ‚Æ‚·
-‚é‚ÆA/usr/include ‚ª /Developer/SDKs/MacOSX10.4u.sdk/usr/include ‚Æ‚È‚è
-‚Ü‚·B‚±‚Ì—á‚Í Mac OS X 10.5 (Leopard) ã‚Å 10.4 (Tiger) ‚ÆŒÝŠ·‚Ì
-universal binary ‚ðƒRƒ“ƒpƒCƒ‹‚·‚é‚½‚ß‚Ì‚à‚Ì‚Å‚·BMCPP ‚Ì make ‚Å‚±‚ê‚ðŽg
-‚¤‚½‚ß‚É‚ÍA‚³‚ç‚É -mmacosx-version-min= ‚Æ‚¢‚¤ƒIƒvƒVƒ‡ƒ“‚Å SDK ‚Æ“¯‚¶ƒo
-[ƒWƒ‡ƒ“‚ðŽw’è‚·‚é•K—v‚ª‚ ‚è‚Ü‚·B
-  MCPP ‚Ì universal binary ‚ÍAã‹L‚Ì configure ƒIƒvƒVƒ‡ƒ“‚Æ‚±‚ê‚ç‚Ì
-make ƒIƒvƒVƒ‡ƒ“‚ð‘g‚Ý‡‚í‚¹‚é‚±‚Æ‚ÅAcompiler-independent-build, GCC-
-specific-build ‚Ì‚Ç‚¿‚ç‚Å‚àAnative-compiler, cross-compiler ‚Ì‚Ç‚¿‚ç‚Å
-‚à¶¬‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B—á‚¦‚Î compiler-independent-build ‚Å Tiger ŒÝ
-Š·‚Ì i386 ‚Æ ppc —p‚Ì‚à‚Ì‚ðì‚é‚É‚Í‚±‚¤‚µ‚Ü‚·iŽÀÛ‚É‚ÍA'*' ‚Ì’†‚ð \ ‚Å
-‚Qs‚É•ª‚¯‚é‚±‚Æ‚Í‚Å‚«‚È‚¢jB
+  Universal binary ¤òºî¤ë¤Ë¤Ï¡¢make ¤¹¤ë»þ¤Ë CFLAGS+='-arch i386 -arch
+ppc' ¤È¤¤¤¦¤è¤¦¤Ë¡¢ÂÐ¾Ý¤È¤¹¤ë CPU ¤ò -arch ¥ª¥×¥·¥ç¥ó¤Ç»ØÄê¤·¤Þ¤¹¡£»ØÄê
+¤Ç¤­¤ë CPU ¤Ï i386, x86_64, ppc, ppc64 ¤Î£´¼ïÎà¤Ç¤¹¡£make CFLAGS+='-arch
+i386 -arch x86_64 -arch ppc -arch ppc64' ¤È¤¹¤ë¤È£´¼ï¤Î CPU ¤ËÂÐ±þ¤·¤¿¤â
+¤Î¤¬¤Ç¤­¤Þ¤¹¡£configure ¤Ï universal binary ¤Ç¤Ê¤¤¾ì¹ç¤ÈÆ±¤¸¤Ç¡¢ÆÃÊÌ¤Ê¥ª
+¥×¥·¥ç¥ó¤ÏÉ¬Í×¤¢¤ê¤Þ¤»¤ó¡£
+  GCC ¤Ë¤Ï -isysroot DIR¡Ê¤Þ¤¿¤Ï --sysroot=DIR¡Ë¤È¤¤¤¦¥ª¥×¥·¥ç¥ó¤¬¤¢¤ê¤Þ
+¤¹¡£¤³¤ì¤¬»ØÄê¤µ¤ì¤ë¤È¡¢¥·¥¹¥Æ¥à¥Ø¥Ã¥À¤Î include directory ¤È¤·¤Æ¥Ç¥Õ¥©
+¥ë¥È¤Î include directory ¤Ë DIR ¤òÆ¬¤ËÉÕ¤±¤¿¤â¤Î¤¬»È¤ï¤ì¤Þ¤¹¡£¤³¤Î¥ª¥×¥·
+¥ç¥ó¤Ï Mac OS ¤Ë¸Â¤Ã¤¿¤â¤Î¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó¤¬¡¢Mac OS ¤Ç¤Ï universal binary
+¤Î¥³¥ó¥Ñ¥¤¥ë¤Ë¤³¤ì¤¬»È¤ï¤ì¤Æ¤¤¤Þ¤¹¡£Mac OS ¤Î¥Ð¡¼¥¸¥ç¥ó´Ö¤Î¸ß´¹À­¤ÎÈÏ°Ï
+¤ò¹­¤²¤ë¤¿¤á¤Ç¤¹¡£Îã¤¨¤Ð¡¢-isysroot /Developer/SDKs/MacOSX10.4u.sdk ¤È¤¹
+¤ë¤È¡¢/usr/include ¤¬ /Developer/SDKs/MacOSX10.4u.sdk/usr/include ¤È¤Ê¤ê
+¤Þ¤¹¡£¤³¤ÎÎã¤Ï Mac OS X 10.5 (Leopard) ¾å¤Ç 10.4 (Tiger) ¤È¸ß´¹¤Î
+universal binary ¤ò¥³¥ó¥Ñ¥¤¥ë¤¹¤ë¤¿¤á¤Î¤â¤Î¤Ç¤¹¡£MCPP ¤Î make ¤Ç¤³¤ì¤ò»È
+¤¦¤¿¤á¤Ë¤Ï¡¢¤µ¤é¤Ë -mmacosx-version-min= ¤È¤¤¤¦¥ª¥×¥·¥ç¥ó¤Ç SDK ¤ÈÆ±¤¸¥Ð
+¡¼¥¸¥ç¥ó¤ò»ØÄê¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
+  MCPP ¤Î universal binary ¤Ï¡¢¾åµ­¤Î configure ¥ª¥×¥·¥ç¥ó¤È¤³¤ì¤é¤Î
+make ¥ª¥×¥·¥ç¥ó¤òÁÈ¤ß¹ç¤ï¤»¤ë¤³¤È¤Ç¡¢compiler-independent-build, GCC-
+specific-build ¤Î¤É¤Á¤é¤Ç¤â¡¢native-compiler, cross-compiler ¤Î¤É¤Á¤é¤Ç
+¤âÀ¸À®¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£Îã¤¨¤Ð compiler-independent-build ¤Ç Tiger ¸ß
+´¹¤Î i386 ¤È ppc ÍÑ¤Î¤â¤Î¤òºî¤ë¤Ë¤Ï¤³¤¦¤·¤Þ¤¹¡Ê¼ÂºÝ¤Ë¤Ï¡¢'*' ¤ÎÃæ¤ò \ ¤Ç
+£²¹Ô¤ËÊ¬¤±¤ë¤³¤È¤Ï¤Ç¤­¤Ê¤¤¡Ë¡£
 
     ${mcpp-dir}/configure
     make CFLAGS+='-isysroot /Developer/SDKs/MacOSX10.4u.sdk     \
             -mmacosx-version-min=10.4 -arch i386 -arch ppc'
     sudo make install
 
-2A2A3Aˆ—Œn‚ª GCC ‚Å‚È‚¢ê‡
+2¡¢2¡¢3¡¢½èÍý·Ï¤¬ GCC ¤Ç¤Ê¤¤¾ì¹ç
 
-  ˆ—Œn‚ª GCC ‚Å‚È‚¢ê‡‚Í configure ‚Å‚¢‚­‚Â‚©‚ÌƒIƒvƒVƒ‡ƒ“‚ðŽw’è‚µ‚È‚¯
-‚ê‚Î‚È‚è‚Ü‚¹‚ñB‚Ü‚½A‚»‚Ìˆ—Œn‚ÌƒvƒŠƒvƒƒZƒbƒT‚Æ’uŠ·‚Å‚«‚é‚æ‚¤‚ÉAƒ\[
-ƒXƒR[ƒh‚ð‘‚«‘«‚·uˆÚAvì‹Æ‚ª•K—v‚Å‚·BìŽÒŽ©g‚Í Linux, FreeBSD, Mac
-OS X, CygWIN, MinGW “™‚Å GCC ‚ðŽg‚Á‚Ä‚¢‚é‚Ì‚ÅˆÚA‚ª‚·‚ñ‚Å‚¨‚èAconfigure
-‚Åî•ñ‚ðŽûW‚·‚é‚±‚Æ‚à‚Å‚«‚é‚Ì‚Å‚·‚ªAUNIX ŒnƒVƒXƒeƒ€‚Ì‘¼‚Ìˆ—Œn‚É‚Â‚¢
-‚Ä‚Í’m‚ç‚È‚¢‚Ì‚ÅAˆÚA‚Í‚¨‚ë‚ª configure ‚Å‰½‚ð‚Ç‚¤’²‚×‚ê‚Î—Ç‚¢‚Ì‚©‚à‚í
-‚©‚ç‚È‚¢‚©‚ç‚Å‚·B
-  UNIX ŒnƒVƒXƒeƒ€‚Ì GCC ˆÈŠO‚Ìˆ—Œn‚Å‚ÍAŽŸ‚Ì‚æ‚¤‚ÈŽè‡‚ÅƒRƒ“ƒpƒCƒ‹‚ði
-‚ß‚Ä‚­‚¾‚³‚¢B
+  ½èÍý·Ï¤¬ GCC ¤Ç¤Ê¤¤¾ì¹ç¤Ï configure ¤Ç¤¤¤¯¤Ä¤«¤Î¥ª¥×¥·¥ç¥ó¤ò»ØÄê¤·¤Ê¤±
+¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó¡£¤Þ¤¿¡¢¤½¤Î½èÍý·Ï¤Î¥×¥ê¥×¥í¥»¥Ã¥µ¤ÈÃÖ´¹¤Ç¤­¤ë¤è¤¦¤Ë¡¢¥½¡¼
+¥¹¥³¡¼¥É¤ò½ñ¤­Â­¤¹¡Ö°Ü¿¢¡×ºî¶È¤¬É¬Í×¤Ç¤¹¡£ºî¼Ô¼«¿È¤Ï Linux, FreeBSD, Mac
+OS X, CygWIN, MinGW Åù¤Ç GCC ¤ò»È¤Ã¤Æ¤¤¤ë¤Î¤Ç°Ü¿¢¤¬¤¹¤ó¤Ç¤ª¤ê¡¢configure
+¤Ç¾ðÊó¤ò¼ý½¸¤¹¤ë¤³¤È¤â¤Ç¤­¤ë¤Î¤Ç¤¹¤¬¡¢UNIX ·Ï¥·¥¹¥Æ¥à¤ÎÂ¾¤Î½èÍý·Ï¤Ë¤Ä¤¤
+¤Æ¤ÏÃÎ¤é¤Ê¤¤¤Î¤Ç¡¢°Ü¿¢¤Ï¤ª¤í¤¬ configure ¤Ç²¿¤ò¤É¤¦Ä´¤Ù¤ì¤ÐÎÉ¤¤¤Î¤«¤â¤ï
+¤«¤é¤Ê¤¤¤«¤é¤Ç¤¹¡£
+  UNIX ·Ï¥·¥¹¥Æ¥à¤Î GCC °Ê³°¤Î½èÍý·Ï¤Ç¤Ï¡¢¼¡¤Î¤è¤¦¤Ê¼ê½ç¤Ç¥³¥ó¥Ñ¥¤¥ë¤ò¿Ê
+¤á¤Æ¤¯¤À¤µ¤¤¡£
 
-2A2A3A1AƒIƒvƒVƒ‡ƒ“‚ðŽw’è‚µ‚Ä configure
-  ‚Ü‚¸A‚¢‚­‚Â‚©‚ÌƒIƒvƒVƒ‡ƒ“‚ðŽw’è‚µ‚Ä configure ‚µ‚Ä‚Ý‚Ü‚·B—á‚¦‚ÎŽŸ‚Ì
-‚æ‚¤‚É‚µ‚Ü‚·B
+2¡¢2¡¢3¡¢1¡¢¥ª¥×¥·¥ç¥ó¤ò»ØÄê¤·¤Æ configure
+  ¤Þ¤º¡¢¤¤¤¯¤Ä¤«¤Î¥ª¥×¥·¥ç¥ó¤ò»ØÄê¤·¤Æ configure ¤·¤Æ¤ß¤Þ¤¹¡£Îã¤¨¤Ð¼¡¤Î
+¤è¤¦¤Ë¤·¤Þ¤¹¡£
 
     ${mcpp-dir}/configure --enable-replace-cpp --bindir=DIR \
             --with-cxx-include-dir=CXXDIR   \
             --enable-SYSTEM-STD-macro=_MACRO=val
 
-  --bindir ‚ÅŽw’è‚·‚é‚Ì‚ÍAƒRƒ“ƒpƒCƒ‰ƒhƒ‰ƒCƒo‚©‚çŒÄ‚Ño‚³‚ê‚éƒvƒŠƒvƒƒZ
-ƒbƒT‚ª’u‚©‚ê‚éƒfƒBƒŒƒNƒgƒŠ‚Å‚·B‚³‚ç‚É C++ ŒÅ—L‚ÌƒCƒ“ƒNƒ‹[ƒhƒfƒBƒŒƒNƒg
-ƒŠ‚ð --with-cxx-include-dir ‚ÅA‚Ü‚½ˆ—ŒnŒÅ—L‚ÌŽ–‘O’è‹`ƒ}ƒNƒ‚ð
---enable-SYSTEM-STD-macro ‚»‚Ì‘¼‚ÌƒIƒvƒVƒ‡ƒ“‚ÅŽw’è‚µ‚Ü‚·B
+  --bindir ¤Ç»ØÄê¤¹¤ë¤Î¤Ï¡¢¥³¥ó¥Ñ¥¤¥é¥É¥é¥¤¥Ð¤«¤é¸Æ¤Ó½Ð¤µ¤ì¤ë¥×¥ê¥×¥í¥»
+¥Ã¥µ¤¬ÃÖ¤«¤ì¤ë¥Ç¥£¥ì¥¯¥È¥ê¤Ç¤¹¡£¤µ¤é¤Ë C++ ¸ÇÍ­¤Î¥¤¥ó¥¯¥ë¡¼¥É¥Ç¥£¥ì¥¯¥È
+¥ê¤ò --with-cxx-include-dir ¤Ç¡¢¤Þ¤¿½èÍý·Ï¸ÇÍ­¤Î»öÁ°ÄêµÁ¥Þ¥¯¥í¤ò
+--enable-SYSTEM-STD-macro ¤½¤ÎÂ¾¤Î¥ª¥×¥·¥ç¥ó¤Ç»ØÄê¤·¤Þ¤¹¡£
 
     ${mcpp-dir}/configure --help
 
-‚Æ‚·‚é‚ÆƒIƒvƒVƒ‡ƒ“‚ª•\Ž¦‚³‚ê‚Ü‚·B
-  ‚»‚µ‚Ä make; make install ‚µ‚ÄA‚³‚ç‚ÉƒRƒ“ƒpƒCƒ‰ƒhƒ‰ƒCƒo‚©‚ç MCPP ‚ªŒÄ
-‚Ño‚³‚ê‚é‚æ‚¤‚É×H‚ð‚µ‚Ü‚·B‚»‚Ì•û–@‚É‚Â‚¢‚Ä‚ÍAGCC ‚Å‚ÌÝ’è•û–@‚ðŽQl
-‚É‚µ‚Ä‚­‚¾‚³‚¢B
+¤È¤¹¤ë¤È¥ª¥×¥·¥ç¥ó¤¬É½¼¨¤µ¤ì¤Þ¤¹¡£
+  ¤½¤·¤Æ make; make install ¤·¤Æ¡¢¤µ¤é¤Ë¥³¥ó¥Ñ¥¤¥é¥É¥é¥¤¥Ð¤«¤é MCPP ¤¬¸Æ
+¤Ó½Ð¤µ¤ì¤ë¤è¤¦¤ËºÙ¹©¤ò¤·¤Þ¤¹¡£¤½¤ÎÊýË¡¤Ë¤Ä¤¤¤Æ¤Ï¡¢GCC ¤Ç¤ÎÀßÄêÊýË¡¤ò»²¹Í
+¤Ë¤·¤Æ¤¯¤À¤µ¤¤¡£
 
-2A2A3A2AuˆÚAvì‹Æ
-  ˆ—Œn‚ÌƒvƒŠƒvƒƒZƒbƒT‚ð MCPP ‚É’u‚«Š·‚¦‚ÄŽg‚¤‚½‚ß‚É‚ÍAƒ\[ƒXƒR[ƒh‚ð
-‘‚«‘«‚·uˆÚAvì‹Æ‚ª•K—v‚Å‚·Bˆ—ŒnŒÅ—L‚ÌŽÀsŽžƒIƒvƒVƒ‡ƒ“‚â #pragma
-“™‚ÌŽÀ‘•‚Å‚·B’†‚Å‚à‚µ‚Î‚µ‚ÎŽg‚í‚ê‚éŽÀsŽžƒIƒvƒVƒ‡ƒ“‚Å MCPP ‚ÆˆÙ‚È‚é‚à‚Ì
-‚ª‚ ‚ê‚ÎAÅ’áŒÀA‚»‚ÌŽÀ‘•‚ª•K—v‚Å‚·B‚»‚Ì‚½‚ß‚É‚ÍAconfiged.H ‚Å‚»‚ÌƒR
-ƒ“ƒpƒCƒ‰‚ð•\‚·ƒ}ƒNƒ‚ð’è‹`‚µ‚½ã‚ÅAsystem.c ‚ÉƒR[ƒh‚ð‘‚«‰Á‚¦‚Ü‚·
-imcpp-porting.html ‚Ì‚±‚Æ‚É 4.2 ‚ðŽQÆjB
+2¡¢2¡¢3¡¢2¡¢¡Ö°Ü¿¢¡×ºî¶È
+  ½èÍý·Ï¤Î¥×¥ê¥×¥í¥»¥Ã¥µ¤ò MCPP ¤ËÃÖ¤­´¹¤¨¤Æ»È¤¦¤¿¤á¤Ë¤Ï¡¢¥½¡¼¥¹¥³¡¼¥É¤ò
+½ñ¤­Â­¤¹¡Ö°Ü¿¢¡×ºî¶È¤¬É¬Í×¤Ç¤¹¡£½èÍý·Ï¸ÇÍ­¤Î¼Â¹Ô»þ¥ª¥×¥·¥ç¥ó¤ä #pragma
+Åù¤Î¼ÂÁõ¤Ç¤¹¡£Ãæ¤Ç¤â¤·¤Ð¤·¤Ð»È¤ï¤ì¤ë¼Â¹Ô»þ¥ª¥×¥·¥ç¥ó¤Ç MCPP ¤È°Û¤Ê¤ë¤â¤Î
+¤¬¤¢¤ì¤Ð¡¢ºÇÄã¸Â¡¢¤½¤Î¼ÂÁõ¤¬É¬Í×¤Ç¤¹¡£¤½¤Î¤¿¤á¤Ë¤Ï¡¢configed.H ¤Ç¤½¤Î¥³
+¥ó¥Ñ¥¤¥é¤òÉ½¤¹¥Þ¥¯¥í¤òÄêµÁ¤·¤¿¾å¤Ç¡¢system.c ¤Ë¥³¡¼¥É¤ò½ñ¤­²Ã¤¨¤Þ¤¹
+¡Êmcpp-porting.html ¤Î¤³¤È¤Ë 4.2 ¤ò»²¾È¡Ë¡£
 
-2A2A3A3AƒIƒvƒVƒ‡ƒ“‚ð’Ç‰Á‚µ‚Ä configure ‚µ‚È‚¨‚·
-  ƒ\[ƒX‚ÌˆÚA‚ª‚Å‚«‚½‚çA--with-compiler-name=COMPILER ‚Æ‚¢‚¤ƒIƒvƒVƒ‡ƒ“
-‚ð’Ç‰Á‚µ‚Ä configure ‚µ’¼‚µ‚Ü‚·BCOMPILER ‚Í configed.H ‚Å’è‹`‚µ‚½‚»‚ÌƒR
-ƒ“ƒpƒCƒ‰‚ð•\‚·ƒ}ƒNƒ‚Å‚·B
-  make; make install ‚ª‚Å‚«‚½‚çA‚³‚ç‚É make clean; make ‚Æ‚·‚é‚ÆAMCPP
-‚ðŽg‚Á‚Ä MCPP ‚ÌƒŠƒRƒ“ƒpƒCƒ‹‚ªs‚í‚ê‚Ü‚·B‚±‚ê‚ª’Ê‚ê‚ÎAÅ’áŒÀ‚ÌˆÚA‚Í‚Å
-‚«‚Ä‚¢‚Ü‚·B
+2¡¢2¡¢3¡¢3¡¢¥ª¥×¥·¥ç¥ó¤òÄÉ²Ã¤·¤Æ configure ¤·¤Ê¤ª¤¹
+  ¥½¡¼¥¹¤Î°Ü¿¢¤¬¤Ç¤­¤¿¤é¡¢--with-compiler-name=COMPILER ¤È¤¤¤¦¥ª¥×¥·¥ç¥ó
+¤òÄÉ²Ã¤·¤Æ configure ¤·Ä¾¤·¤Þ¤¹¡£COMPILER ¤Ï configed.H ¤ÇÄêµÁ¤·¤¿¤½¤Î¥³
+¥ó¥Ñ¥¤¥é¤òÉ½¤¹¥Þ¥¯¥í¤Ç¤¹¡£
+  make; make install ¤¬¤Ç¤­¤¿¤é¡¢¤µ¤é¤Ë make clean; make ¤È¤¹¤ë¤È¡¢MCPP
+¤ò»È¤Ã¤Æ MCPP ¤Î¥ê¥³¥ó¥Ñ¥¤¥ë¤¬¹Ô¤ï¤ì¤Þ¤¹¡£¤³¤ì¤¬ÄÌ¤ì¤Ð¡¢ºÇÄã¸Â¤Î°Ü¿¢¤Ï¤Ç
+¤­¤Æ¤¤¤Þ¤¹¡£
 
-2A2A4Aconfigure ‚Ì§–ñ
+2¡¢2¡¢4¡¢configure ¤ÎÀ©Ìó
 
-  compiler-specific-build ‚Ì MCPP ‚ÌƒRƒ“ƒpƒCƒ‹‚Å‚Íƒ^[ƒQƒbƒgˆ—ŒniMCPP
-‚ðƒvƒŠƒvƒƒZƒbƒT‚Æ‚µ‚ÄŽg‚¤—\’è‚Ìˆ—Œnj‚ÌŽd—l‚ðÚ‚µ‚­’m‚é•K—v‚ª‚ ‚è‚Ü‚·B
-“¯Žž‚ÉAƒRƒ“ƒpƒCƒ‹‚·‚éˆ—Œn‚É‚Â‚¢‚Ä‚à•Ê‚Ì‘¤–Ê‚ÌŽd—l‚ð’m‚é•K—v‚ª‚ ‚è‚Ü‚·B
-MCPP ‚Ìƒ\[ƒX‚Í‚±‚Ì—¼ŽÒ‚Ìˆ—Œn‚ªˆá‚Á‚Ä‚¢‚Ä‚à‚©‚Ü‚í‚È‚¢‚æ‚¤‚ÉA—¼ŽÒ‚ÌÝ
-’è‚ð•ª‚¯‚Äƒwƒbƒ_ƒtƒ@ƒCƒ‹ (configed.H) ‚ð‘‚¢‚Ä‚ ‚è‚Ü‚·B‚µ‚©‚µA
-configure ‚Å‚Í‚±‚Ì—¼ŽÒ‚ð“¯Žž‚É’²‚×‚é‚±‚Æ‚ª‚Å‚«‚Ü‚¹‚ñB‚»‚Ì‚½‚ßAƒ^[ƒQƒb
-ƒg‚Æ‚·‚éˆ—Œn‚ÆƒRƒ“ƒpƒCƒ‹‚·‚éˆ—Œn‚Í“¯‚¶‚Å‚ ‚é‚Æ‚¢‚¤‘O’ñ‚Å’²¸‚ð‚µ‚Ü‚·B
-  ‚à‚µ‚±‚Ì—¼ŽÒ‚Ìˆ—Œn‚ªˆá‚¤ê‡‚ÍAconfiged.H ‚Ì Part 2 ‚ð•ÒW‚·‚é‚±‚Æ
-‚ª•K—v‚Å‚·B
-  MCPP ‚Ì configure ‚Í“¯—l‚ÉƒNƒƒXƒRƒ“ƒpƒCƒ‹‚É‚à‘Î‰ž‚µ‚Ä‚¢‚Ü‚¹‚ñB‚Ü‚½A
-ƒNƒƒXƒRƒ“ƒpƒCƒ‹‚Å‚ÍŽÀs‚Å‚«‚È‚¢ƒeƒXƒg‚à‚¢‚­‚Â‚©ŠÜ‚Ü‚ê‚Ä‚¢‚Ü‚·BƒNƒƒXƒR
-ƒ“ƒpƒCƒ‹‚Å‚Í‚»‚Ìê‡‚ÍƒfƒtƒHƒ‹ƒg’l‚ðƒZƒbƒg‚µ‚Ü‚·‚ªA‚¤‚Ü‚­‚ä‚©‚È‚¢‚©‚à‚µ
-‚ê‚Ü‚¹‚ñB
+  compiler-specific-build ¤Î MCPP ¤Î¥³¥ó¥Ñ¥¤¥ë¤Ç¤Ï¥¿¡¼¥²¥Ã¥È½èÍý·Ï¡ÊMCPP
+¤ò¥×¥ê¥×¥í¥»¥Ã¥µ¤È¤·¤Æ»È¤¦Í½Äê¤Î½èÍý·Ï¡Ë¤Î»ÅÍÍ¤ò¾Ü¤·¤¯ÃÎ¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
+Æ±»þ¤Ë¡¢¥³¥ó¥Ñ¥¤¥ë¤¹¤ë½èÍý·Ï¤Ë¤Ä¤¤¤Æ¤âÊÌ¤ÎÂ¦ÌÌ¤Î»ÅÍÍ¤òÃÎ¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£
+MCPP ¤Î¥½¡¼¥¹¤Ï¤³¤ÎÎ¾¼Ô¤Î½èÍý·Ï¤¬°ã¤Ã¤Æ¤¤¤Æ¤â¤«¤Þ¤ï¤Ê¤¤¤è¤¦¤Ë¡¢Î¾¼Ô¤ÎÀß
+Äê¤òÊ¬¤±¤Æ¥Ø¥Ã¥À¥Õ¥¡¥¤¥ë (configed.H) ¤ò½ñ¤¤¤Æ¤¢¤ê¤Þ¤¹¡£¤·¤«¤·¡¢
+configure ¤Ç¤Ï¤³¤ÎÎ¾¼Ô¤òÆ±»þ¤ËÄ´¤Ù¤ë¤³¤È¤¬¤Ç¤­¤Þ¤»¤ó¡£¤½¤Î¤¿¤á¡¢¥¿¡¼¥²¥Ã
+¥È¤È¤¹¤ë½èÍý·Ï¤È¥³¥ó¥Ñ¥¤¥ë¤¹¤ë½èÍý·Ï¤ÏÆ±¤¸¤Ç¤¢¤ë¤È¤¤¤¦Á°Äó¤ÇÄ´ºº¤ò¤·¤Þ¤¹¡£
+  ¤â¤·¤³¤ÎÎ¾¼Ô¤Î½èÍý·Ï¤¬°ã¤¦¾ì¹ç¤Ï¡¢configed.H ¤Î Part 2 ¤òÊÔ½¸¤¹¤ë¤³¤È
+¤¬É¬Í×¤Ç¤¹¡£
+  MCPP ¤Î configure ¤ÏÆ±ÍÍ¤Ë¥¯¥í¥¹¥³¥ó¥Ñ¥¤¥ë¤Ë¤âÂÐ±þ¤·¤Æ¤¤¤Þ¤»¤ó¡£¤Þ¤¿¡¢
+¥¯¥í¥¹¥³¥ó¥Ñ¥¤¥ë¤Ç¤Ï¼Â¹Ô¤Ç¤­¤Ê¤¤¥Æ¥¹¥È¤â¤¤¤¯¤Ä¤«´Þ¤Þ¤ì¤Æ¤¤¤Þ¤¹¡£¥¯¥í¥¹¥³
+¥ó¥Ñ¥¤¥ë¤Ç¤Ï¤½¤Î¾ì¹ç¤Ï¥Ç¥Õ¥©¥ë¥ÈÃÍ¤ò¥»¥Ã¥È¤·¤Þ¤¹¤¬¡¢¤¦¤Þ¤¯¤æ¤«¤Ê¤¤¤«¤â¤·
+¤ì¤Þ¤»¤ó¡£
 
-3AWindows ã‚Ìˆ—Œn‚Å‚Ì make
+3¡¢Windows ¾å¤Î½èÍý·Ï¤Ç¤Î make
 
-  Windows ã‚Ìˆ—Œn‚Í CygWIN, MinGW ˆÈŠO‚Í configure ‚Ì‘ÎÛ‚É‚È‚ç‚È‚¢‚Ì
-‚ÅAƒ\[ƒX‚ðC³‚µ‚Ä make ‚·‚é‚±‚Æ‚ª•K—v‚Å‚·B‚·‚Å‚ÉˆÚA‚¸‚Ý‚Ìˆ—Œn‚É‚Â
-‚¢‚Ä‚Í·•ªƒtƒ@ƒCƒ‹‚ð—pˆÓ‚µ‚Ä‚ ‚é‚Ì‚ÅA‚±‚ê‚ðŽg‚Á‚Äƒpƒbƒ`‚ð‚ ‚Ä‚é‚±‚Æ‚ª‚Å
-‚«‚Ü‚·B·•ªƒtƒ@ƒCƒ‹‚ðŽg‚¤ê‡‚ÌŽè‡‚ðˆÈ‰º‚Éà–¾‚µ‚Ü‚·B
-  ‚Ü‚½Aconfigure ‚Ì‘ÎÛ‚É‚È‚éˆ—Œn‚Å‚àAƒwƒbƒ_ƒtƒ@ƒCƒ‹‚â makefile ‚ð’¼
-ÚA•ÒW‚·‚é‚±‚Æ‚Å‚«‚ß‚Ì‚±‚Ü‚©‚¢§Œä‚ð‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+  Windows ¾å¤Î½èÍý·Ï¤Ï CygWIN, MinGW °Ê³°¤Ï configure ¤ÎÂÐ¾Ý¤Ë¤Ê¤é¤Ê¤¤¤Î
+¤Ç¡¢¥½¡¼¥¹¤ò½¤Àµ¤·¤Æ make ¤¹¤ë¤³¤È¤¬É¬Í×¤Ç¤¹¡£¤¹¤Ç¤Ë°Ü¿¢¤º¤ß¤Î½èÍý·Ï¤Ë¤Ä
+¤¤¤Æ¤Ïº¹Ê¬¥Õ¥¡¥¤¥ë¤òÍÑ°Õ¤·¤Æ¤¢¤ë¤Î¤Ç¡¢¤³¤ì¤ò»È¤Ã¤Æ¥Ñ¥Ã¥Á¤ò¤¢¤Æ¤ë¤³¤È¤¬¤Ç
+¤­¤Þ¤¹¡£º¹Ê¬¥Õ¥¡¥¤¥ë¤ò»È¤¦¾ì¹ç¤Î¼ê½ç¤ò°Ê²¼¤ËÀâÌÀ¤·¤Þ¤¹¡£
+  ¤Þ¤¿¡¢configure ¤ÎÂÐ¾Ý¤Ë¤Ê¤ë½èÍý·Ï¤Ç¤â¡¢¥Ø¥Ã¥À¥Õ¥¡¥¤¥ë¤ä makefile ¤òÄ¾
+ÀÜ¡¢ÊÔ½¸¤¹¤ë¤³¤È¤Ç¤­¤á¤Î¤³¤Þ¤«¤¤À©¸æ¤ò¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£
 
-3A1Aƒpƒbƒ`‚ð‚ ‚Ä‚é
-  noconfig ‚Æ‚¢‚¤ƒfƒBƒŒƒNƒgƒŠ‚ÉŠeŽíˆ—Œn—p‚Ì·•ªƒtƒ@ƒCƒ‹‚Æ makefile ‚ª
-—pˆÓ‚³‚ê‚Ä‚¢‚Ü‚·BMCPP ‚Ìƒ\[ƒX‚ÍƒfƒtƒHƒ‹ƒg‚Å‚Í FreeBSD / GCC 3.4 —p‚ÌÝ
-’è‚É‚È‚Á‚Ä‚¢‚Ü‚·B·•ªƒtƒ@ƒCƒ‹‚Í‚±‚ê‚ð•Ê‚Ìˆ—Œn—p‚ÉC³‚·‚é‚à‚Ì‚Å‚·B
-Makefile ‚ÍŠeˆ—Œn‚É•t‘®‚·‚é make ‚ðŽg‚¤‚æ‚¤‚É‘‚©‚ê‚Ä‚¢‚Ü‚·B
-  src ƒfƒBƒŒƒNƒgƒŠ‚É“ü‚Á‚ÄŽŸ‚Ì‚æ‚¤‚É‚µ‚Ü‚·BˆÈ‰º‚Ìì‹Æ‚Í‚·‚×‚Ä src ƒfƒB
-ƒŒƒNƒgƒŠ‚Ås‚¢‚Ü‚·B
+3¡¢1¡¢¥Ñ¥Ã¥Á¤ò¤¢¤Æ¤ë
+  noconfig ¤È¤¤¤¦¥Ç¥£¥ì¥¯¥È¥ê¤Ë³Æ¼ï½èÍý·ÏÍÑ¤Îº¹Ê¬¥Õ¥¡¥¤¥ë¤È makefile ¤¬
+ÍÑ°Õ¤µ¤ì¤Æ¤¤¤Þ¤¹¡£MCPP ¤Î¥½¡¼¥¹¤Ï¥Ç¥Õ¥©¥ë¥È¤Ç¤Ï FreeBSD / GCC 3.4 ÍÑ¤ÎÀß
+Äê¤Ë¤Ê¤Ã¤Æ¤¤¤Þ¤¹¡£º¹Ê¬¥Õ¥¡¥¤¥ë¤Ï¤³¤ì¤òÊÌ¤Î½èÍý·ÏÍÑ¤Ë½¤Àµ¤¹¤ë¤â¤Î¤Ç¤¹¡£
+Makefile ¤Ï³Æ½èÍý·Ï¤ËÉÕÂ°¤¹¤ë make ¤ò»È¤¦¤è¤¦¤Ë½ñ¤«¤ì¤Æ¤¤¤Þ¤¹¡£
+  src ¥Ç¥£¥ì¥¯¥È¥ê¤ËÆþ¤Ã¤Æ¼¡¤Î¤è¤¦¤Ë¤·¤Þ¤¹¡£°Ê²¼¤Îºî¶È¤Ï¤¹¤Ù¤Æ src ¥Ç¥£
+¥ì¥¯¥È¥ê¤Ç¹Ô¤¤¤Þ¤¹¡£
 
     patch -c < ..\noconfig\which-compiler.dif
     copy ..\noconfig\which-compiler.mak Makefile
 
-  patch ‚Í UNIX ŒnƒVƒXƒeƒ€‚ÌƒRƒ}ƒ“ƒh‚Å‚·‚ªAWindows ‚É‚àˆÚA‚³‚ê‚Ä‚¢‚é‚Ì
-‚ÅA‚»‚ê‚ðŽg‚¢‚Ü‚·B‚à‚¿‚ë‚ñA·•ªƒtƒ@ƒCƒ‹‚ðŒ©‚ÄAƒGƒfƒBƒ^‚ÅC³‚µ‚Ä‚à‚©
-‚Ü‚¢‚Ü‚¹‚ñB
+  patch ¤Ï UNIX ·Ï¥·¥¹¥Æ¥à¤Î¥³¥Þ¥ó¥É¤Ç¤¹¤¬¡¢Windows ¤Ë¤â°Ü¿¢¤µ¤ì¤Æ¤¤¤ë¤Î
+¤Ç¡¢¤½¤ì¤ò»È¤¤¤Þ¤¹¡£¤â¤Á¤í¤ó¡¢º¹Ê¬¥Õ¥¡¥¤¥ë¤ò¸«¤Æ¡¢¥¨¥Ç¥£¥¿¤Ç½¤Àµ¤·¤Æ¤â¤«
+¤Þ¤¤¤Þ¤»¤ó¡£
 
-3A2A•K—v‚È‚ç‚³‚ç‚É noconfig.H, Makefile ‚ðC³‚·‚é
-  ·•ªƒtƒ@ƒCƒ‹‚Å‚ÍŠeŽíƒfƒBƒŒƒNƒgƒŠ‚ÌÝ’è‚ª•MŽÒ‚ÌŠÂ‹«‚ðŒ³‚É‚µ‚Ä‚¢‚é‚Ì‚ÅA
-Ž©•ª‚ÌŠÂ‹«‚É‡‚í‚¹‚ÄC³‚µ‚Ü‚·B
-  Žg‚¤ˆ—Œn‚ª·•ªƒtƒ@ƒCƒ‹‚Ì‚à‚Ì‚Æ‚Íƒo[ƒWƒ‡ƒ“‚ªˆá‚Á‚Ä‚¢‚éê‡‚ÍAƒwƒbƒ_
-ƒtƒ@ƒCƒ‹ noconfig.H ‚É‚³‚ç‚ÉC³‚ð‰Á‚¦‚Ü‚·inoconfig.H ‚»‚Ì‚à‚Ì‚¨‚æ‚Ñ
-mcpp-porting.html 3.1 ‚ðŽQÆjB’ÊíŽg‚¤ multi-byte character ‚ª“ú–{Œê‚Å
-‚Í‚È‚¢ê‡‚à“¯—l‚ÉAnocongig.H ‚Ì MBCHAR ‚Æ‚¢‚¤ƒ}ƒNƒ‚Ì’è‹`‚ð‘‚«Š·‚¦‚Ü
-‚·B
-  ‚Ü‚½AŽÀsƒvƒƒOƒ‰ƒ€‚ðƒCƒ“ƒXƒg[ƒ‹‚·‚éƒfƒBƒŒƒNƒgƒŠ‚ð Makefile ‚Ì
-BINDIR ‚Æ‚¢‚¤•Ï”‚É‘‚«‚Ü‚·BVisual C —p‚Ì Makefile ‚Å‚ÍŽŸ‚Ìs‚Ì # ‚ðí
-œ‚µ‚ÄAinstall ƒ^[ƒQƒbƒg‚ð—LŒø‚É‚µ‚Ä‚­‚¾‚³‚¢B
+3¡¢2¡¢É¬Í×¤Ê¤é¤µ¤é¤Ë noconfig.H, Makefile ¤ò½¤Àµ¤¹¤ë
+  º¹Ê¬¥Õ¥¡¥¤¥ë¤Ç¤Ï³Æ¼ï¥Ç¥£¥ì¥¯¥È¥ê¤ÎÀßÄê¤¬É®¼Ô¤Î´Ä¶­¤ò¸µ¤Ë¤·¤Æ¤¤¤ë¤Î¤Ç¡¢
+¼«Ê¬¤Î´Ä¶­¤Ë¹ç¤ï¤»¤Æ½¤Àµ¤·¤Þ¤¹¡£
+  »È¤¦½èÍý·Ï¤¬º¹Ê¬¥Õ¥¡¥¤¥ë¤Î¤â¤Î¤È¤Ï¥Ð¡¼¥¸¥ç¥ó¤¬°ã¤Ã¤Æ¤¤¤ë¾ì¹ç¤Ï¡¢¥Ø¥Ã¥À
+¥Õ¥¡¥¤¥ë noconfig.H ¤Ë¤µ¤é¤Ë½¤Àµ¤ò²Ã¤¨¤Þ¤¹¡Ênoconfig.H ¤½¤Î¤â¤Î¤ª¤è¤Ó
+mcpp-porting.html 3.1 ¤ò»²¾È¡Ë¡£ÄÌ¾ï»È¤¦ multi-byte character ¤¬ÆüËÜ¸ì¤Ç
+¤Ï¤Ê¤¤¾ì¹ç¤âÆ±ÍÍ¤Ë¡¢nocongig.H ¤Î MBCHAR ¤È¤¤¤¦¥Þ¥¯¥í¤ÎÄêµÁ¤ò½ñ¤­´¹¤¨¤Þ
+¤¹¡£
+  ¤Þ¤¿¡¢¼Â¹Ô¥×¥í¥°¥é¥à¤ò¥¤¥ó¥¹¥È¡¼¥ë¤¹¤ë¥Ç¥£¥ì¥¯¥È¥ê¤ò Makefile ¤Î
+BINDIR ¤È¤¤¤¦ÊÑ¿ô¤Ë½ñ¤­¤Þ¤¹¡£Visual C ÍÑ¤Î Makefile ¤Ç¤Ï¼¡¤Î¹Ô¤Î # ¤òºï
+½ü¤·¤Æ¡¢install ¥¿¡¼¥²¥Ã¥È¤òÍ­¸ú¤Ë¤·¤Æ¤¯¤À¤µ¤¤¡£
 
     #install :
 
-3A3Acompiler-independent-build
-  ‚±‚ê‚Å  make ‚µ‚Ä make install ‚·‚é‚ÆAcompiler-independent ”Å‚ÌŽÀsƒv
-ƒƒOƒ‰ƒ€‚ª¶¬‚³‚ê‚ÄƒCƒ“ƒXƒg[ƒ‹‚³‚ê‚Ü‚·iVisual C++ ‚Å‚Í make ‚Å‚Í‚È‚­
-nmake ‚ðŽg‚¤jB
+3¡¢3¡¢compiler-independent-build
+  ¤³¤ì¤Ç  make ¤·¤Æ make install ¤¹¤ë¤È¡¢compiler-independent ÈÇ¤Î¼Â¹Ô¥×
+¥í¥°¥é¥à¤¬À¸À®¤µ¤ì¤Æ¥¤¥ó¥¹¥È¡¼¥ë¤µ¤ì¤Þ¤¹¡ÊVisual C++ ¤Ç¤Ï make ¤Ç¤Ï¤Ê¤¯
+nmake ¤ò»È¤¦¡Ë¡£
 
-3A4Acompiler-specific-build
-  compiler-specific ”Å‚ð¶¬‚·‚é‚½‚ß‚É‚ÍA‚Ü‚¸ Makefile ‚Ì BINDIR ‚ð‚»‚Ì
-ˆ—Œn‚ÌŽÀsƒvƒƒOƒ‰ƒ€‚Ì’u‚©‚ê‚Ä‚¢‚éƒfƒBƒŒƒNƒgƒŠ‚É‘‚«Š·‚¦‚Ü‚·B‚»‚µ‚ÄA
-noconfig.H ‚ÌŽŸ‚Ìs‚Ì 'INDEPENDENT' ‚ð‚»‚ÌƒRƒ“ƒpƒCƒ‰‚ð•\‚·ƒ}ƒNƒ‚É‘‚«Š·
-‚¦‚ÄA'make' ‚µ 'make install' ‚µ‚Ü‚·B
+3¡¢4¡¢compiler-specific-build
+  compiler-specific ÈÇ¤òÀ¸À®¤¹¤ë¤¿¤á¤Ë¤Ï¡¢¤Þ¤º Makefile ¤Î BINDIR ¤ò¤½¤Î
+½èÍý·Ï¤Î¼Â¹Ô¥×¥í¥°¥é¥à¤ÎÃÖ¤«¤ì¤Æ¤¤¤ë¥Ç¥£¥ì¥¯¥È¥ê¤Ë½ñ¤­´¹¤¨¤Þ¤¹¡£¤½¤·¤Æ¡¢
+noconfig.H ¤Î¼¡¤Î¹Ô¤Î 'INDEPENDENT' ¤ò¤½¤Î¥³¥ó¥Ñ¥¤¥é¤òÉ½¤¹¥Þ¥¯¥í¤Ë½ñ¤­´¹
+¤¨¤Æ¡¢'make' ¤· 'make install' ¤·¤Þ¤¹¡£
 
     #define COMPILER    INDEPENDENT
 
-'COMPILER' ‚Í make ‚ÌƒIƒvƒVƒ‡ƒ“‚Åã‘‚«‚·‚é‚±‚Æ‚à‚Å‚«‚é‚Ì‚ÅAnoconfig.H
-‚Í•K‚¸‚µ‚à‘‚«Š·‚¦‚é•K—v‚Í‚ ‚è‚Ü‚¹‚ñB—á‚¦‚ÎAVisual C ‚Å‚Í 'nmake
-COMPILER=MSC' ‚Æ‚µ‚Ä 'nmake COMPILER=MSC install' ‚µ‚Ü‚·BBorland C ‚Å‚Í
-'make -DCOMPILER=BORLANDC' ‚Æ‚µ‚Ä 'make -DCOMPILER=BORLANDC install' ‚µ
-‚Ü‚·B
+'COMPILER' ¤Ï make ¤Î¥ª¥×¥·¥ç¥ó¤Ç¾å½ñ¤­¤¹¤ë¤³¤È¤â¤Ç¤­¤ë¤Î¤Ç¡¢noconfig.H
+¤ÏÉ¬¤º¤·¤â½ñ¤­´¹¤¨¤ëÉ¬Í×¤Ï¤¢¤ê¤Þ¤»¤ó¡£Îã¤¨¤Ð¡¢Visual C ¤Ç¤Ï 'nmake
+COMPILER=MSC' ¤È¤·¤Æ 'nmake COMPILER=MSC install' ¤·¤Þ¤¹¡£Borland C ¤Ç¤Ï
+'make -DCOMPILER=BORLANDC' ¤È¤·¤Æ 'make -DCOMPILER=BORLANDC install' ¤·
+¤Þ¤¹¡£
 
-  ‚à‚µAƒ^[ƒQƒbƒgˆ—Œn‚ÆƒRƒ“ƒpƒCƒ‹‚·‚éˆ—Œn‚Æ‚ªˆá‚Á‚Ä‚¢‚éê‡‚ÍA
-noconfig.H / Part 1 ‚ðƒ^[ƒQƒbƒgˆ—Œn‚ÌŽd—l‚É‡‚í‚¹APart 2 ‚ðƒRƒ“ƒpƒC
-ƒ‹‚·‚éˆ—Œn‚ÌŽd—l‚É‡‚í‚¹‚Ü‚·BMakefile ‚ÍƒRƒ“ƒpƒCƒ‹‚·‚éˆ—Œn—p‚Ì‚à‚Ì
-‚ðŽg‚¢AƒCƒ“ƒXƒg[ƒ‹‚·‚éƒfƒBƒŒƒNƒgƒŠ‚ðƒ^[ƒQƒbƒgˆ—Œn—p‚É•ÏX‚µ‚Ü‚·B
+  ¤â¤·¡¢¥¿¡¼¥²¥Ã¥È½èÍý·Ï¤È¥³¥ó¥Ñ¥¤¥ë¤¹¤ë½èÍý·Ï¤È¤¬°ã¤Ã¤Æ¤¤¤ë¾ì¹ç¤Ï¡¢
+noconfig.H / Part 1 ¤ò¥¿¡¼¥²¥Ã¥È½èÍý·Ï¤Î»ÅÍÍ¤Ë¹ç¤ï¤»¡¢Part 2 ¤ò¥³¥ó¥Ñ¥¤
+¥ë¤¹¤ë½èÍý·Ï¤Î»ÅÍÍ¤Ë¹ç¤ï¤»¤Þ¤¹¡£Makefile ¤Ï¥³¥ó¥Ñ¥¤¥ë¤¹¤ë½èÍý·ÏÍÑ¤Î¤â¤Î
+¤ò»È¤¤¡¢¥¤¥ó¥¹¥È¡¼¥ë¤¹¤ë¥Ç¥£¥ì¥¯¥È¥ê¤ò¥¿¡¼¥²¥Ã¥È½èÍý·ÏÍÑ¤ËÊÑ¹¹¤·¤Þ¤¹¡£
 
-  ‚µ‚©‚µAWindows ‚Ìˆ—Œn‚Ì‘½‚­‚ÍƒvƒŠƒvƒƒZƒbƒT‚ªƒRƒ“ƒpƒCƒ‰–{‘Ì‚Æˆê‘Ì‚É
-‚È‚Á‚Ä‚¢‚é‚Ì‚ÅAMCPP ‚ðƒCƒ“ƒXƒg[ƒ‹‚µ‚Ä‚àƒvƒŠƒvƒƒZƒbƒT‚ð’uŠ·‚·‚é‚±‚Æ‚ª
-‚Å‚«‚Ü‚¹‚ñB‚»‚¤‚µ‚½ˆ—Œn‚Å MCPP ‚ðŽg‚¤‚½‚ß‚É‚ÍA‚»‚Ì‚æ‚¤‚É makefile ‚ð
-‘‚­•K—v‚ª‚ ‚è‚Ü‚·Bnoconfig ƒfƒBƒŒƒNƒgƒŠ‚ÌŠe makefile ‚É‚ÍAMCPP ‚ðŽg‚Á
-‚Ä MCPP ‚ðƒŠƒRƒ“ƒpƒCƒ‹‚·‚éÝ’è‚ª‘‚¢‚Ä‚ ‚é‚Ì‚ÅA‚»‚ê‚ðŽQl‚É‚µ‚Ä‚­‚¾‚³‚¢B
-  Visual C++ ‚Å‚Í‚»‚¤‚µ‚½ makefile ‚ðŽg‚Á‚ÄAIDE ‚ÅuƒƒCƒNƒtƒ@ƒCƒ‹ƒvƒ
-ƒWƒFƒNƒgv‚ðì¬‚·‚é‚ÆAIDE ‚Ìƒ\[ƒXƒŒƒxƒ‹ƒfƒoƒbƒO“™‚Ì‹@”\‚ª‚·‚×‚ÄŽg‚¦‚Ü
-‚·imcpp-manual.html 2.10 ŽQÆjB
+  ¤·¤«¤·¡¢Windows ¤Î½èÍý·Ï¤ÎÂ¿¤¯¤Ï¥×¥ê¥×¥í¥»¥Ã¥µ¤¬¥³¥ó¥Ñ¥¤¥éËÜÂÎ¤È°ìÂÎ¤Ë
+¤Ê¤Ã¤Æ¤¤¤ë¤Î¤Ç¡¢MCPP ¤ò¥¤¥ó¥¹¥È¡¼¥ë¤·¤Æ¤â¥×¥ê¥×¥í¥»¥Ã¥µ¤òÃÖ´¹¤¹¤ë¤³¤È¤¬
+¤Ç¤­¤Þ¤»¤ó¡£¤½¤¦¤·¤¿½èÍý·Ï¤Ç MCPP ¤ò»È¤¦¤¿¤á¤Ë¤Ï¡¢¤½¤Î¤è¤¦¤Ë makefile ¤ò
+½ñ¤¯É¬Í×¤¬¤¢¤ê¤Þ¤¹¡£noconfig ¥Ç¥£¥ì¥¯¥È¥ê¤Î³Æ makefile ¤Ë¤Ï¡¢MCPP ¤ò»È¤Ã
+¤Æ MCPP ¤ò¥ê¥³¥ó¥Ñ¥¤¥ë¤¹¤ëÀßÄê¤¬½ñ¤¤¤Æ¤¢¤ë¤Î¤Ç¡¢¤½¤ì¤ò»²¹Í¤Ë¤·¤Æ¤¯¤À¤µ¤¤¡£
+  Visual C++ ¤Ç¤Ï¤½¤¦¤·¤¿ makefile ¤ò»È¤Ã¤Æ¡¢IDE ¤Ç¡Ö¥á¥¤¥¯¥Õ¥¡¥¤¥ë¥×¥í
+¥¸¥§¥¯¥È¡×¤òºîÀ®¤¹¤ë¤È¡¢IDE ¤Î¥½¡¼¥¹¥ì¥Ù¥ë¥Ç¥Ð¥Ã¥°Åù¤Îµ¡Ç½¤¬¤¹¤Ù¤Æ»È¤¨¤Þ
+¤¹¡Êmcpp-manual.html 2.10 »²¾È¡Ë¡£
 
-3A5AƒeƒXƒg
-  Windows ‚Å‚Í MinGW / GCC-specific-build ‚¨‚æ‚Ñ CygWIN ˆÈŠO‚Å‚Í include
-directory ‚ÍÝ’è‚³‚ê‚È‚¢‚Ì‚ÅAINCLUDE ‚Æ‚¢‚¤ŠÂ‹«•Ï”‚ÅÝ’è‚µ‚Ü‚·i•K—v‚È
-‚ç CPLUS_INCLUDE ‚àjB
-  Windows ‚Å‚Í GCC / testsuite ‚ÍŽg‚¦‚È‚¢‚Ì‚ÅAtest-t, test-c, test-l ƒf
-ƒBƒŒƒNƒgƒŠ‚É‚ ‚éƒeƒXƒg—pƒTƒ“ƒvƒ‹‚ð’¼ÚAƒvƒŠƒvƒƒZƒX‚µ‚ÄŠm‚©‚ß‚Ü‚·Btool
-/cpp_test.c ‚ðŽg‚¤‚ÆAˆê•”‚ÌƒeƒXƒg‚¾‚¯‚Å‚·‚ªAŽ©“®“I‚ÉŽÀs‚Å‚«‚Ü‚·icpp-
-test.html 3.2.2 ŽQÆjB
-  compiler-specific-build ‚Å‚ÍAMCPP Ž©g‚ðƒvƒŠƒvƒƒZƒbƒT‚Æ‚µ‚ÄŽg‚Á‚ÄA
-MCPP ‚Ì "pre-preprocess" ‚Æ‚¢‚¤‹@”\‚ðŽg‚Á‚Ä MCPP ‚ðƒŠƒRƒ“ƒpƒCƒ‹‚µ‚Ä‚Ý‚é
-‚ÆA‚»‚Ìˆ—Œn‚Å‚Æ‚è‚ ‚¦‚¸Žg‚¦‚é‚æ‚¤‚É‚È‚Á‚½‚©‚Ç‚¤‚©‚ðŠm‚©‚ß‚é‚±‚Æ‚ª‚Å‚«
-‚Ü‚·imcpp-porting.html 3.7 ŽQÆjB
+3¡¢5¡¢¥Æ¥¹¥È
+  Windows ¤Ç¤Ï MinGW / GCC-specific-build ¤ª¤è¤Ó CygWIN °Ê³°¤Ç¤Ï include
+directory ¤ÏÀßÄê¤µ¤ì¤Ê¤¤¤Î¤Ç¡¢INCLUDE ¤È¤¤¤¦´Ä¶­ÊÑ¿ô¤ÇÀßÄê¤·¤Þ¤¹¡ÊÉ¬Í×¤Ê
+¤é CPLUS_INCLUDE ¤â¡Ë¡£
+  Windows ¤Ç¤Ï GCC / testsuite ¤Ï»È¤¨¤Ê¤¤¤Î¤Ç¡¢test-t, test-c, test-l ¥Ç
+¥£¥ì¥¯¥È¥ê¤Ë¤¢¤ë¥Æ¥¹¥ÈÍÑ¥µ¥ó¥×¥ë¤òÄ¾ÀÜ¡¢¥×¥ê¥×¥í¥»¥¹¤·¤Æ³Î¤«¤á¤Þ¤¹¡£tool
+/cpp_test.c ¤ò»È¤¦¤È¡¢°ìÉô¤Î¥Æ¥¹¥È¤À¤±¤Ç¤¹¤¬¡¢¼«Æ°Åª¤Ë¼Â¹Ô¤Ç¤­¤Þ¤¹¡Êcpp-
+test.html 3.2.2 »²¾È¡Ë¡£
+  compiler-specific-build ¤Ç¤Ï¡¢MCPP ¼«¿È¤ò¥×¥ê¥×¥í¥»¥Ã¥µ¤È¤·¤Æ»È¤Ã¤Æ¡¢
+MCPP ¤Î "pre-preprocess" ¤È¤¤¤¦µ¡Ç½¤ò»È¤Ã¤Æ MCPP ¤ò¥ê¥³¥ó¥Ñ¥¤¥ë¤·¤Æ¤ß¤ë
+¤È¡¢¤½¤Î½èÍý·Ï¤Ç¤È¤ê¤¢¤¨¤º»È¤¨¤ë¤è¤¦¤Ë¤Ê¤Ã¤¿¤«¤É¤¦¤«¤ò³Î¤«¤á¤ë¤³¤È¤¬¤Ç¤­
+¤Þ¤¹¡Êmcpp-porting.html 3.7 »²¾È¡Ë¡£
 
-4AˆÚA‚Ì‚½‚ß‚Ìî•ñ‚ð‚¨Šñ‚¹‚­‚¾‚³‚¢
+4¡¢°Ü¿¢¤Î¤¿¤á¤Î¾ðÊó¤ò¤ª´ó¤»¤¯¤À¤µ¤¤
 
-  MCPP ‚ð‚Ü‚¾ˆÚA‚³‚ê‚Ä‚È‚¢ˆ—Œn‚ÉˆÚA‚·‚é‚½‚ß‚É‚ÍA‘½‚­‚Ìî•ñ‚ª•K—v‚Å
-‚·B‚Ý‚È‚³‚ñ‚Ìî•ñ‚ð‚¨‘Ò‚¿‚µ‚Ä‚¢‚Ü‚·B
-  GCC ˆÈŠO‚Ìˆ—Œn‚É‚Â‚¢‚Ä configure ‚ÌƒIƒvƒVƒ‡ƒ“‚ÅŽw’è‚·‚é’l‚ª‚¨‚í‚©‚è
-‚Ì‚©‚½‚Í‹³‚¦‚Ä‚­‚¾‚³‚¢Bconfigure.ac ‚ÉŽæ‚èž‚ñ‚Å‚ä‚«‚½‚¢‚ÆŽv‚¢‚Ü‚·B
+  MCPP ¤ò¤Þ¤À°Ü¿¢¤µ¤ì¤Æ¤Ê¤¤½èÍý·Ï¤Ë°Ü¿¢¤¹¤ë¤¿¤á¤Ë¤Ï¡¢Â¿¤¯¤Î¾ðÊó¤¬É¬Í×¤Ç
+¤¹¡£¤ß¤Ê¤µ¤ó¤Î¾ðÊó¤ò¤ªÂÔ¤Á¤·¤Æ¤¤¤Þ¤¹¡£
+  GCC °Ê³°¤Î½èÍý·Ï¤Ë¤Ä¤¤¤Æ configure ¤Î¥ª¥×¥·¥ç¥ó¤Ç»ØÄê¤¹¤ëÃÍ¤¬¤ª¤ï¤«¤ê
+¤Î¤«¤¿¤Ï¶µ¤¨¤Æ¤¯¤À¤µ¤¤¡£configure.ac ¤Ë¼è¤ê¹þ¤ó¤Ç¤æ¤­¤¿¤¤¤È»×¤¤¤Þ¤¹¡£
 
-5AuŒŸØƒZƒbƒgv‚Æ‚Í
+5¡¢¡Ö¸¡¾Ú¥»¥Ã¥È¡×¤È¤Ï
 
-  MCPP ‚É‚ÍuŒŸØƒZƒbƒgv‚Æ‚¢‚¤‚à‚Ì‚ª•t‘®‚µ‚Ä‚¢‚Ü‚·B‚±‚ê‚Í C/C++ ƒvƒŠƒv
-ƒƒZƒbƒT‚É‚Â‚¢‚Ä 265 €–Ú‚É‚í‚½‚é“O’ê“I‚ÈƒeƒXƒg‚Æ•]‰¿‚ð‚·‚é‚à‚Ì‚Å‚·B
-MCPP ‚¾‚¯‚Å‚È‚­”CˆÓ‚ÌƒvƒŠƒvƒƒZƒbƒT‚É“K—p‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚»‚ÌŽg‚¢•û
-‚É‚Â‚¢‚Ä‚ÍAcpp-test.html 3.1, 3.2 ‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B
+  MCPP ¤Ë¤Ï¡Ö¸¡¾Ú¥»¥Ã¥È¡×¤È¤¤¤¦¤â¤Î¤¬ÉÕÂ°¤·¤Æ¤¤¤Þ¤¹¡£¤³¤ì¤Ï C/C++ ¥×¥ê¥×
+¥í¥»¥Ã¥µ¤Ë¤Ä¤¤¤Æ 265 ¹àÌÜ¤Ë¤ï¤¿¤ëÅ°ÄìÅª¤Ê¥Æ¥¹¥È¤ÈÉ¾²Á¤ò¤¹¤ë¤â¤Î¤Ç¤¹¡£
+MCPP ¤À¤±¤Ç¤Ê¤¯Ç¤°Õ¤Î¥×¥ê¥×¥í¥»¥Ã¥µ¤ËÅ¬ÍÑ¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£¤½¤Î»È¤¤Êý
+¤Ë¤Ä¤¤¤Æ¤Ï¡¢cpp-test.html 3.1, 3.2 ¤ò»²¾È¤·¤Æ¤¯¤À¤µ¤¤¡£
 
 2008/11
-                                         ¼ˆä@Œ‰ <kmatsui@t3.rim.or.jp>
+                                         ¾¾°æ¡¡·é <kmatsui@t3.rim.or.jp>
 

@@ -26,11 +26,11 @@ EXTRA_DIST = $(top_srcdir)/LICENSE $(top_srcdir)/INSTALL*   \
 if ! REPLACE_CPP 
 install-exec-hook:
 	$(top_srcdir)/config/install-sh -d "$(DESTDIR)$(prefix)/share/doc/mcpp"
-	cp  $(top_srcdir)/LICENSE $(top_srcdir)/README $(top_srcdir)/NEWS \
+	cp -pf $(top_srcdir)/LICENSE $(top_srcdir)/README $(top_srcdir)/NEWS \
             $(DESTDIR)$(prefix)/share/doc/mcpp
-	cp  $(top_srcdir)/doc/mcpp-manual.html   \
+	cp -pf $(top_srcdir)/doc/mcpp-manual.html   \
             $(DESTDIR)$(prefix)/share/doc/mcpp
-	cp  $(top_srcdir)/doc-jp/mcpp-manual.html   \
+	cp -pf $(top_srcdir)/doc-jp/mcpp-manual.html   \
             $(DESTDIR)$(prefix)/share/doc/mcpp/mcpp-manual-jp.html
 uninstall-hook:
 	rm -rf $(DESTDIR)$(prefix)/share/doc/mcpp
