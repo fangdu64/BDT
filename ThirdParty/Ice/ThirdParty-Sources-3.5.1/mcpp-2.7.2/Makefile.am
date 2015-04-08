@@ -5,7 +5,7 @@ AUTOMAKE_OPTIONS = foreign
 SUBDIRS = src
 
 if REPLACE_CPP
-SUBDIRS += tests .
+SUBDIRS += .
 man_page = mcpp-gcc
 else
 man_page = mcpp
