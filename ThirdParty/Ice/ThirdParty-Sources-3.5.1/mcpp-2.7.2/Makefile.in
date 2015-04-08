@@ -696,11 +696,11 @@ uninstall-man: uninstall-man1
 
 @REPLACE_CPP_FALSE@install-exec-hook:
 @REPLACE_CPP_FALSE@	$(top_srcdir)/config/install-sh -d "$(DESTDIR)$(prefix)/share/doc/mcpp"
-@REPLACE_CPP_FALSE@	cp -pf $(top_srcdir)/LICENSE $(top_srcdir)/README $(top_srcdir)/NEWS \
+@REPLACE_CPP_FALSE@	cp  $(top_srcdir)/LICENSE $(top_srcdir)/README $(top_srcdir)/NEWS \
 @REPLACE_CPP_FALSE@            $(DESTDIR)$(prefix)/share/doc/mcpp
-@REPLACE_CPP_FALSE@	cp -pf $(top_srcdir)/doc/mcpp-manual.html   \
+@REPLACE_CPP_FALSE@	cp  $(top_srcdir)/doc/mcpp-manual.html   \
 @REPLACE_CPP_FALSE@            $(DESTDIR)$(prefix)/share/doc/mcpp
-@REPLACE_CPP_FALSE@	cp -pf $(top_srcdir)/doc-jp/mcpp-manual.html   \
+@REPLACE_CPP_FALSE@	cp  $(top_srcdir)/doc-jp/mcpp-manual.html   \
 @REPLACE_CPP_FALSE@            $(DESTDIR)$(prefix)/share/doc/mcpp/mcpp-manual-jp.html
 @REPLACE_CPP_FALSE@uninstall-hook:
 @REPLACE_CPP_FALSE@	rm -rf $(DESTDIR)$(prefix)/share/doc/mcpp
