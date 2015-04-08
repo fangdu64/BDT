@@ -364,7 +364,7 @@ JMODSUFFIX_CONFIG
 
 LIBTOOL="./libtool"
 
-INSTALLER="\$(LIBTOOL) --mode=install cp"
+INSTALLER="\$(LIBTOOL) --mode=install cp -p"
 
 MAKEFILE_CC="\$(LIBTOOL) --mode=compile ${MAKEFILE_CC}"
 MAKEFILE_SOLINK="\$(LIBTOOL) --mode=link ${MAKEFILE_CCLINK} -avoid-version"
