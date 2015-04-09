@@ -11,7 +11,7 @@ all: lapack_install lib blas_testing lapack_testing
 lib: lapacklib tmglib
 #lib: blaslib variants lapacklib tmglib
 
-clean: cleanlib cleantesting cleanblas_testing 
+clean: cleanlib
 
 lapack_install:
 	( cd INSTALL; $(MAKE); ./testlsame; ./testslamch; ./testdlamch; \
