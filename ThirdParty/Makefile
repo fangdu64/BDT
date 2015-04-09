@@ -1,4 +1,4 @@
-SUBDIRS = Python Ice
+SUBDIRS = Python Ice LAPACK
 .PHONY: $(SUBDIRS)
 
 Ice: Python
