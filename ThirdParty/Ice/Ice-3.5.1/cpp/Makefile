@@ -11,11 +11,7 @@ top_srcdir	= .
 
 include $(top_srcdir)/config/Make.rules
 
-SUBDIRS		= config src include test
-
-ifeq ($(shell uname | grep MINGW),)
-SUBDIRS		:= $(SUBDIRS) demo
-endif
+SUBDIRS		= config src include
 
 INSTALL_SUBDIRS	= $(install_bindir) $(install_libdir) $(install_includedir) \
 	$(install_configdir) $(install_mandir)
@@ -50,5 +46,3 @@ $(EVERYTHING)::
 	    ( cd $$subdir && $(MAKE) $@ ) || exit 1; \
 	done
 
-test::
-	@python $(top_srcdir)/allTests.py

@@ -7,25 +7,27 @@
 #
 # **********************************************************************
 
+include $(top_srcdir)/../../../config/Make.rules
+
 #
 # Select an installation base directory. The directory will be created
 # if it does not exist.
 #
 
-prefix			?= /opt/Ice-$(VERSION)
+prefix			?= $(BDT_Install)/Ice-$(VERSION)
 
 #
 # The "root directory" for runpath embedded in executables. Can be unset
 # to avoid adding a runpath to Ice executables.
 #
-embedded_runpath_prefix  ?= /opt/Ice-$(VERSION_MAJOR).$(VERSION_MINOR)
+embedded_runpath_prefix  ?= $(prefix)
 
 #
 # Define OPTIMIZE as yes if you want to build with optimization.
 # Otherwise the Ice extension is built with debug information.
 #
 
-#OPTIMIZE		= yes
+OPTIMIZE		= yes
 
 #
 # Define LP64 as yes if you want to build in 64 bit mode on a platform
@@ -44,15 +46,18 @@ embedded_runpath_prefix  ?= /opt/Ice-$(VERSION_MAJOR).$(VERSION_MINOR)
 # to a value like "python2.5". Otherwise, the settings below use the
 # default Python interpreter found in your PATH.
 #
-PYTHON_VERSION	    ?= python$(shell python -c "import sys; import distutils.sysconfig as ds; sys.stdout.write(ds.get_python_version())")
+#PYTHON_VERSION	    ?= python$(shell python -c "import sys; import distutils.sysconfig as ds; sys.stdout.write(ds.get_python_version())")
 
-PYTHON_BASE_VERSION ?= $(shell $(PYTHON_VERSION) -c "import sys; import distutils.sysconfig as ds; sys.stdout.write(ds.get_python_version())")
+PYTHON_VERSION	    ?=python3.3
+PYTHON_EXE			?=$(BDT_Install)/python/bin/python3.3
 
-PYTHON_INCLUDE_DIR  ?= $(shell $(PYTHON_VERSION) -c "import sys; import distutils.sysconfig as ds; sys.stdout.write(ds.get_python_inc())")
+PYTHON_BASE_VERSION ?= $(shell $(PYTHON_EXE) -c "import sys; import distutils.sysconfig as ds; sys.stdout.write(ds.get_python_version())")
 
-PYTHON_LIB_DIR	    ?= $(shell $(PYTHON_VERSION) -c "import sys; import distutils.sysconfig as ds; sys.stdout.write(ds.get_config_var('LIBPL'))")
+PYTHON_INCLUDE_DIR  ?= $(shell $(PYTHON_EXE) -c "import sys; import distutils.sysconfig as ds; sys.stdout.write(ds.get_python_inc())")
 
-PYTHON_LIB_SUFFIX   ?= $(shell $(PYTHON_VERSION) -c "import sys; sys.stdout.write(sys.__dict__['abiflags'] if 'abiflags' in sys.__dict__ else '')")
+PYTHON_LIB_DIR	    ?= $(shell $(PYTHON_EXE) -c "import sys; import distutils.sysconfig as ds; sys.stdout.write(ds.get_config_var('LIBPL'))")
+
+PYTHON_LIB_SUFFIX   ?= $(shell $(PYTHON_EXE) -c "import sys; sys.stdout.write(sys.__dict__['abiflags'] if 'abiflags' in sys.__dict__ else '')")
 
 PYTHON_LIB_NAME	    ?= $(PYTHON_VERSION)$(PYTHON_LIB_SUFFIX)
 

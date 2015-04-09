@@ -12,19 +12,12 @@ top_srcdir	= ..
 include $(top_srcdir)/config/Make.rules
 
 SUBDIRS		= Ice \
-		  IceSSL \
 		  IceUtil \
 		  Slice
 
 ifeq ($(findstring MINGW,$(UNAME)),)
 SUBDIRS		:= $(SUBDIRS) \
-		Freeze \
-		Glacier2 \
-		IceBox \
-		IceGrid \
-		IcePatch2 \
-		IceStorm \
-		IceXML
+		Freeze
 endif
 
 

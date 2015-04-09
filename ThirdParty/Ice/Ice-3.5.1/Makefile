@@ -7,10 +7,10 @@
 #
 # **********************************************************************
 
-SUBDIRS			= cpp java cs py rb php
-CLEAN_SUBDIRS		= java cs py rb php cpp
-DEPEND_SUBDIRS		= cpp cs py rb php
-INSTALL_SUBDIRS		= cpp java cs py rb php
+SUBDIRS			= cpp py
+CLEAN_SUBDIRS		= py cpp
+DEPEND_SUBDIRS		= cpp py
+INSTALL_SUBDIRS		= cpp py
 
 all::
 	@for subdir in $(SUBDIRS); \
@@ -40,33 +40,3 @@ install::
 	    ( cd $$subdir && $(MAKE) install ) || exit 1; \
 	done
 
-test::
-	@for subdir in $(SUBDIRS); \
-	do \
-	    echo "making test in $$subdir"; \
-	    ( cd $$subdir && $(MAKE) test ) || exit 1; \
-	done
-
-cpp::
-	echo "making all in cpp";
-	( cd cpp && $(MAKE) all ) || exit 1;
-
-java::
-	echo "making all in java";
-	( cd java && $(MAKE) all ) || exit 1;
-
-cs::
-	echo "making all in cs";
-	( cd cs && $(MAKE) all ) || exit 1;
-
-py::
-	echo "making all in py";
-	( cd py && $(MAKE) all ) || exit 1;
-
-rb::
-	echo "making all in rb";
-	( cd rb && $(MAKE) all ) || exit 1;
-
-php::
-	echo "making all in php";
-	( cd php && $(MAKE) all ) || exit 1;

@@ -7,17 +7,18 @@
 #
 # **********************************************************************
 
+include $(top_srcdir)/../../../../config/Make.rules
 #
 # Select an installation base directory. The directory will be created
 # if it does not exist.
 #
-prefix			?= /opt/Ice-$(VERSION)
+prefix			?= $(BDT_Install)/Ice-$(VERSION)
 
 #
 # The "root directory" for runpath embedded in executables. Can be unset
 # to avoid adding a runpath to Ice executables.
 #
-embedded_runpath_prefix ?= /opt/Ice-$(VERSION_MAJOR).$(VERSION_MINOR)
+embedded_runpath_prefix ?= $(prefix)
 
 #
 # Define create_runpath_symlink as yes if you would like 'make install'
@@ -30,7 +31,7 @@ create_runpath_symlink	?= no
 # Define OPTIMIZE as yes if you want to build with
 # optimization. Otherwise Ice is build with debug information.
 #
-#OPTIMIZE		= yes
+OPTIMIZE		= yes
 
 #
 # Define LP64 as yes or no if you want force a 32 or 64 bit. The
@@ -73,33 +74,33 @@ USE_READLINE		?= no
 # compiler can find it, set BZIP2_HOME to the bzip2 installation
 # directory.
 #
-#BZIP2_HOME		?= /opt/bzip2
+BZIP2_HOME		?= $(BDT_Install)/bzip2
 
 #
 # If Berkeley DB is not installed in a standard location where the
 # compiler can find it, set DB_HOME to the Berkeley DB installation
 # directory.
 #
-#DB_HOME		?= /opt/db
+DB_HOME		?= $(BDT_Install)/db
 
 #
 # If expat is not installed in a standard location where the compiler
 # can find it, set EXPAT_HOME to the expat installation directory.
 #
-#EXPAT_HOME		?= /opt/expat
+EXPAT_HOME		?= $(BDT_Install)/expat
 
 #
 # If OpenSSL is not installed in a standard location where the
 # compiler can find it, set OPENSSL_HOME to the OpenSSL installation
 # directory.
 #
-#OPENSSL_HOME		?= /opt/openssl
+OPENSSL_HOME		?= $(BDT_Install)/openssl
 
 #
 # If MCPP is not installed in a standard location where the compiler 
 # can find it, set MCPP_HOME to the Mcpp installation directory.
 #
-#MCPP_HOME		?= /opt/mcpp
+MCPP_HOME		?= $(BDT_Install)/mcpp
 
 #
 # If libiconv is not installed in a standard location where the compiler 

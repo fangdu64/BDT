@@ -16,36 +16,15 @@ ifneq ($(findstring MINGW,$(UNAME)),)
 			  Slice \
 			  slice2cpp \
 			  slice2rb \
-			  Ice \
-			  IceSSL
+			  Ice
 else
     SUBDIRS		= IceUtil \
 			  Slice \
 			  slice2cpp \
-			  slice2cs \
 			  slice2freeze \
-			  slice2freezej \
-			  slice2java \
-			  slice2php \
 			  slice2py \
-			  slice2rb \
-			  slice2html \
 			  Ice \
-			  IceXML \
-			  IceSSL \
-			  Freeze \
-			  FreezeScript \
-			  IceBox \
-			  Glacier2Lib \
-			  Glacier2 \
-			  IceDB \
-			  IcePatch2Lib \
-			  IcePatch2 \
-			  IceStormLib \
-			  IceGridLib \
-			  IceStorm \
-			  IceGrid \
-			  ca
+			  Freeze
 endif
 
 .PHONY: $(EVERYTHING) $(SUBDIRS)

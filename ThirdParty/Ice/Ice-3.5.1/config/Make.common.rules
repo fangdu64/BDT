@@ -19,7 +19,7 @@ VERSION			= 3.5.1
 SHORT_VERSION           = 3.5
 SOVERSION		= 35
 
-INSTALL			= cp -fp
+INSTALL			= cp -f
 INSTALL_PROGRAM		= ${INSTALL}
 INSTALL_LIBRARY		= ${INSTALL}
 INSTALL_DATA		= ${INSTALL}
@@ -391,7 +391,7 @@ install-common::
 	    for subdir in * ; \
 	    do \
 	        echo "Copying slice/$$subdir to $(DESTDIR)$(install_slicedir)..." ; \
-	        cp -fpr $$subdir $(DESTDIR)$(install_slicedir) ; \
+	        cp -fr $$subdir $(DESTDIR)$(install_slicedir) ; \
 	    done ; \
 	    fi
 
