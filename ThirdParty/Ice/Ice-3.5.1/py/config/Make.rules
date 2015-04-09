@@ -7,7 +7,7 @@
 #
 # **********************************************************************
 
-include $(top_srcdir)/../../../config/Make.rules
+include $(top_srcdir)/../../../../config/Make.rules
 
 #
 # Select an installation base directory. The directory will be created
