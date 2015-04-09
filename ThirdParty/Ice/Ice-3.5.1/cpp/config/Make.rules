@@ -12,7 +12,7 @@ include $(top_srcdir)/../../../../config/Make.rules
 # Select an installation base directory. The directory will be created
 # if it does not exist.
 #
-prefix			?= $(BDT_Install)/Ice-$(VERSION)
+prefix			?= $(BDT_Install)/ThirdParty/Ice-$(VERSION)
 
 #
 # The "root directory" for runpath embedded in executables. Can be unset
@@ -74,33 +74,33 @@ USE_READLINE		?= no
 # compiler can find it, set BZIP2_HOME to the bzip2 installation
 # directory.
 #
-BZIP2_HOME		?= $(BDT_Install)/bzip2
+BZIP2_HOME		?= $(BDT_Install)/ThirdParty/bzip2
 
 #
 # If Berkeley DB is not installed in a standard location where the
 # compiler can find it, set DB_HOME to the Berkeley DB installation
 # directory.
 #
-DB_HOME		?= $(BDT_Install)/db
+DB_HOME		?= $(BDT_Install)/ThirdParty/db
 
 #
 # If expat is not installed in a standard location where the compiler
 # can find it, set EXPAT_HOME to the expat installation directory.
 #
-EXPAT_HOME		?= $(BDT_Install)/expat
+EXPAT_HOME		?= $(BDT_Install)/ThirdParty/expat
 
 #
 # If OpenSSL is not installed in a standard location where the
 # compiler can find it, set OPENSSL_HOME to the OpenSSL installation
 # directory.
 #
-OPENSSL_HOME		?= $(BDT_Install)/openssl
+OPENSSL_HOME		?= $(BDT_Install)/ThirdParty/openssl
 
 #
 # If MCPP is not installed in a standard location where the compiler 
 # can find it, set MCPP_HOME to the Mcpp installation directory.
 #
-MCPP_HOME		?= $(BDT_Install)/mcpp
+MCPP_HOME		?= $(BDT_Install)/ThirdParty/mcpp
 
 #
 # If libiconv is not installed in a standard location where the compiler 

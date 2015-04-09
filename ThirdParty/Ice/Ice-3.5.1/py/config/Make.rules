@@ -14,7 +14,7 @@ include $(top_srcdir)/../../../../config/Make.rules
 # if it does not exist.
 #
 
-prefix			?= $(BDT_Install)/Ice-$(VERSION)
+prefix			?= $(BDT_Install)/ThirdParty/Ice-$(VERSION)
 
 #
 # The "root directory" for runpath embedded in executables. Can be unset
@@ -49,7 +49,7 @@ OPTIMIZE		= yes
 #PYTHON_VERSION	    ?= python$(shell python -c "import sys; import distutils.sysconfig as ds; sys.stdout.write(ds.get_python_version())")
 
 PYTHON_VERSION	    ?=python3.3
-PYTHON_EXE			?=$(BDT_Install)/python/bin/python3.3
+PYTHON_EXE			?=$(BDT_Install)/ThirdParty/python/bin/python3.3
 
 PYTHON_BASE_VERSION ?= $(shell $(PYTHON_EXE) -c "import sys; import distutils.sysconfig as ds; sys.stdout.write(ds.get_python_version())")
 

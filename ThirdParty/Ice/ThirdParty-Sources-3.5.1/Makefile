@@ -1,6 +1,6 @@
 bdt_topdir	= ../../../
 include $(bdt_topdir)/config/Make.rules
-install_dir=$(BDT_Install)
+install_dir=$(BDT_Install)/ThirdParty
 dir_bzip2=bzip2-1.0.6
 dir_db=db-5.3.21.NC
 dir_mcpp=mcpp-2.7.2
