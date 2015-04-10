@@ -16,7 +16,8 @@
 */
 #ifndef BAMTOOLS_LIBRARY_EXPORT
 #  if defined(WIN32)
-#    define BAMTOOLS_LIBRARY_EXPORT __declspec(dllexport)
+//#    define BAMTOOLS_LIBRARY_EXPORT __declspec(dllexport)
+#    define BAMTOOLS_LIBRARY_EXPORT
 #  else
 #    define BAMTOOLS_LIBRARY_EXPORT __attribute__((visibility("default")))
 #  endif
@@ -27,7 +28,7 @@
 */
 #ifndef BAMTOOLS_LIBRARY_IMPORT
 #  if defined(WIN32)
-#    define BAMTOOLS_LIBRARY_IMPORT __declspec(dllimport)
+#    define BAMTOOLS_LIBRARY_IMPORT
 #  else
 #    define BAMTOOLS_LIBRARY_IMPORT
 #  endif
