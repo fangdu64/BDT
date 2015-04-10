@@ -1,4 +1,4 @@
-SUBDIRS = Python Ice LAPACK
+SUBDIRS = Python Ice LAPACK BamTools
 .PHONY: $(SUBDIRS)
 
 Ice: Python
