@@ -15,9 +15,9 @@ iBS_includedir 	= ../../../common/include
 
 STATICLIBS = yes
 iBSLibDir	= $(BDT_Install)/bdt/lib
-LIBFILENAME	= $(call mklibfilename,iBSUtil,1.0.0)
-SONAME		= $(call mksoname,iBSUtil,10)  
-LIBNAME		= $(call mklibname,iBSUtil)
+LIBFILENAME	= $(call mklibfilename,bdtUtil,1.0.0)
+SONAME		= $(call mksoname,bdtUtil,10)  
+LIBNAME		= $(call mklibname,bdtUtil)
 TARGETS		= $(call mklibtargets,$(iBSLibDir)/$(LIBFILENAME),$(iBSLibDir)/$(SONAME),$(iBSLibDir)/$(LIBNAME))
 
 OBJS_LOCAL	= BasicSliceDefine.o \
