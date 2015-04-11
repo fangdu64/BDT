@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\algorithms\Sort.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\api_global.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamAlgorithms.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamAlignment.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamAux.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamConstants.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamIndex.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamMultiReader.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamReader.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamWriter.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\IBamIODevice.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamHeader_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamMultiMerger_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamMultiReader_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamRandomAccessController_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamReader_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamWriter_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\index\BamIndexFactory_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\index\BamStandardIndex_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\index\BamToolsIndex_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamDeviceFactory_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamFile_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamFtp_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamHttp_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamPipe_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BgzfStream_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\ByteArray_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\HostAddress_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\HostInfo_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\HttpHeader_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\ILocalIODevice_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\NetUnix_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\NetWin_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\RollingBuffer_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\TcpSocketEngine_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\TcpSocket_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\sam\SamFormatParser_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\sam\SamFormatPrinter_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\sam\SamHeaderValidator_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\sam\SamHeaderVersion_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\utils\BamException_p.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamConstants.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamHeader.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamProgram.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamProgramChain.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamReadGroup.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamReadGroupDictionary.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamSequence.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamSequenceDictionary.h" />
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\shared\bamtools_global.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\BamAlignment.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\BamMultiReader.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\BamReader.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\BamWriter.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamHeader_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamMultiReader_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamRandomAccessController_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamReader_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamWriter_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\index\BamIndexFactory_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\index\BamStandardIndex_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\index\BamToolsIndex_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamDeviceFactory_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamFile_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamFtp_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamHttp_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamPipe_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BgzfStream_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\ByteArray_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\HostAddress_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\HostInfo_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\HttpHeader_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\ILocalIODevice_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\RollingBuffer_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\TcpSocketEngine_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\TcpSocketEngine_unix_p.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\TcpSocketEngine_win_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\TcpSocket_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\sam\SamFormatParser_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\sam\SamFormatPrinter_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\sam\SamHeaderValidator_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\utils\BamException_p.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\SamHeader.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\SamProgram.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\SamProgramChain.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\SamReadGroup.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\SamReadGroupDictionary.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\SamSequence.cpp" />
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\SamSequenceDictionary.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C8FC18AA-0764-4AA1-8DF4-B6DBB2A4EE32}</ProjectGuid>
+    <RootNamespace>Bamtools</RootNamespace>
+    <ProjectName>Bamtools</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.51106.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\..\bin\$(Platform)\Objs\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\bin\$(Platform)\Objs\$(Configuration)\$(ProjectName)\</IntDir>
+    <ExecutablePath>D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\bin\vc110\x64;$(ExecutablePath)</ExecutablePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\..\bin\$(Platform)\Libs\$(Configuration)\</OutDir>
+    <IntDir>..\..\bin\$(Platform)\Objs\$(Configuration)\$(ProjectName)\</IntDir>
+    <ExecutablePath>D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\bin\vc120\x64;$(ExecutablePath)</ExecutablePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;..\..\..\..\ThirdParty\BamTools;..\..\..\..\common\include;D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <OutputFile>..\..\bin\$(Platform)\Dlls\$(Configuration)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\lib\vc110\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalDependencies>freezed.lib;iced.lib;iceutild.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.;..\..\..\..\ThirdParty\BamTools;..\..\..\..\common\include;E:\iBS\Libs\zlib\zlib128-dll\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_FILE_OFFSET_BITS=64;BAMTOOLS_API_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/d2Zi+</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <OutputFile>..\..\bin\$(Platform)\Libs\$(Configuration)\$(ProjectName).lib</OutputFile>
+      <AdditionalLibraryDirectories>D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\lib\vc120\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalDependencies>freeze.lib;ice.lib;iceutil.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <OutputFile>..\..\bin\$(Platform)\Libs\$(Configuration)\$(ProjectName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties ZerocIce_Enabled="False" ZerocIce_Components="Freeze" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
