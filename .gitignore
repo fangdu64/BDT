@@ -81,3 +81,9 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+# ===========================
+# files generated from slice
+# ===========================
+/build/windows/projects/bdtUtil/*.h
+/build/windows/projects/bdtUtil/*.cpp
