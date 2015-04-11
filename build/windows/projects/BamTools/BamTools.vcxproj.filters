@@ -19,273 +19,273 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\BamAlignment.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\BamAlignment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\BamMultiReader.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\BamMultiReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\BamReader.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\BamReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\BamWriter.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\BamWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\bam\BamHeader_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamHeader_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\bam\BamMultiReader_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamMultiReader_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\bam\BamRandomAccessController_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamRandomAccessController_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\bam\BamReader_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamReader_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\bam\BamWriter_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamWriter_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\index\BamIndexFactory_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\index\BamIndexFactory_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\index\BamStandardIndex_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\index\BamStandardIndex_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\index\BamToolsIndex_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\index\BamToolsIndex_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\BamDeviceFactory_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamDeviceFactory_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\BamFile_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamFile_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\BamFtp_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamFtp_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\BamHttp_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamHttp_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\BamPipe_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamPipe_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\BgzfStream_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BgzfStream_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\ByteArray_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\ByteArray_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\HostAddress_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\HostAddress_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\HostInfo_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\HostInfo_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\HttpHeader_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\HttpHeader_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\ILocalIODevice_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\ILocalIODevice_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\RollingBuffer_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\RollingBuffer_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\TcpSocketEngine_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\TcpSocketEngine_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\TcpSocketEngine_unix_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\TcpSocketEngine_unix_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\TcpSocketEngine_win_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\TcpSocketEngine_win_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\TcpSocket_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\TcpSocket_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\sam\SamFormatParser_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\sam\SamFormatParser_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\sam\SamFormatPrinter_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\sam\SamFormatPrinter_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\sam\SamHeaderValidator_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\sam\SamHeaderValidator_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\utils\BamException_p.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\internal\utils\BamException_p.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamHeader.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\SamHeader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamProgram.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\SamProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamProgramChain.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\SamProgramChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamReadGroup.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\SamReadGroup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamReadGroupDictionary.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\SamReadGroupDictionary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamSequence.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\SamSequence.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamSequenceDictionary.cpp">
+    <ClCompile Include="..\..\..\..\ThirdParty\BamTools\api\SamSequenceDictionary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\algorithms\Sort.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\algorithms\Sort.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\api_global.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\api_global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\BamAlgorithms.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamAlgorithms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\BamAlignment.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamAlignment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\BamAux.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamAux.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\BamConstants.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\BamIndex.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamIndex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\BamMultiReader.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamMultiReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\BamReader.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\BamWriter.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\BamWriter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\IBamIODevice.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\IBamIODevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\bam\BamHeader_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamHeader_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\bam\BamMultiMerger_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamMultiMerger_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\bam\BamMultiReader_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamMultiReader_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\bam\BamRandomAccessController_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamRandomAccessController_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\bam\BamReader_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamReader_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\bam\BamWriter_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\bam\BamWriter_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\index\BamIndexFactory_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\index\BamIndexFactory_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\index\BamStandardIndex_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\index\BamStandardIndex_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\index\BamToolsIndex_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\index\BamToolsIndex_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\BamDeviceFactory_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamDeviceFactory_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\BamFile_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamFile_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\BamFtp_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamFtp_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\BamHttp_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamHttp_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\BamPipe_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BamPipe_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\BgzfStream_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\BgzfStream_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\ByteArray_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\ByteArray_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\HostAddress_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\HostAddress_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\HostInfo_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\HostInfo_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\HttpHeader_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\HttpHeader_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\ILocalIODevice_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\ILocalIODevice_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\NetUnix_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\NetUnix_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\NetWin_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\NetWin_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\RollingBuffer_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\RollingBuffer_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\TcpSocketEngine_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\TcpSocketEngine_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\io\TcpSocket_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\io\TcpSocket_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\sam\SamFormatParser_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\sam\SamFormatParser_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\sam\SamFormatPrinter_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\sam\SamFormatPrinter_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\sam\SamHeaderValidator_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\sam\SamHeaderValidator_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\sam\SamHeaderVersion_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\sam\SamHeaderVersion_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\internal\utils\BamException_p.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\internal\utils\BamException_p.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamConstants.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamHeader.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamHeader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamProgram.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamProgramChain.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamProgramChain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamReadGroup.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamReadGroup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamReadGroupDictionary.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamReadGroupDictionary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamSequence.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamSequence.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\api\SamSequenceDictionary.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\api\SamSequenceDictionary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\trunk\core\src\BamTools\shared\bamtools_global.h">
+    <ClInclude Include="..\..\..\..\ThirdParty\BamTools\shared\bamtools_global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
