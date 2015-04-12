@@ -641,28 +641,13 @@ module iBS
 			throws ArgumentException;
 	};
 
-	//struct FilteredMatrixFacetInfo
-	//{
-	//	int			FacetID;
-	//	string		FacetName;
-	//	string		Description;
-
-	//	IntVec		InSampleIDs;
-	//	IntVec      OutSampleIDs;
-
-	//	int			MapbackObserverID;  //for mapping local back to unfiltered feature index
-	//};
-
-	/*interface FilteredMatrixService extends FcdcReadService
-	{
-		int SetOutputSamples(IntVec sampleIDs)
-		throws ArgumentException;
-
-		int SetRowAdjust(RowAdjustEnum rowAdjust)
-			throws ArgumentException;
-	};*/
-
 	interface FcdcFacetAdminService
+	{
+		BigMatrixService* GetBigMatrixFacet(int gid)
+			throws ArgumentException;
+	};
+
+	interface BdvdFacetAdminService
 	{
 		int RqstNewRUVFacet(out RUVFacetInfo rfi)
 			throws ArgumentException;
@@ -677,9 +662,6 @@ module iBS
 			throws ArgumentException;
 
 		FcdcRUVService* GetRUVFacet(int facetID)
-			throws ArgumentException;
-
-		BigMatrixService* GetBigMatrixFacet(int gid)
 			throws ArgumentException;
 	};
 

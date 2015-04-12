@@ -44,44 +44,6 @@ module iBS
 		AMDTaskStatusEnum Status;
 	};
 
-	//data table
-	enum KNIMEDataType
-	{
-		DataTypeInt,
-		DataTypeDouble,
-		DataTypeString,
-		DataTypeByteVec,
-		DataTypeIntList,
-		DataTypeDoubleList,
-		DataTypeStringList
-	};
-
-	struct KNIMEDataColumnInfo
-	{
-		KNIMEDataType DataType;
-		string ColumnName;
-		int IdxInAllColumn;
-		int IdxInSameTypeColumn;
-		bool IsDateTime;
-	};
-	sequence<KNIMEDataColumnInfo> KNIMEDataColumnInfoVec;
-
-	struct KNIMEDataTable
-	{
-		int tableID;
-		string tableName;
-		KNIMEDataColumnInfoVec columns;
-		IntVecVec intColumnData;
-		DoubleVecVec doubleColumnData;
-		StringVecVec strColumnData;
-		ByteVecVecVec bytesColumnData;
-		IntVecVecVec  intListColumnData;
-		StringVecVecVec  strListColumnData;
-		DoubleVecVecVec  doubleListColumnData;
-	};
-	sequence<KNIMEDataTable> KNIMEDataTableVec;
-
-
 	dictionary<string, string> Str2StrMap;
 
 	struct IntPair
@@ -91,7 +53,6 @@ module iBS
 	};
 	sequence<IntPair> IntPairVec;
 
-	
 	enum RecordUpdateAction
 	{ 
 		RecordActionUnkown,
