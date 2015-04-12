@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C8FC189F-0759-4991-8DE0-A6DFCFF4EE32}</ProjectGuid>
+    <RootNamespace>bigMat</RootNamespace>
+    <ProjectName>bigMat</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.51106.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\..\bin\$(Platform)\Dlls\$(Configuration)\</OutDir>
+    <IntDir>..\..\bin\$(Platform)\Objs\$(Configuration)\$(ProjectName)\</IntDir>
+    <ExecutablePath>D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\bin\vc120\x64;$(ExecutablePath)</ExecutablePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.;..\..\..\..\bigMat;..\..\..\..\bdtCore;..\bdtCore;..\..\..\..\common\include;D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\include;..\..\..\..\ThirdParty\Armadillo\armadillo-4.650.4\include;..\..\..\..\ThirdParty\boost\boost_1_55_0;..\..\..\..\ThirdParty\BamTools;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ARMA_USE_LAPACK;ARMA_USE_BLAS;ARMA_NO_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/d2Zi+</AdditionalOptions>
+      <ShowIncludes>false</ShowIncludes>
+    </ClCompile>
+    <Link>
+      <OutputFile>..\..\bin\$(Platform)\Dlls\$(Configuration)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\lib\vc120\x64;..\..\..\..\ThirdParty\Armadillo\armadillo-4.650.4\examples\lib_win64;E:\iBS\Libs\zlib\zlib-1.2.8\contrib\vstudio\vc11\x64\ZlibStatRelease;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalDependencies>freeze.lib;ice.lib;iceutil.lib;lapack_win64_MT.lib;blas_win64_MT.lib;zlibstat.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <OutputFile>..\..\bin\$(Platform)\Libs\$(Configuration)\$(ProjectName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\bigMat\GenomeBpBitset.cpp" />
+    <ClCompile Include="..\..\..\..\bigMat\BamToBinCountCreator.cpp" />
+    <ClCompile Include="..\..\..\..\bigMat\SampleServiceImpl.cpp" />
+    <ClCompile Include="..\..\..\..\bigMat\BigMat.cpp" />
+    <ClCompile Include="..\..\..\..\bigMat\SampleWorkItem.cpp" />
+    <ClCompile Include="SampleService.cpp" />
+    <ClCompile Include="SampleServiceI.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\bigMat\GenomeBpBitset.h" />
+    <ClInclude Include="..\..\..\..\bigMat\BamToBinCountCreator.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\BigMatrixFacetImpl.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\BigMatrixFacetWorkItem.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\ComputeBuilder.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\ComputeCommonDefine.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\ComputeServiceImpl.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\ComputeWorker.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\ComputeWorkerMgr.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\ComputeWorkItem.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\BitSetHelper.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\CommonHelper.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\FacetAdminImpl.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\FCDCFacetImpI.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\FCDCFacetWorkItem.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\FeatureDomainDB.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\FeatureObserverDB.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\ObserverIndexDB.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\FeatureValueStoreMgr.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\FeatureValueWorkItem.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\GlobalVars.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\ObserverStatsDB.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\ProxyCentralServiceImpl.h" />
+    <ClInclude Include="..\..\..\..\bigMat\SampleServiceImpl.h" />
+    <ClInclude Include="..\..\..\..\bigMat\SampleWorkItem.h" />
+    <ClInclude Include="..\..\..\..\bigMat\StatisticsHelper.h" />
+    <ClInclude Include="..\..\..\..\common\include\bdtUtil\RowAdjustHelper.h" />
+    <ClInclude Include="..\..\..\..\common\include\bdt\bdtBase.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\FeatureValueRAM.h" />
+    <ClInclude Include="..\bdtCore\ComputeService.h" />
+    <ClInclude Include="..\bdtCore\ComputeServiceI.h" />
+    <ClInclude Include="..\bdtCore\FeatureDomainFreezeMap.h" />
+    <ClInclude Include="..\bdtCore\FeatureObserverFreezeMap.h" />
+    <ClInclude Include="..\bdtCore\FCDCentralService.h" />
+    <ClInclude Include="..\bdtCore\FCDCentralServiceI.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\FCDCentralServiceImpl.h" />
+    <ClInclude Include="..\bdtCore\BasicSliceDefine.h" />
+    <ClInclude Include="..\bdtCore\FCDCentralFreeze.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\FeatureValueWorker.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\FeatureValueWorkerMgr.h" />
+    <ClInclude Include="..\bdtCore\ObserverIndexFreezeMap.h" />
+    <ClInclude Include="..\bdtCore\ObserverStatsFreezeMap.h" />
+    <ClInclude Include="SampleService.h" />
+    <ClInclude Include="SampleServiceI.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\..\common\slice\bdt\SampleService.ice">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">del SampleServiceI.h SampleServiceI.cpp
+slice2cpp.exe --ice -I. %(FullPath) --impl</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SampleService.h;SampleService.cpp;SampleServiceI.h;SampleServiceI.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\..\..\common\slice\bdt\BasicSliceDefine.ice;..\..\..\..\common\slice\bdt\FCDCentralService.ice</AdditionalInputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BamTools\BamTools.vcxproj">
+      <Project>{c8fc18aa-0764-4aa1-8df4-b6dbb2a4ee32}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\bdtCore\bdtCore.vcxproj">
+      <Project>{c8fc189f-0759-4991-8de0-b6dfcbb4ee32}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\bdtUtil\bdtUtil.vcxproj">
+      <Project>{c8fc18aa-0764-4aa1-8de0-b6dbb2a4ee32}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties ZerocIce_Enabled="False" ZerocIce_Components="Freeze" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
