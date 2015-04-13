@@ -10,8 +10,7 @@ import iBSConfig
 def install_python_cmdline(srcDir, srcFileName, destDir, pythonBinPath):
     infile = open("{0}/{1}".format(srcDir, srcFileName))
     outFN = "{0}/{1}".format(destDir, srcFileName)
-	outfile = open(outFN, "w")
-
+    outfile = open(outFN, "w")
     replacements = {"__PYTHON_BIN_PATH__":pythonBinPath}
 
     for line in infile:
@@ -20,7 +19,7 @@ def install_python_cmdline(srcDir, srcFileName, destDir, pythonBinPath):
         outfile.write(line)
     infile.close()
     outfile.close()
-	os.chmod(outFN, 0o755)
+    os.chmod(outFN, 0o755)
 
 def main(argv=None):
 	bdtCmdsDir = os.path.dirname(os.path.abspath(__file__))
