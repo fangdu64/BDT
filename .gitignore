@@ -97,3 +97,8 @@ $RECYCLE.BIN/
 /build/windows/projects/bigKmeans/server/*.cpp
 /build/windows/projects/bigKmeans/contractor/*.h
 /build/windows/projects/bigKmeans/contractor/*.cpp
+
+# ================================
+# python project
+# ================================
+__pycache__/
