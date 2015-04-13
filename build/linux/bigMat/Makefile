@@ -82,13 +82,13 @@ $(bigMat): $(OBJS)
 	echo "$(embedded_runpath_prefix), $(runpath_libdir)"
 	rm -f $(iBS_bindir)/$@
 
-	if [ $(BLAS_LAPACK_LIB) == ATLAS ] ; \
+	if [ "$(BLAS_LAPACK_LIB)" == "ATLAS" ] ; \
 	then \
 		echo "BLAS_LAPACK from ATLAS"; \
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) -lFreeze -lBamtools -lbdtUtil -lbdtCore -lz -latlaslapack -latlasblas $(LIBS); \
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) -lFreeze -lBamtools -lbdtCore -lz -latlaslapack -latlasblas $(LIBS); \
 	else \
 		echo "BLAS_LAPACK from Netlib"; \
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) -lFreeze -lBamtools -lbdtUtil -lbdtCore -lz -llapack -lrefblas -lgfortran $(LIBS); \
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) -lFreeze -lBamtools -lbdtCore -lz -llapack -lrefblas -lgfortran $(LIBS); \
 	fi
 
 	mv $@ $(iBS_bindir)/$@
