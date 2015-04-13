@@ -16,6 +16,7 @@ iBS_libdir =$(BDT_Install)/iBS/lib
 iBS_bindir =$(BDT_Install)/iBS/bin
 netlib_lapack_libdir =$(bdt_topdir)/ThirdParty/LAPACK/lapack-3.5.0
 bamtools_includedir = $(bdt_topdir)/ThirdParty/BamTools
+bamtools_libdir = $(bdt_topdir)/ThirdParty/BamTools/lib
 armadillo_includedir=$(bdt_topdir)/ThirdParty/Armadillo/armadillo-4.650.4/include
 
 ifeq ($(BOOST_TOPDIR),)
@@ -57,9 +58,9 @@ SLICE2CPPFLAGS	:= --ice -I. -I$(iBS_slicedir) $(SLICE2CPPFLAGS)
 LDFLAGS	:= -Wl,-rpath,$(BDT_Install)/ThirdParty/db/lib64 $(LDFLAGS)
 
 ifeq ($(BLAS_LAPACK_LIB),ATLAS)
-	LDFLAGS 	:= -L$(iBS_libdir) -L$(ATLAS_LIBDIR) $(LDFLAGS)
+	LDFLAGS 	:= -L$(iBS_libdir) -L$(bamtools_libdir) -L$(ATLAS_LIBDIR) $(LDFLAGS)
 else
-	LDFLAGS 	:= -L$(iBS_libdir) -L$(netlib_lapack_libdir) $(LDFLAGS)
+	LDFLAGS 	:= -L$(iBS_libdir) -L$(bamtools_libdir) -L$(netlib_lapack_libdir) $(LDFLAGS)
 endif
 
 
