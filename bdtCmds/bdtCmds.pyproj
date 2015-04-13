@@ -26,6 +26,15 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="bdvd.py" />
+    <Compile Include="bigclust-kmeans++.py" />
+    <Compile Include="bigKmeans.py" />
+    <Compile Include="bigmat-bam2mat.py" />
+    <Compile Include="bigmat-bfv2mat.py" />
+    <Compile Include="bigmat-txt2mat.py" />
+    <Compile Include="install.py" />
+  </ItemGroup>
   <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />
   <Import Condition="!Exists($(PtvsTargetsFile))" Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
