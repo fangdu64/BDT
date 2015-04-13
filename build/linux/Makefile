@@ -18,10 +18,13 @@ iBS_iBSConfigSrcDir =$(bdt_topdir)/common/config
 iBS_iBSRDestDir =$(BDT_Install)/bdt/bdtR
 iBS_iBSRSrcDir =$(bdt_topdir)/bdtR
 
-SUBDIRS = ../../ThirdParty bdtUtil bdtCore bigMat bigKmeans/server bigKmeans/contractor
+ifeq ($(R_BinDir),)
+	R_BinDir	= None
+endif
+
+SUBDIRS = bdtUtil bdtCore bigMat bigKmeans/server bigKmeans/contractor
 .PHONY: $(SUBDIRS)
 
-bdtUtil: ../../ThirdParty
 bdtCore: bdtUtil
 bigMat: bdtCore
 bigKmeans/server: bigMat
@@ -50,9 +53,7 @@ install::
 	rm -rf $(iBS_iBSPyDestDir)
 	$(call mkdir,$(iBS_iBSPyDestDir), -p)
 	cp -rf $(iBS_iBSPySrcDir)/* $(iBS_iBSPyDestDir)
-	ifeq ($(R_BinDir),)
-		R_BinDir	= None
-	endif
+
 	@echo R_BinDir=\"$(R_BinDir)\" > $(iBS_iBSPyDestDir)/iBSConfig.py
 	@echo BDT_HomeDir=\"$(BDT_Install)\" >> $(iBS_iBSPyDestDir)/iBSConfig.py
 
