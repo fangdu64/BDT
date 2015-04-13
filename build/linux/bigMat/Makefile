@@ -85,10 +85,10 @@ $(bigMat): $(OBJS)
 	if [ "$(BLAS_LAPACK_LIB)" == "ATLAS" ] ; \
 	then \
 		echo "BLAS_LAPACK from ATLAS"; \
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) -lFreeze -lBamtools -lbdtUtil -lbdtCore -lz -latlaslapack -latlasblas $(LIBS); \
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) -lFreeze -lbdtCore -lbdtUtil -lBamtools -lz -latlaslapack -latlasblas $(LIBS); \
 	else \
 		echo "BLAS_LAPACK from Netlib"; \
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) -lFreeze -lBamtools -lbdtUtil -lbdtCore -lz -llapack -lrefblas -lgfortran $(LIBS); \
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) -lFreeze -lbdtCore -lbdtUtil -lBamtools -lz -llapack -lrefblas -lgfortran $(LIBS); \
 	fi
 
 	mv $@ $(iBS_bindir)/$@
