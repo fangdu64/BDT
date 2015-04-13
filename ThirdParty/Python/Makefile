@@ -27,5 +27,5 @@ $(dir_python)::
 	cd $(dir_python) && ./configure CFLAGS=-fPIC --prefix=$(install_dir)/python && $(MAKE) install
 	rm -f $(install_dir)/python/lib/python3.3/site-packages/Ice.pth
 	echo "$(install_dir)/Ice-3.5.1/python" > "$(install_dir)/python/lib/python3.3/site-packages/Ice.pth"
-	rm -f $(install_dir)/python/lib/python3.3/site-packages/iBSPy.pth
-	echo "$(install_dir)/iBS/iBSPy" > "$(install_dir)/python/lib/python3.3/site-packages/iBSPy.pth"
+	rm -f $(install_dir)/python/lib/python3.3/site-packages/bdtPy.pth
+	echo "$(BDT_Install)/bdt/bdtPy" > "$(install_dir)/python/lib/python3.3/site-packages/bdtPy.pth"
