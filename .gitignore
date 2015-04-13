@@ -93,3 +93,7 @@ $RECYCLE.BIN/
 /build/windows/projects/bigMat/*.cpp
 /build/windows/projects/bdvd/*.h
 /build/windows/projects/bdvd/*.cpp
+/build/windows/projects/bigKmeans/server/*.h
+/build/windows/projects/bigKmeans/server/*.cpp
+/build/windows/projects/bigKmeans/contractor/*.h
+/build/windows/projects/bigKmeans/contractor/*.cpp
