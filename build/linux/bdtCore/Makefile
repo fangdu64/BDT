@@ -53,7 +53,6 @@ OBJS_RELATIVE=BigMatrixFacetImpl.o \
 			ProxyCentralServiceImpl.o \
 			StatisticsHelper.o \
 			FCDCentralServiceImpl.o \
-			FCDCentral.o \
 			FeatureValueWorker.o \
 			FeatureValueWorkerMgr.o \
 			GenomeBpBitset.o
