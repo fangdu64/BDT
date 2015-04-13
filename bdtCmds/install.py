@@ -25,12 +25,19 @@ def main(argv=None):
 	bdtCmdsDir = os.path.dirname(os.path.abspath(__file__))
 	cmdFiles = next(os.walk(bdtCmdsDir))[2]
 	pythonBinPath = iBSConfig.BDT_HomeDir + "/ThirdParty/python/bin/python3.3"
-	destDir = iBSConfig.BDT_HomeDir + "/bdt"
+	
+	shortCutCmds = [
+		'bigKmeans.py',
+		'bdvd.py']
+
 	print(bdtCmdsDir)
 	print(cmdFiles)
 	for cmdFile in cmdFiles:
 		if cmdFile == "install.py":
 			continue
+		destDir = iBSConfig.BDT_HomeDir + "/bdt/bdtCmds"
+		if cmdFile in shortCutCmds:
+			destDir = iBSConfig.BDT_HomeDir
 		install_python_cmdline(bdtCmdsDir, cmdFile, destDir, pythonBinPath)
 
 if __name__ == "__main__":

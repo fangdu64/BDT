@@ -9,8 +9,10 @@ iBS_SliceSrcDir =$(bdt_topdir)/common/slice
 iBS_iBSPyDestDir =$(BDT_Install)/bdt/bdtPy
 iBS_iBSPySrcDir =$(bdt_topdir)/bdtPy
 
-iBS_iBSToolsDestDir =$(BDT_Install)
-iBS_iBSToolsSrcDir =$(bdt_topdir)/bdtCmds
+iBS_iBSShortcutCmdDestDir =$(BDT_Install)
+iBS_iBSCmdDestDir =$(BDT_Install)/bdt/bdtCmds
+iBS_pythonBin =$(BDT_Install)/ThirdParty/python/bin/python3.3
+iBS_cmdtoolInstall =$(bdt_topdir)/bdtCmds/install.py
 
 iBS_iBSConfigDestDir =$(BDT_Install)/bdt/config
 iBS_iBSConfigSrcDir =$(bdt_topdir)/common/config
@@ -57,8 +59,10 @@ install::
 	@echo R_BinDir=\"$(R_BinDir)\" > $(iBS_iBSPyDestDir)/iBSConfig.py
 	@echo BDT_HomeDir=\"$(BDT_Install)\" >> $(iBS_iBSPyDestDir)/iBSConfig.py
 
-	rm -rf $(iBS_iBSToolsDestDir)/*.py
-	cp -rf $(iBS_iBSToolsSrcDir)/* $(iBS_iBSToolsDestDir)
+	rm -rf $(iBS_iBSShortcutCmdDestDir)/*.py
+	rm -rf $(iBS_iBSCmdDestDir)/*.py
+	
+	$(iBS_pythonBin) $(iBS_cmdtoolInstall)
 	
 	rm -rf $(iBS_iBSRDestDir)
 	$(call mkdir,$(iBS_iBSRDestDir), -p)
