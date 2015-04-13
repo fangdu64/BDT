@@ -10,9 +10,14 @@ project_builddir=.
 project_srcdir 	= $(bdt_topdir)/bdtCore
 
 iBS_slicedir   	= $(bdt_topdir)/common/slice/bdt
-Bamtools_includedir = $(bdt_topdir)/ThirdParty/BamTools
+bamtools_includedir = $(bdt_topdir)/ThirdParty/BamTools
 iBS_includedir 	= $(bdt_topdir)/common/include
 armadillo_includedir=$(bdt_topdir)/ThirdParty/Armadillo/armadillo-4.650.4/include
+
+ifeq ($(BOOST_TOPDIR),)
+   BOOST_TOPDIR	= $(bdt_topdir)/ThirdParty/boost/boost_1_55_0
+endif
+boost_includedir=$(BOOST_TOPDIR)
 
 STATICLIBS = yes
 iBSLibDir	= $(BDT_Install)/bdt/lib
