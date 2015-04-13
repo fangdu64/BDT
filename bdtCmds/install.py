@@ -9,7 +9,7 @@ import iBSConfig
 
 def install_python_cmdline(srcDir, srcFileName, destDir, pythonBinPath):
     infile = open("{0}/{1}".format(srcDir, srcFileName))
-    outFN = "{0}/{1}".format(destDir, srcFileName)
+    outFN = "{0}/{1}".format(destDir, srcFileName.replace(".py",""))
     outfile = open(outFN, "w")
     replacements = {"__PYTHON_BIN_PATH__":pythonBinPath}
 
