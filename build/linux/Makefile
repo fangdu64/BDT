@@ -1,8 +1,11 @@
-SUBDIRS = ../../ThirdParty bdtUtil bdtCore
+SUBDIRS = ../../ThirdParty bdtUtil bdtCore bigMat bigKmeans/server bigKmeans/contractor
 .PHONY: $(SUBDIRS)
 
 bdtUtil: ../../ThirdParty
 bdtCore: bdtUtil
+bigMat: bdtCore
+bigKmeans/server: bigMat
+bigKmeans/contractor: bigMat
 
 all install:: $(SUBDIRS)
 
