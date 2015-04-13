@@ -62,6 +62,12 @@ install::
 	rm -rf $(iBS_iBSShortcutCmdDestDir)/*.py
 	rm -rf $(iBS_iBSCmdDestDir)/*.py
 	
+	if test ! -d $(iBS_iBSCmdDestDir) ; \
+	then \
+		mkdir -p $(iBS_iBSCmdDestDir) ; \
+		chmod a+rx $(iBS_iBSCmdDestDir) ; \
+	fi
+	
 	$(iBS_pythonBin) $(iBS_cmdtoolInstall)
 	
 	rm -rf $(iBS_iBSRDestDir)
