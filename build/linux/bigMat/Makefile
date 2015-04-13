@@ -7,7 +7,7 @@ bdt_topdir		= ../../..
 include $(bdt_topdir)/config/Make.rules
 top_srcdir		= $(bdt_topdir)/ThirdParty/Ice/Ice-3.5.1/cpp
 project_builddir=.
-project_srcdir 	= $(bdt_topdir)/bdtCore
+project_srcdir 	= $(bdt_topdir)/bigMat
 iBS_slicedir   	= $(bdt_topdir)/common/slice/bdt
 iBS_includedir 	= $(bdt_topdir)/common/include
 bdtCore_dir 	= $(bdt_topdir)/bdtCore
