@@ -13,6 +13,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bigMat", "..\projects\bigMa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bdvd", "..\projects\bdvd\bdvd.vcxproj", "{C8FC1EFF-0759-4991-8DE0-A6DFCFF4EE32}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bigKmeansServer", "..\projects\bigKmeans\server\bigKmeansServer.vcxproj", "{FEFCF9A2-31FB-4602-8820-ED8F99E82621}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bigKmeansContractor", "..\projects\bigKmeans\contractor\bigKmeansContractor.vcxproj", "{FEEEF9A2-31FB-4602-8820-ED8F99E82621}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -39,6 +43,14 @@ Global
 		{C8FC1EFF-0759-4991-8DE0-A6DFCFF4EE32}.Debug|x64.Build.0 = Release|x64
 		{C8FC1EFF-0759-4991-8DE0-A6DFCFF4EE32}.Release|x64.ActiveCfg = Release|x64
 		{C8FC1EFF-0759-4991-8DE0-A6DFCFF4EE32}.Release|x64.Build.0 = Release|x64
+		{FEFCF9A2-31FB-4602-8820-ED8F99E82621}.Debug|x64.ActiveCfg = Release|x64
+		{FEFCF9A2-31FB-4602-8820-ED8F99E82621}.Debug|x64.Build.0 = Release|x64
+		{FEFCF9A2-31FB-4602-8820-ED8F99E82621}.Release|x64.ActiveCfg = Release|x64
+		{FEFCF9A2-31FB-4602-8820-ED8F99E82621}.Release|x64.Build.0 = Release|x64
+		{FEEEF9A2-31FB-4602-8820-ED8F99E82621}.Debug|x64.ActiveCfg = Release|x64
+		{FEEEF9A2-31FB-4602-8820-ED8F99E82621}.Debug|x64.Build.0 = Release|x64
+		{FEEEF9A2-31FB-4602-8820-ED8F99E82621}.Release|x64.ActiveCfg = Release|x64
+		{FEEEF9A2-31FB-4602-8820-ED8F99E82621}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
