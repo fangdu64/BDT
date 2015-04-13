@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bigKmeansContractor", "..\p
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "bdtPy", "..\..\..\bdtPy\bdtPy.pyproj", "{68D4560D-6FE2-476F-B11A-6B19090BCBAE}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "bdtCmds", "..\..\..\bdtCmds\bdtCmds.pyproj", "{68D4560D-6FE2-476F-B22A-6B19090BCBAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,12 @@ Global
 		{68D4560D-6FE2-476F-B11A-6B19090BCBAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68D4560D-6FE2-476F-B11A-6B19090BCBAE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{68D4560D-6FE2-476F-B11A-6B19090BCBAE}.Release|x64.ActiveCfg = Release|Any CPU
+		{68D4560D-6FE2-476F-B22A-6B19090BCBAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68D4560D-6FE2-476F-B22A-6B19090BCBAE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{68D4560D-6FE2-476F-B22A-6B19090BCBAE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{68D4560D-6FE2-476F-B22A-6B19090BCBAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68D4560D-6FE2-476F-B22A-6B19090BCBAE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{68D4560D-6FE2-476F-B22A-6B19090BCBAE}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
