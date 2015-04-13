@@ -31,9 +31,6 @@
     <ClCompile Include="..\..\..\..\bigMat\BamToBinCountCreator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\bigMat\GenomeBpBitset.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\bigMat\BigMat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
