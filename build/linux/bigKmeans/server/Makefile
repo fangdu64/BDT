@@ -3,7 +3,7 @@
 # bigKmeansServer
 #
 # **********************************************************************
-bdt_topdir		= ../../..
+bdt_topdir		= ../../../..
 include $(bdt_topdir)/config/Make.rules
 top_srcdir		= $(bdt_topdir)/ThirdParty/Ice/Ice-3.5.1/cpp
 project_builddir=.
