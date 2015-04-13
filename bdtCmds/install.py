@@ -24,13 +24,13 @@ def main(argv=None):
 	bdtCmdsDir = os.path.dirname(os.path.abspath(__file__))
 	cmdFiles = next(os.walk(bdtCmdsDir))[2]
 	pythonBinPath = iBSConfig.BDT_HomeDir + "/ThirdParty/python/bin/python3.3"
+	destDir = iBSConfig.BDT_HomeDir + "/bdt"
 	print(bdtCmdsDir)
 	print(cmdFiles)
 	for cmdFile in cmdFiles:
 		if cmdFile == "install.py":
 			continue
-		install_python_cmdline(bdtCmdsDir,srcFileName
-
+		install_python_cmdline(bdtCmdsDir, srcFileName, destDir, pythonBinPath)
 
 if __name__ == "__main__":
-    sys.exit(main())
+	sys.exit(main())
