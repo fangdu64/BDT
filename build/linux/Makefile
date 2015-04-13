@@ -1,7 +1,8 @@
-SUBDIRS = ../../ThirdParty bdtUtil
+SUBDIRS = ../../ThirdParty bdtUtil bdtCore
 .PHONY: $(SUBDIRS)
 
 bdtUtil: ../../ThirdParty
+bdtCore: bdtUtil
 
 all install:: $(SUBDIRS)
 
