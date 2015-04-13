@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FEFCF9A2-31FB-4602-8820-ED8F99E82621}</ProjectGuid>
+    <RootNamespace>bigKmeansServer</RootNamespace>
+    <ProjectName>bigKmeansServer</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.51106.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\..\..\bin\$(Platform)\Dlls\$(Configuration)\</OutDir>
+    <IntDir>..\..\..\bin\$(Platform)\Objs\$(Configuration)\$(ProjectName)\</IntDir>
+    <ExecutablePath>D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\bin\vc120\x64;$(ExecutablePath)</ExecutablePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.;..\..\..\..\..\bigKmeans\server;..\..\..\..\..\common\include;D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\include;..\..\..\..\..\ThirdParty\boost\boost_1_55_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/d2Zi+</AdditionalOptions>
+      <ShowIncludes>false</ShowIncludes>
+    </ClCompile>
+    <Link>
+      <OutputFile>..\..\..\bin\$(Platform)\Dlls\$(Configuration)\$(ProjectName).exe</OutputFile>
+      <AdditionalLibraryDirectories>D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\lib\vc120\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalDependencies>freeze.lib;ice.lib;iceutil.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <OutputFile>..\..\bin\..\$(Platform)\Libs\$(Configuration)\$(ProjectName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\bigKmeans\server\KMeanProject.cpp" />
+    <ClCompile Include="..\..\..\..\..\bigKmeans\server\KMeanServerImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\bigKmeans\server\GlobalVars.cpp" />
+    <ClCompile Include="..\..\..\..\..\bigKmeans\server\KMeanWorkItem.cpp" />
+    <ClCompile Include="..\..\..\..\..\bigKmeans\server\KMeanProjectMgr.cpp" />
+    <ClCompile Include="..\..\..\..\..\bigKmeans\server\KMeanWorker.cpp" />
+    <ClCompile Include="FCDCentralService.cpp" />
+    <ClCompile Include="BasicSliceDefine.cpp" />
+    <ClCompile Include="..\..\..\..\..\bigKmeans\server\KMeanServer.cpp" />
+    <ClCompile Include="KMeanService.cpp" />
+    <ClCompile Include="KMeanServiceI.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\common\include\bdtUtil\RowAdjustHelper.h" />
+    <ClInclude Include="..\..\..\..\..\common\include\bdt\bdtBase.h" />
+    <ClInclude Include="..\..\..\..\..\bigKmeans\server\KMeanProject.h" />
+    <ClInclude Include="..\..\..\..\..\bigKmeans\server\KMeanServerImpl.h" />
+    <ClInclude Include="..\..\..\..\..\bigKmeans\server\GlobalVars.h" />
+    <ClInclude Include="..\..\..\..\..\bigKmeans\server\KMeanWorkItem.h" />
+    <ClInclude Include="..\..\..\..\..\bigKmeans\server\KMeanProjectMgr.h" />
+    <ClInclude Include="..\..\..\..\..\bigKmeans\server\KMeanWorker.h" />
+    <ClInclude Include="FCDCentralService.h" />
+    <ClInclude Include="BasicSliceDefine.h" />
+    <ClInclude Include="KMeanService.h" />
+    <ClInclude Include="KMeanServiceI.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\..\..\common\slice\bdt\FCDCentralService.ice">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">slice2cpp.exe --ice -I. %(FullPath)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">FCDCentralService.h;FCDCentralService.cpp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">BasicSliceDefine.h</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\common\slice\bdt\KMeanService.ice">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">del KMeanServiceI.h KMeanServiceI.cpp
+slice2cpp.exe --ice -I. %(FullPath) --impl</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">KMeanService.h;KMeanService.cpp;KMeanServiceI.h;KMeanServiceI.cpp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">FCDCentralService.h</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\..\..\common\slice\bdt\BasicSliceDefine.ice">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">slice2cpp.exe --ice -I. %(FullPath)</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">BasicSliceDefine.h;BasicSliceDefine.cpp</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\bdtUtil\bdtUtil.vcxproj">
+      <Project>{c8fc18aa-0764-4aa1-8de0-b6dbb2a4ee32}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties ZerocIce_Enabled="False" ZerocIce_Components="Freeze" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
