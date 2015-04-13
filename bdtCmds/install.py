@@ -9,7 +9,8 @@ import iBSConfig
 
 def install_python_cmdline(srcDir, srcFileName, destDir, pythonBinPath):
     infile = open("{0}/{1}".format(srcDir, srcFileName))
-    outfile = open("{0}/{1}".format(destDir, srcFileName), "w")
+    outFN = "{0}/{1}".format(destDir, srcFileName)
+	outfile = open(outFN, "w")
 
     replacements = {"__PYTHON_BIN_PATH__":pythonBinPath}
 
@@ -19,6 +20,7 @@ def install_python_cmdline(srcDir, srcFileName, destDir, pythonBinPath):
         outfile.write(line)
     infile.close()
     outfile.close()
+	os.chmod(outFN, 0o755)
 
 def main(argv=None):
 	bdtCmdsDir = os.path.dirname(os.path.abspath(__file__))
@@ -30,7 +32,7 @@ def main(argv=None):
 	for cmdFile in cmdFiles:
 		if cmdFile == "install.py":
 			continue
-		install_python_cmdline(bdtCmdsDir, srcFileName, destDir, pythonBinPath)
+		install_python_cmdline(bdtCmdsDir, cmdFile, destDir, pythonBinPath)
 
 if __name__ == "__main__":
 	sys.exit(main())
