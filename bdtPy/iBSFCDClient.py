@@ -1,12 +1,8 @@
 import sys, traceback, Ice
+import iBSConfig
 import iBSUtil
 
-if not iBSUtil.cwdAtBDT():
-    print("error: current path is not at BDT's root director",file=sys.stderr)
-    sys.exit(1)
-
-#current dir should be at BDT install dir
-iBS_SliceDir="./bdt/slice/bdt"
+iBS_SliceDir= iBSConfig.BDT_HomeDir+"/bdt/slice/bdt"
 iBS_LoadSliceFlag="--all -I"+iBS_SliceDir
 
 Ice.loadSlice(iBS_LoadSliceFlag,[iBS_SliceDir+"/FCDCentralService.ice"])
