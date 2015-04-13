@@ -5,14 +5,14 @@
 # **********************************************************************
 bdt_topdir		= ../../..
 include $(bdt_topdir)/config/Make.rules
-top_srcdir		= ../../../ThirdParty/Ice/Ice-3.5.1/cpp
+top_srcdir		= $(bdt_topdir)/ThirdParty/Ice/Ice-3.5.1/cpp
 project_builddir=.
-project_srcdir 	= ../../../bdtCore
+project_srcdir 	= $(bdt_topdir)/bdtCore
 
-iBS_slicedir   	= ../../../common/slice/bdt
-Bamtools_includedir = ../../../ThirdParty/BamTools
-iBS_includedir 	= ../../../common/include
-armadillo_includedir=$(bdt_topdir)/Armadillo/armadillo-4.650.4/include
+iBS_slicedir   	= $(bdt_topdir)/common/slice/bdt
+Bamtools_includedir = $(bdt_topdir)/ThirdParty/BamTools
+iBS_includedir 	= $(bdt_topdir)/common/include
+armadillo_includedir=$(bdt_topdir)/ThirdParty/Armadillo/armadillo-4.650.4/include
 
 STATICLIBS = yes
 iBSLibDir	= $(BDT_Install)/bdt/lib
