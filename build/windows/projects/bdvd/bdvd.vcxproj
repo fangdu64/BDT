@@ -31,7 +31,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\..\bin\$(Platform)\Dlls\$(Configuration)\</OutDir>
     <IntDir>..\..\bin\$(Platform)\Objs\$(Configuration)\$(ProjectName)\</IntDir>
-    <ExecutablePath>D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\bin\vc120\x64;$(ExecutablePath)</ExecutablePath>
+    <ExecutablePath>..\dependency\Ice\Ice-3.5.1\bin\vc120\x64;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
@@ -40,7 +40,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;..\..\..\..\bdvd;..\..\..\..\bdtCore;..\bdtCore;..\..\..\..\common\include;D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\include;..\..\..\..\ThirdParty\Armadillo\armadillo-4.650.4\include;..\..\..\..\ThirdParty\boost\boost_1_55_0;..\..\..\..\ThirdParty\BamTools;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\..\..\..\bdvd;..\..\..\..\bdtCore;..\bdtCore;..\..\..\..\common\include;..\..\..\..\ThirdParty\Ice\Ice-3.5.1\cpp\include;..\..\..\..\ThirdParty\Armadillo\armadillo-4.650.4\include;..\..\..\..\ThirdParty\boost\boost_1_55_0;..\..\..\..\ThirdParty\BamTools;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>ARMA_USE_LAPACK;ARMA_USE_BLAS;ARMA_NO_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -51,7 +51,7 @@
     </ClCompile>
     <Link>
       <OutputFile>..\..\bin\$(Platform)\Dlls\$(Configuration)\$(ProjectName).exe</OutputFile>
-      <AdditionalLibraryDirectories>D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\lib\vc120\x64;..\..\..\..\ThirdParty\Armadillo\armadillo-4.650.4\examples\lib_win64;E:\iBS\Libs\zlib\zlib-1.2.8\contrib\vstudio\vc11\x64\ZlibStatRelease;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\dependency\Ice\Ice-3.5.1\lib\vc120\x64;..\..\..\..\ThirdParty\Armadillo\armadillo-4.650.4\examples\lib_win64;..\dependency\zlib\zlib-1.2.8\lib\vc120\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

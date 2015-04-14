@@ -40,7 +40,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;..\..\..\..\bdtCore;..\..\..\..\common\include;D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\include;..\..\..\..\ThirdParty\Armadillo\armadillo-4.650.4\include;D:\CS\Boost\boost_1_55_0;..\..\..\..\ThirdParty\BamTools;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\..\..\..\bdtCore;..\..\..\..\common\include;..\..\..\..\ThirdParty\Ice\Ice-3.5.1\cpp\include;..\..\..\..\ThirdParty\Armadillo\armadillo-4.650.4\include;D:\CS\Boost\boost_1_55_0;..\..\..\..\ThirdParty\BamTools;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>ARMA_USE_LAPACK;ARMA_USE_BLAS;ARMA_NO_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>

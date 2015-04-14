@@ -31,7 +31,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\..\..\bin\$(Platform)\Dlls\$(Configuration)\</OutDir>
     <IntDir>..\..\..\bin\$(Platform)\Objs\$(Configuration)\$(ProjectName)\</IntDir>
-    <ExecutablePath>D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\bin\vc120\x64;$(ExecutablePath)</ExecutablePath>
+    <ExecutablePath>..\..\..\dependency\Ice\Ice-3.5.1\bin\vc120\x64;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
@@ -40,7 +40,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;..\..\..\..\..\bigKmeans\contractor;..\..\..\..\..\common\include;D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\include;..\..\..\..\..\ThirdParty\boost\boost_1_55_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\..\..\..\..\bigKmeans\contractor;..\..\..\..\..\common\include;..\..\..\..\..\ThirdParty\Ice\Ice-3.5.1\cpp\include;..\..\..\..\..\ThirdParty\boost\boost_1_55_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -51,7 +51,7 @@
     </ClCompile>
     <Link>
       <OutputFile>..\..\..\bin\$(Platform)\Dlls\$(Configuration)\$(ProjectName).exe</OutputFile>
-      <AdditionalLibraryDirectories>D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\lib\vc120\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\dependency\Ice\Ice-3.5.1\lib\vc120\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -77,7 +77,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\common\include\bdtUtil\RowAdjustHelper.h" />
     <ClInclude Include="..\..\..\..\..\common\include\bdt\bdtBase.h" />
-	<ClInclude Include="..\..\..\..\..\bigKmeans\contractor\KMeanCommonDefine.h" />
+    <ClInclude Include="..\..\..\..\..\bigKmeans\contractor\KMeanCommonDefine.h" />
     <ClInclude Include="..\..\..\..\..\bigKmeans\contractor\KMeanContract.h" />
     <ClInclude Include="..\..\..\..\..\bigKmeans\contractor\GlobalVars.h" />
     <ClInclude Include="..\..\..\..\..\bigKmeans\contractor\KMeanContractorImpl.h" />
