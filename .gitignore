@@ -9,8 +9,6 @@
 # Build Results
 [Dd]ebug/
 [Rr]elease/
-x64/
-[Bb]in/
 [Oo]bj/
 
 # MSTest test Results
@@ -101,4 +99,5 @@ $RECYCLE.BIN/
 # ================================
 # python project
 # ================================
+*.pyc
 __pycache__/
