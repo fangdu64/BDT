@@ -17,7 +17,7 @@ def getUsableTcpPort():
     return port
 
 def get_version():
-   return "__VERSION__"
+   return "1.0"
 
 # Format a DateTime as a pretty string.
 # FIXME: Currently doesn't support days!
@@ -95,3 +95,9 @@ def parseIntSeqSeq(value):
             continue
         ks.append(parseIntSeq(g))
     return ks
+
+def getFirstNone(valueList):
+    for i in range(len(valueList)):
+        if valueList is None:
+            return i
+    return -1

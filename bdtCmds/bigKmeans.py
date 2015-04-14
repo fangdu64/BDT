@@ -1,14 +1,6 @@
 #!__PYTHON_BIN_PATH__
 
-"""
-pipeline-kmeans++.py
-Created by Fang Du on 2014-11-11.
-"""
 import os
-BDT_HomeDir=os.path.dirname(os.path.abspath(__file__))
-if os.getcwd()!=BDT_HomeDir:
-    os.chdir(BDT_HomeDir)
-
 import sys, traceback
 import getopt
 import subprocess
@@ -19,6 +11,10 @@ import logging
 import random
 
 import iBSConfig
+BDT_HomeDir = iBSConfig.BDT_HomeDir
+if os.getcwd()!=BDT_HomeDir:
+    os.chdir(BDT_HomeDir)
+
 import iBSUtil
 import iBSDefines
 import iBSFCDClient as fcdc
@@ -44,7 +40,7 @@ class Usage(Exception):
     def __init__(self, msg):
         self.msg = msg
 
-output_dir = "~/kmeans++/"
+output_dir = "~/bigKmeans/"
 logging_dir = output_dir + "logs/"
 
 bdvd_log_handle = None #main log file handle
@@ -93,18 +89,19 @@ class BDVDParams:
     def parse_options(self, argv):
         try:
             opts, args = getopt.getopt(argv[1:], "hvp:m:o:",
-                                        ["version",
-                                         "help",
-                                         "start-from=",
-                                         "data=",
-                                         "out=",
-                                         "thread-num=",
-                                         "dist-type=",
-                                         "ncol=",
-                                         "nrow=",
-                                         "k=",
-                                         "max-iter=",
-                                         "min-expchg="])
+                ["version",
+                "help",
+                "start-from=",
+                "data=",
+                "out=",
+                "thread-num=",
+                "dist-type=",
+                "ncol=",
+                "nrow=",
+                "k=",
+                "max-iter=",
+                "min-expchg="])
+
         except getopt.error as msg:
             raise Usage(msg)
 
@@ -116,7 +113,7 @@ class BDVDParams:
         # option processing
         for option, value in opts:
             if option in ("-v", "--version"):
-                print("KMeans++ v",iBSUtil.get_version())
+                print("bigKmeans v",iBSUtil.get_version())
                 sys.exit(0)
             if option in ("-h", "--help"):
                 raise Usage(use_message)
@@ -125,8 +122,9 @@ class BDVDParams:
             if option in ("-o", "--out"):
                 custom_out_dir = value + "/"
             if option =="--start-from":
-                if value not in ('1-input-mat', '2-kmeans++'):
-                    raise Usage('invalid --start-from')
+                allowedValues = ('1-input-mat', '2-run-kmeans');
+                if value not in allowedValues:
+                    raise Usage('--start-from should be one of the {0}'.format(allowedValues))
                 self.start_from = value
             if option == "--data":
                 self.data_file = value
@@ -139,21 +137,25 @@ class BDVDParams:
             if option in ("--min-expchg"):
                 self.kmeans_minexplainedchange = float(value)
             if option =="--dist_type":
+                allowedValues = ('Euclidean', 'Correlation');
+                if value not in allowedValues:
+                    raise Usage('--dist_type should be one of the {0}'.format(allowedValues))
                 self.dist_type = value
             if option =="--k":
                 self.kmeans_ks = iBSUtil.parseIntSeq(value)
                 if len(self.kmeans_ks)<1:
-                    raise Usage(use_message)
+                    raise Usage('invalid --k')
 
         if custom_out_dir:
             output_dir = custom_out_dir
             logging_dir = output_dir + "logs/"
         self.pipeline_rundir=output_dir+"run"
         
-        if (self.data_file is None) or (self.kmeans_ks is None) or (custom_out_dir is None):
-            raise Usage(use_message)
-        if (self.col_cnt is None) or (self.row_cnt is None):
-            raise Usage(use_message)
+        requiredNames = ['--data', '--k', '--out', '--ncol', '--nrow']
+        providedValues = [self.data_file, self.kmeans_ks, custom_out_dir, self.col_cnt, self.row_cnt]
+        noneIdx = iBSUtil.getFirstNone(providedValues)
+        if noneIdx != -1:
+            raise Usage("{0} is required".format(requiredNames[noneIdx]))
 
         return args
 
@@ -192,15 +194,15 @@ def prepare_output_dir():
 # -----------------------------------------------------------
 def s01_ext2mat():
     nodeName = "s01_ext2mat"
-    nodeDir=gParams.pipeline_rundir+"/"+nodeName
-    nodeScriptDir=nodeDir+"-script"
+    nodeDir = gParams.pipeline_rundir + "/" + nodeName
+    nodeScriptDir = nodeDir + "-script"
 
     subnode_picke_file = "{0}/{1}.pickle".format(nodeDir,nodeName)
     if gParams.dry_run:
         return subnode_picke_file
 
     if gParams.remove_before_run and os.path.exists(nodeDir):
-        bdvd_logp("remove existing dir: {0}".format(nodeDir))
+        bdvd_logp("remove existing dir: {0}".format(nodeDir))   
         shutil.rmtree(nodeDir)
 
     if not os.path.exists(nodeScriptDir):
