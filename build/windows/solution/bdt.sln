@@ -21,6 +21,8 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "bdtPy", "..\..\..\bdtPy\bdt
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "bdtCmds", "..\..\..\bdtCmds\bdtCmds.pyproj", "{68D4560D-6FE2-476F-B22A-6B19090BCBAE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bdtSlice", "..\projects\bdtSlice\bdtSlice.vcxproj", "{C8FC18BB-0764-4AA1-8DE0-B6DBB2A4EFE2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,16 @@ Global
 		{68D4560D-6FE2-476F-B22A-6B19090BCBAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68D4560D-6FE2-476F-B22A-6B19090BCBAE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{68D4560D-6FE2-476F-B22A-6B19090BCBAE}.Release|x64.ActiveCfg = Release|Any CPU
+		{C8FC18BB-0764-4AA1-8DE0-B6DBB2A4EFE2}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{C8FC18BB-0764-4AA1-8DE0-B6DBB2A4EFE2}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{C8FC18BB-0764-4AA1-8DE0-B6DBB2A4EFE2}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{C8FC18BB-0764-4AA1-8DE0-B6DBB2A4EFE2}.Debug|x64.ActiveCfg = Debug|x64
+		{C8FC18BB-0764-4AA1-8DE0-B6DBB2A4EFE2}.Debug|x64.Build.0 = Debug|x64
+		{C8FC18BB-0764-4AA1-8DE0-B6DBB2A4EFE2}.Release|Any CPU.ActiveCfg = Release|x64
+		{C8FC18BB-0764-4AA1-8DE0-B6DBB2A4EFE2}.Release|Mixed Platforms.ActiveCfg = Release|x64
+		{C8FC18BB-0764-4AA1-8DE0-B6DBB2A4EFE2}.Release|Mixed Platforms.Build.0 = Release|x64
+		{C8FC18BB-0764-4AA1-8DE0-B6DBB2A4EFE2}.Release|x64.ActiveCfg = Release|x64
+		{C8FC18BB-0764-4AA1-8DE0-B6DBB2A4EFE2}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
