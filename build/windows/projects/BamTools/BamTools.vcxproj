@@ -175,7 +175,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;..\..\..\..\ThirdParty\BamTools;..\..\..\..\common\include;E:\iBS\Libs\zlib\zlib128-dll\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\..\..\..\ThirdParty\BamTools;..\..\..\..\common\include;..\..\dependency\zlib\zlib-1.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_FILE_OFFSET_BITS=64;BAMTOOLS_API_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
