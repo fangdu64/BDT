@@ -99,5 +99,7 @@ $RECYCLE.BIN/
 # ================================
 # python project
 # ================================
+# install time config
+/bdtPy/iBSConfig.py
 *.pyc
 __pycache__/
