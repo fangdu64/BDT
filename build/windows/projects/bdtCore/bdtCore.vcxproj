@@ -31,7 +31,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\..\bin\$(Platform)\Dlls\$(Configuration)\</OutDir>
     <IntDir>..\..\bin\$(Platform)\Objs\$(Configuration)\$(ProjectName)\</IntDir>
-    <ExecutablePath>D:\CS\Ice\Ice-3.5.1\Install\Ice-3.5.1\bin\vc120\x64;$(ExecutablePath)</ExecutablePath>
+    <ExecutablePath>..\..\dependency\Ice\Ice-3.5.1\bin\vc120\x64;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
