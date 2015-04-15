@@ -51,7 +51,7 @@
     </ClCompile>
     <Link>
       <OutputFile>..\..\bin\$(Platform)\Dlls\$(Configuration)\$(ProjectName).exe</OutputFile>
-      <AdditionalLibraryDirectories>..\..\dependency\Ice\Ice-3.5.1\lib\vc120\x64;..\..\..\..\ThirdParty\Armadillo\armadillo-4.650.4\examples\lib_win64;..\..\dependency\zlib\zlib-1.2.8\lib\vc120\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\dependency\Ice\Ice-3.5.1\lib\vc120\x64;..\..\dependency\Armadillo\armadillo-4.650.4\examples\lib_win64;..\..\dependency\zlib\zlib-1.2.8\lib\vc120\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
