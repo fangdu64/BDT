@@ -32,6 +32,7 @@
     <Compile Include="bigmat-bam2mat.py" />
     <Compile Include="bigmat-bfv2mat.py" />
     <Compile Include="bigmat-txt2mat.py" />
+    <Compile Include="install-win.py" />
     <Compile Include="install.py" />
   </ItemGroup>
   <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />

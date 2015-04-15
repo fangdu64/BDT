@@ -105,3 +105,8 @@ $RECYCLE.BIN/
 /build/windows/projects/bdtSlice/iBS/*.py
 *.pyc
 __pycache__/
+
+# ================================
+# windows install
+# ================================
+/build/windows/install/
