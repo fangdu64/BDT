@@ -1,6 +1,6 @@
 import sys, traceback, Ice
 import time
-import iBSUtil
+import bdtUtil
 import iBS
 
 def exportMatByRange(bdt_log,fcdcPrx, computePrx, task):

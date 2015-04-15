@@ -29,7 +29,7 @@
     <Compile Include="iBSDefines.py" />
     <Compile Include="iBSFcdcHelper.py" />
     <Compile Include="iBSFCDClient.py" />
-    <Compile Include="iBSUtil.py" />
+    <Compile Include="bdtUtil.py" />
   </ItemGroup>
   <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />
   <Import Condition="!Exists($(PtvsTargetsFile))" Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />

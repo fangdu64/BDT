@@ -1,6 +1,6 @@
 import sys, traceback, Ice
 import iBSConfig
-import iBSUtil
+import bdtUtil
 
 iBS_SliceDir= iBSConfig.BDT_HomeDir+"/bdt/slice/bdt"
 iBS_LoadSliceFlag="--all -I"+iBS_SliceDir

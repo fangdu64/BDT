@@ -1,6 +1,8 @@
 import sys
 import os
 import socket
+import logging
+
 # check if current working directory is at BDT install dir
 def cwdAtBDT():
     if os.path.exists("./bdt/slice/bdt/BasicSliceDefine.ice"):
@@ -101,3 +103,62 @@ def getFirstNone(valueList):
         if valueList is None:
             return i
     return -1
+
+# bdtRunner
+class bdtRunner:
+    def __init__(self):
+        self.output_dir = None
+        self.logging_dir = None
+        self.pipeline_rundir = None
+        self.bdvd_logger = None # main logging object
+        self.bdvd_log_handle = None #main log file handle
+
+    # Ensures that the output, logging, and temp directories are present. If not,
+    # they are created
+    def prepare_dirs(self, outDir, logDir, runDir):
+        self.output_dir = outDir
+        self.logging_dir = logDir
+        self.pipeline_rundir =runDir
+
+        if not os.path.exists(self.output_dir):
+            os.mkdir(self.output_dir)
+
+        if not os.path.exists(self.logging_dir):
+            os.mkdir(self.logging_dir)
+    
+        if not os.path.exists(self.pipeline_rundir):
+            os.mkdir(self.pipeline_rundir)
+
+    def init_logger(self, log_fname):
+        self.bdvd_logger = logging.getLogger('project')
+        formatter = logging.Formatter('%(asctime)s %(message)s', '[%Y-%m-%d %H:%M:%S]')
+        self.bdvd_logger.setLevel(logging.DEBUG)
+
+        # output logging information to stderr
+        hstream = logging.StreamHandler(sys.stderr)
+        hstream.setFormatter(formatter)
+        self.bdvd_logger.addHandler(hstream)
+    
+        #
+        # Output logging information to file
+        if os.path.isfile(log_fname):
+            os.remove(log_fname)
+        logfh = logging.FileHandler(log_fname)
+        logfh.setFormatter(formatter)
+        self.bdvd_logger.addHandler(logfh)
+        self.bdvd_log_handle=logfh.stream
+    
+    def log(self, out_str):
+      if self.bdvd_logger:
+           self.bdvd_logger.info(out_str)
+
+    # error msg
+    def logp(self, out_str=""):
+        print(out_str,file=sys.stderr)
+        if bdvd_log_handle:
+            print(out_str, file=self.bdvd_log_handle)
+
+    def die(self, msg=None):
+        if msg is not None:
+            self.logp(msg)
+        sys.exit(1)

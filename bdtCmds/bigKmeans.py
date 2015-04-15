@@ -1,5 +1,9 @@
 #!__PYTHON_BIN_PATH__
 
+"""
+command line tools for big k-means 
+"""
+
 import os
 import sys, traceback
 import getopt
@@ -7,7 +11,6 @@ import subprocess
 import shutil
 import time
 from datetime import datetime, date
-import logging
 import random
 
 import iBSConfig
@@ -15,7 +18,7 @@ BDT_HomeDir = iBSConfig.BDT_HomeDir
 if os.getcwd()!=BDT_HomeDir:
     os.chdir(BDT_HomeDir)
 
-import iBSUtil
+import bdtUtil
 import iBSDefines
 import iBSFCDClient as fcdc
 import iBS
@@ -36,46 +39,21 @@ Advanced Options:
 
 '''
 
+gParams=None
+gRunner=None
+gSteps = ['1-input-mat', '2-run-kmeans']
+
 class Usage(Exception):
     def __init__(self, msg):
         self.msg = msg
 
-output_dir = "~/bigKmeans/"
-logging_dir = output_dir + "logs/"
-
-bdvd_log_handle = None #main log file handle
-bdvd_logger = None # main logging object
-
-gParams=None
-
-def init_logger(log_fname):
-    global bdvd_logger
-    bdvd_logger = logging.getLogger('project')
-    formatter = logging.Formatter('%(asctime)s %(message)s', '[%Y-%m-%d %H:%M:%S]')
-    bdvd_logger.setLevel(logging.DEBUG)
-
-    # output logging information to stderr
-    hstream = logging.StreamHandler(sys.stderr)
-    hstream.setFormatter(formatter)
-    bdvd_logger.addHandler(hstream)
-    
-    #
-    # Output logging information to file
-    if os.path.isfile(log_fname):
-        os.remove(log_fname)
-    global bdvd_log_handle
-    logfh = logging.FileHandler(log_fname)
-    logfh.setFormatter(formatter)
-    bdvd_logger.addHandler(logfh)
-    bdvd_log_handle=logfh.stream
-
 class BDVDParams:
-
     def __init__(self):
+        self.output_dir = None
+        self.logging_dir = None
         self.start_from = '1-input-mat'
         self.dry_run = True
         self.remove_before_run = True
-
         self.pipeline_rundir = None
         self.data_file = None
         self.kmeansc_workercnt = 4
@@ -105,9 +83,6 @@ class BDVDParams:
         except getopt.error as msg:
             raise Usage(msg)
 
-        global output_dir
-        global logging_dir
-
         custom_out_dir = None
 
         # option processing
@@ -122,7 +97,7 @@ class BDVDParams:
             if option in ("-o", "--out"):
                 custom_out_dir = value + "/"
             if option =="--start-from":
-                allowedValues = ('1-input-mat', '2-run-kmeans');
+                allowedValues = gSteps;
                 if value not in allowedValues:
                     raise Usage('--start-from should be one of the {0}'.format(allowedValues))
                 self.start_from = value
@@ -146,48 +121,17 @@ class BDVDParams:
                 if len(self.kmeans_ks)<1:
                     raise Usage('invalid --k')
 
-        if custom_out_dir:
-            output_dir = custom_out_dir
-            logging_dir = output_dir + "logs/"
-        self.pipeline_rundir=output_dir+"run"
-        
         requiredNames = ['--data', '--k', '--out', '--ncol', '--nrow']
         providedValues = [self.data_file, self.kmeans_ks, custom_out_dir, self.col_cnt, self.row_cnt]
-        noneIdx = iBSUtil.getFirstNone(providedValues)
+        noneIdx = bdtUtil.getFirstNone(providedValues)
         if noneIdx != -1:
             raise Usage("{0} is required".format(requiredNames[noneIdx]))
 
+        self.output_dir = custom_out_dir
+        self.logging_dir = output_dir + "logs/"
+        self.pipeline_rundir=output_dir+"run"
+
         return args
-
-# The BDVD logging formatter
-def bdvd_log(out_str):
-  if bdvd_logger:
-       bdvd_logger.info(out_str)
-
-# error msg
-def bdvd_logp(out_str=""):
-    print(out_str,file=sys.stderr)
-    if bdvd_log_handle:
-        print(out_str, file=bdvd_log_handle)
-
-def die(msg=None):
-    if msg is not None:
-        bdvd_logp(msg)
-    sys.exit(1)
-
-
-# Ensures that the output, logging, and temp directories are present. If not,
-# they are created
-def prepare_output_dir():
-    bdvd_log("Preparing output location "+output_dir)
-    if not os.path.exists(output_dir):
-        os.mkdir(output_dir)
-
-    if not os.path.exists(logging_dir):
-        os.mkdir(logging_dir)
-    
-    if not os.path.exists(gParams.pipeline_rundir):
-        os.mkdir(gParams.pipeline_rundir)
 
 # -----------------------------------------------------------
 # Input Data to BigMat
@@ -245,7 +189,6 @@ def s01_ext2mat():
     proc = subprocess.call(node_cmd)
     bdvd_logp("end subtask \n")
     return subnode_picke_file
-
 
 # -----------------------------------------------------------
 # KMeans ++
@@ -309,10 +252,10 @@ def preparePipelineResult(kmeansPPNodeDir):
     bdvd_logp("cluster_assignments: {0}\n".format(outfile))
 
 def main(argv=None):
-
-    # Initialize default parameter values
     global gParams
+    global gRunner
     gParams = BDVDParams()
+    gRunner = bdtUtil.bdtRunner()
     run_argv = sys.argv[:]
 
     try:
@@ -322,59 +265,47 @@ def main(argv=None):
        
         start_time = datetime.now()
 
-        prepare_output_dir()
-        init_logger(logging_dir + "kmeans++.log")
+        gRunner.prepare_dirs(gParams.output_dir, gParams.logging_dir, gParams.pipeline_rundir)
+        gRunner.init_logger(gParams.logging_dir + "bigKmeans.log")
 
-        bdvd_logp()
-        bdvd_log("Beginning kmeans++ run (v"+iBSUtil.get_version()+")")
-        bdvd_logp("-----------------------------------------------")
+        gRunner.logp()
+        gRunner.log("Beginning bigKmeans run v({0})".format(bdtUtil.get_version()))
+        gRunner.logp("-----------------------------------------------")
 
         # -----------------------------------------------------------
-        # launch FCDCentral
+        # launch bigMat
         # -----------------------------------------------------------
        
-        if gParams.dry_run and gParams.start_from == '1-input-mat':
+        if gParams.dry_run and gParams.start_from == gSteps[0]:
             gParams.dry_run = False
 
         datamatPickle = s01_ext2mat()
 
         if gParams.dry_run:
-            bdvd_log("retrieve existing result for: 1-input-mat")
-            bdvd_log("from: {0}".format(datamatPickle))
+            gRunner.log("retrieve existing result for: {0}".format(gSteps[0]))
+            gRunner.log("from: {0}".format(datamatPickle))
             if not os.path.exists(datamatPickle):
-                die('file not exist')
-            bdvd_log("")
+                gRunner.die('file not exist')
+            gRunner.log("")
         
-        if gParams.dry_run and gParams.start_from == '2-kmeans++':
+        if gParams.dry_run and gParams.start_from == gSteps[1]:
             gParams.dry_run = False
 
         (nodeDir,subnode_picke)=s02_kmeansPP(datamatPickle)
         preparePipelineResult(nodeDir)
-        # -----------------------------------------------------------
-        # launch KMeans Server
-        # -----------------------------------------------------------
-        
-
-        # -----------------------------------------------------------
-        # launch KMeans Contractor
-        # -----------------------------------------------------------
-        
-        # -----------------------------------------------------------
-        # Run KMeans
-        # -----------------------------------------------------------
 
         finish_time = datetime.now()
         duration = finish_time - start_time
-        bdvd_logp("-----------------------------------------------")
-        bdvd_log("Run complete: %s elapsed" %  iBSUtil.formatTD(duration))
+        gRunner.logp("-----------------------------------------------")
+        gRunner.log("Run complete: %s elapsed" %  iBSUtil.formatTD(duration))
 
     except Usage as err:
-        bdvd_logp(sys.argv[0].split("/")[-1] + ": " + str(err.msg))
-        bdvd_logp("    for detailed help see url ...")
+        gRunner.logp(sys.argv[0].split("/")[-1] + ": " + str(err.msg))
+        gRunner.logp("    for detailed help see url ...")
         return 2
     
     except:
-        bdvd_logp(traceback.format_exc())
+        gRunner.logp(traceback.format_exc())
         die()
 
 if __name__ == "__main__":
