@@ -13,11 +13,22 @@ import time
 from datetime import datetime, date
 import random
 
-import iBSConfig
-BDT_HomeDir = iBSConfig.BDT_HomeDir
+BDT_HomeDir=os.path.dirname(os.path.abspath(__file__))
 if os.getcwd()!=BDT_HomeDir:
     os.chdir(BDT_HomeDir)
 
+Platform = None
+if Platform == "Windows":
+    # this file will be at install\
+    bdtInstallDir = BDT_HomeDir
+    icePyDir = bdtInstallDir+"\\dependency\\IcePy"
+    bdtPyDir = bdtInstallDir+"\\bdt\\bdtPy"
+    for dir in [icePyDir, bdtPyDir]:
+        if dir not in sys.path:
+            sys.path.append(dir)
+
+import iBSConfig
+iBSConfig.BDT_HomeDir = BDT_HomeDir
 import bdtUtil
 import iBSDefines
 import iBSFCDClient as fcdc
@@ -51,7 +62,7 @@ class BDVDParams:
     def __init__(self):
         self.output_dir = None
         self.logging_dir = None
-        self.start_from = '1-input-mat'
+        self.start_from = gSteps[0]
         self.dry_run = True
         self.remove_before_run = True
         self.pipeline_rundir = None
@@ -95,14 +106,14 @@ class BDVDParams:
             if option in ("-p", "--thread-num"):
                 self.kmeansc_workercnt = int(value)
             if option in ("-o", "--out"):
-                custom_out_dir = value + "/"
+                custom_out_dir = value
             if option =="--start-from":
                 allowedValues = gSteps;
                 if value not in allowedValues:
                     raise Usage('--start-from should be one of the {0}'.format(allowedValues))
                 self.start_from = value
             if option == "--data":
-                self.data_file = value
+                self.data_file = os.path.abspath(value)
             if option in ("--ncol"):
                 self.col_cnt = int(value)
             if option in ("--nrow"):
@@ -117,7 +128,7 @@ class BDVDParams:
                     raise Usage('--dist_type should be one of the {0}'.format(allowedValues))
                 self.dist_type = value
             if option =="--k":
-                self.kmeans_ks = iBSUtil.parseIntSeq(value)
+                self.kmeans_ks = bdtUtil.parseIntSeq(value)
                 if len(self.kmeans_ks)<1:
                     raise Usage('invalid --k')
 
@@ -127,17 +138,22 @@ class BDVDParams:
         if noneIdx != -1:
             raise Usage("{0} is required".format(requiredNames[noneIdx]))
 
-        self.output_dir = custom_out_dir
-        self.logging_dir = output_dir + "logs/"
-        self.pipeline_rundir=output_dir+"run"
+        providedFiles = [self.data_file]
+        noneIdx = bdtUtil.getFirstNotExistFile(providedFiles)
+        if noneIdx != -1:
+            raise Usage("{0} not exist".format(providedFiles[noneIdx]))
+
+        self.output_dir = os.path.abspath(custom_out_dir)+"/"
+        self.logging_dir = self.output_dir + "logs/"
+        self.pipeline_rundir=self.output_dir + "run"
 
         return args
 
 # -----------------------------------------------------------
 # Input Data to BigMat
 # -----------------------------------------------------------
-def s01_ext2mat():
-    nodeName = "s01_ext2mat"
+def s01_txt2mat():
+    nodeName = "s01_txt2mat"
     nodeDir = gParams.pipeline_rundir + "/" + nodeName
     nodeScriptDir = nodeDir + "-script"
 
@@ -146,7 +162,7 @@ def s01_ext2mat():
         return subnode_picke_file
 
     if gParams.remove_before_run and os.path.exists(nodeDir):
-        bdvd_logp("remove existing dir: {0}".format(nodeDir))   
+        gRunner.logp("remove existing dir: {0}".format(nodeDir))   
         shutil.rmtree(nodeDir)
 
     if not os.path.exists(nodeScriptDir):
@@ -165,7 +181,7 @@ def s01_ext2mat():
     params_pickle_fn="{0}/design_params.pickle".format(nodeScriptDir)
     iBSDefines.dumpPickle(design_params, params_pickle_fn)
 
-    design_file=BDT_HomeDir+"/iBS/iBSPy/PipelineDesigns/bdvdTxt2MatDesign.py"
+    design_file=BDT_HomeDir+"/bdt/bdtPy/PipelineDesigns/bdvdTxt2MatDesign.py"
     shutil.copy(design_file,nodeScriptDir)
 
     #
@@ -173,21 +189,24 @@ def s01_ext2mat():
     #
     design_fn=os.path.abspath(nodeScriptDir)+"/bdvdTxt2MatDesign.py"
     subnode=nodeName
-    cmdpath="{0}/bdvd-txt2mat.py".format(BDT_HomeDir)
-    node_cmd = [cmdpath,
-                "--node",nodeName,
+    cmdpath="{0}/bdt/bdtCmds/bigmat-txt2mat".format(BDT_HomeDir)
+    if Platform == "Windows":
+        node_cmd = ["py", cmdpath]
+    else:
+        node_cmd = [cmdpath]
+    node_cmd.extend(["--node", nodeName,
                 "--num-threads", "4",
                 "--output-dir",nodeDir,
-                design_fn]
+                design_fn])
       
     shell_cmd=""
     for strCmd in node_cmd:
         shell_cmd=shell_cmd+strCmd+" "
     #print(shell_cmd)
 
-    bdvd_logp("run subtask at: {0}".format(nodeDir))
+    gRunner.logp("run subtask at: {0}".format(nodeDir))
     proc = subprocess.call(node_cmd)
-    bdvd_logp("end subtask \n")
+    gRunner.logp("end subtask \n")
     return subnode_picke_file
 
 # -----------------------------------------------------------
@@ -238,10 +257,10 @@ def s02_kmeansPP(datamatPickle):
         shell_cmd=shell_cmd+str+" "
     #print(shell_cmd)
 
-    bdvd_logp("run subtask at: {0}".format(nodeDir))
+    gRunner.logp("run subtask at: {0}".format(nodeDir))
     proc = subprocess.call(node_cmd)
     subnode_picke_file="{0}/{1}.pickle".format(nodeDir,nodeName)
-    bdvd_logp("end subtask \n")
+    gRunner.logp("end subtask \n")
     return (nodeDir,subnode_picke_file)
 
 def preparePipelineResult(kmeansPPNodeDir):
@@ -249,7 +268,7 @@ def preparePipelineResult(kmeansPPNodeDir):
     shutil.copy("{0}/gid_10001.bfv".format(kmeansPPNodeDir),
                 "{0}cluster_assignments.bfv".format(output_dir))
 
-    bdvd_logp("cluster_assignments: {0}\n".format(outfile))
+    gRunner.logp("cluster_assignments: {0}\n".format(outfile))
 
 def main(argv=None):
     global gParams
@@ -279,7 +298,7 @@ def main(argv=None):
         if gParams.dry_run and gParams.start_from == gSteps[0]:
             gParams.dry_run = False
 
-        datamatPickle = s01_ext2mat()
+        datamatPickle = s01_txt2mat()
 
         if gParams.dry_run:
             gRunner.log("retrieve existing result for: {0}".format(gSteps[0]))
@@ -306,7 +325,7 @@ def main(argv=None):
     
     except:
         gRunner.logp(traceback.format_exc())
-        die()
+        gRunner.die()
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -100,7 +100,13 @@ def parseIntSeqSeq(value):
 
 def getFirstNone(valueList):
     for i in range(len(valueList)):
-        if valueList is None:
+        if valueList[i] is None:
+            return i
+    return -1
+
+def getFirstNotExistFile(fileList):
+    for i in range(len(fileList)):
+        if not os.path.exists(fileList[i]):
             return i
     return -1
 
@@ -155,7 +161,7 @@ class bdtRunner:
     # error msg
     def logp(self, out_str=""):
         print(out_str,file=sys.stderr)
-        if bdvd_log_handle:
+        if self.bdvd_log_handle:
             print(out_str, file=self.bdvd_log_handle)
 
     def die(self, msg=None):

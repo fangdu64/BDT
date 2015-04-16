@@ -1,10 +1,7 @@
 #!__PYTHON_BIN_PATH__
 
 """
-bdvd-bam2mat.py
-
-Created by Fang Du on 2014-07-24.
-Copyright (c) 2014 Fang Du. All rights reserved.
+bigmat-bam2mat
 """
 
 import sys, traceback
@@ -17,8 +14,25 @@ from datetime import datetime, date
 import logging
 from copy import deepcopy
 
+BDT_HomeDir=os.path.abspath(os.path.dirname(os.path.abspath(__file__))+"../../..")
+print(BDT_HomeDir)
+if os.getcwd()!=BDT_HomeDir:
+    os.chdir(BDT_HomeDir)
+
+Platform = None
+if Platform == "Windows":
+    # this file will be at install\
+    bdtInstallDir = BDT_HomeDir
+    icePyDir = bdtInstallDir+"\\dependency\\IcePy"
+    bdtPyDir = bdtInstallDir+"\\bdt\\bdtPy"
+    for dir in [icePyDir, bdtPyDir]:
+        if dir not in sys.path:
+            sys.path.append(dir)
+
 import iBSConfig
-import iBSUtil
+iBSConfig.BDT_HomeDir = BDT_HomeDir
+
+import bdtUtil
 import iBSDefines
 import iBSFCDClient as fcdc
 import iBS
@@ -121,7 +135,7 @@ class BDVDParams:
         # option processing
         for option, value in opts:
             if option in ("-v", "--version"):
-                print("BDT v",iBSUtil.get_version())
+                print("BDT v",bdtUtil.get_version())
                 sys.exit(0)
             if option in ("-h", "--help"):
                 raise Usage(use_message)
@@ -222,7 +236,7 @@ def prepare_output_dir():
        
 
 def prepare_fcdcentral_config(tcpPort,fvWorkerSize, iceThreadPoolSize ):
-    infile = open("./iBS/config/FCDCentralServer.config")
+    infile = open("./bdt/config/FCDCentralServer.config")
     outfile = open(fcdcentral_dir+"FCDCentralServer.config", "w")
 
     replacements = {"__FCDCentral_TCP_PORT__":str(tcpPort), 
@@ -239,7 +253,7 @@ def prepare_fcdcentral_config(tcpPort,fvWorkerSize, iceThreadPoolSize ):
 def launchFCDCentral():
     global fcdc_popen
     global fcdc_log_fhandle
-    fcdcentral_path=os.getcwd()+"/iBS/bin/FCDCentral"
+    fcdcentral_path=os.getcwd()+"/bdt/bin/bigMat"
     fcdc_cmd = [fcdcentral_path]
     bdvd_log("Launching FCDCentral ...")
     fcdc_log_file = open(logging_dir + "fcdc.log","w")
@@ -301,10 +315,10 @@ def main(argv=None):
         init_logger(logging_dir + "bdvd.log")
 
         bdvd_logp()
-        bdvd_log("Beginning BDT Txt2Mat run (v"+iBSUtil.get_version()+")")
+        bdvd_log("Beginning BDT Txt2Mat run (v"+bdtUtil.get_version()+")")
         bdvd_logp("-----------------------------------------------")
 
-        gParams.fcdc_tcp_port = iBSUtil.getUsableTcpPort()
+        gParams.fcdc_tcp_port = bdtUtil.getUsableTcpPort()
         prepare_fcdcentral_config(gParams.fcdc_tcp_port, 
                                   gParams.fcdc_fvworker_size, 
                                   gParams.fcdc_threadpool_size)
@@ -383,7 +397,7 @@ def main(argv=None):
         finish_time = datetime.now()
         duration = finish_time - start_time
         bdvd_logp("-----------------------------------------------")
-        bdvd_log("Run complete: %s elapsed" %  iBSUtil.formatTD(duration))
+        bdvd_log("Run complete: %s elapsed" %  bdtUtil.formatTD(duration))
 
     except Usage as err:
         shutdownFCDCentral()

@@ -30,6 +30,15 @@
     <Compile Include="iBSFcdcHelper.py" />
     <Compile Include="iBSFCDClient.py" />
     <Compile Include="bdtUtil.py" />
+    <Compile Include="PipelineDesigns\bdvdBam2MatDesign.py" />
+    <Compile Include="PipelineDesigns\bdvdBFV2MatDesign.py" />
+    <Compile Include="PipelineDesigns\bdvdIDs2MatDesign.py" />
+    <Compile Include="PipelineDesigns\bdvdRUVDesign.py" />
+    <Compile Include="PipelineDesigns\bdvdTxt2MatDesign.py" />
+    <Compile Include="PipelineDesigns\bigclustKMeansPPDesign.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PipelineDesigns\" />
   </ItemGroup>
   <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />
   <Import Condition="!Exists($(PtvsTargetsFile))" Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />

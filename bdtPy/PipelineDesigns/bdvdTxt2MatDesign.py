@@ -1,0 +1,53 @@
+import os
+import pickle
+import iBSDefines
+
+desing_params=os.path.dirname(os.path.abspath(__file__))+"/design_params.pickle"
+desing_params = desing_params.replace('\\', '/')
+desing_params=desing_params.replace("/script/design_params.pickle","-script/design_params.pickle")
+
+SampleNames,ColCnt,RowCnt,DataFile,FieldSep,CalcStatistics=iBSDefines.loadPickle(desing_params)
+StartingRowIdx = 0
+# ==================================================================
+# upload data
+# ==================================================================
+def uploadData(fcdcPrx, matID, batchRowCnt):
+    dataFile = DataFile
+    lineNum=0
+    dataValues=[]
+    thisBatchRowCnt=0
+    rowIdxFrom=0
+    batch=0
+    for line in open(dataFile):
+        lineNum = lineNum+1
+        #===================================
+        # Modify as appropriate to parse data
+        # values from each line
+        #===================================
+        if lineNum==0:
+            #skip first row
+            continue
+        
+        fields=line.rstrip('\n').split(FieldSep)
+        for j in range(ColCnt):
+                #skip first column
+                dataValues.append(float(fields[j+0]))
+        
+        #===================================
+        # No need to change below this line
+        #===================================
+        thisBatchRowCnt=thisBatchRowCnt+1
+        if thisBatchRowCnt>=batchRowCnt:
+            batch=batch+1
+            print("uploading batch {0}, rows {1} - {2} ...".format(batch, rowIdxFrom, rowIdxFrom+thisBatchRowCnt))
+            fcdcPrx.SetDoublesRowMatrix(matID,rowIdxFrom,rowIdxFrom+thisBatchRowCnt,dataValues)
+            rowIdxFrom = rowIdxFrom +thisBatchRowCnt
+            dataValues=[]
+            thisBatchRowCnt=0
+    if thisBatchRowCnt>0:
+            batch=batch+1
+            print("uploading batch {0}, rows {1} - {2} ...".format(batch, rowIdxFrom, rowIdxFrom+thisBatchRowCnt))
+            fcdcPrx.SetDoublesRowMatrix(matID,rowIdxFrom,rowIdxFrom+thisBatchRowCnt,dataValues)
+            rowIdxFrom = rowIdxFrom +thisBatchRowCnt
+            dataValues=[]
+            thisBatchRowCnt=0
