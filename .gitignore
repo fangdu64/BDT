@@ -100,7 +100,6 @@ $RECYCLE.BIN/
 # python project
 # ================================
 # install time config
-/bdtPy/iBSConfig.py
 /build/windows/projects/bdtSlice/*.py
 /build/windows/projects/bdtSlice/iBS/*.py
 *.pyc
