@@ -110,3 +110,8 @@ __pycache__/
 # windows install
 # ================================
 /build/windows/install/
+
+# ================================
+# examples out dir
+# ================================
+/examples/bigKMeans/txtData/windows/out/
