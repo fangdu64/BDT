@@ -1,3 +1,4 @@
+@ECHO OFF
 SET scriptPath=%~dp0
 SET pathConfigBat=%~dp0..\..\..\config\bdt_path_win.bat
 call %pathConfigBat%

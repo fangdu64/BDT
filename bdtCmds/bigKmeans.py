@@ -196,7 +196,7 @@ def s01_txt2mat():
         node_cmd = [cmdpath]
     node_cmd.extend(["--node", nodeName,
                 "--num-threads", "4",
-                "--output-dir",nodeDir,
+                "--out",nodeDir,
                 design_fn])
       
     shell_cmd=""
