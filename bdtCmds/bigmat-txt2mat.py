@@ -15,8 +15,6 @@ import logging
 from copy import deepcopy
 
 BDT_HomeDir=os.path.abspath(os.path.dirname(os.path.abspath(__file__))+"../../..")
-if os.getcwd()!=BDT_HomeDir:
-    os.chdir(BDT_HomeDir)
 
 Platform = None
 if Platform == "Windows":
@@ -122,7 +120,8 @@ class BDVDParams:
         return args
 
 def prepare_output_dir():
-    shutil.copy(gParams.design_file,"{0}/txt2MatDesign.py".format(gRunner.script_dir))
+    shutil.copy(gParams.design_file,
+                os.path.abspath("{0}/txt2MatDesign.py".format(gRunner.script_dir)))
 
 def uploadData(fcdcPrx):
     designPath=os.path.abspath(gRunner.script_dir)
@@ -154,7 +153,7 @@ def uploadData(fcdcPrx):
     return (sampleNames,observerIDs,DomainSize)
 
 def dumpOutput(ext2mat):
-    fn = "{0}/{1}".format(gRunner.output_dir, gParams.result_dumpfile)
+    fn = os.path.abspath("{0}/{1}".format(gRunner.output_dir, gParams.result_dumpfile))
     iBSDefines.dumpPickle(ext2mat,fn)
 
 def main(argv=None):
@@ -240,6 +239,7 @@ def main(argv=None):
 
         #now prepare output infomation
         (rt,bigmat_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(outOIDs[0])
+        bigmat_store_pathprefix = os.path.abspath(bigmat_store_pathprefix)
         gRunner.log("bigmat store: {0}".format(bigmat_store_pathprefix))
         bigmat = iBSDefines.BigMatrixMetaInfo()
         bigmat.Name = gParams.workflow_node

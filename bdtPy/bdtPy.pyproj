@@ -26,6 +26,7 @@
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="bigKmeansUtil.py" />
     <Compile Include="bigMatUtil.py" />
     <Compile Include="iBSConfig.py" />
     <Compile Include="iBSDefines.py" />

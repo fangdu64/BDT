@@ -14,15 +14,13 @@ from datetime import datetime, date
 import random
 
 BDT_HomeDir=os.path.dirname(os.path.abspath(__file__))
-if os.getcwd()!=BDT_HomeDir:
-    os.chdir(BDT_HomeDir)
 
 Platform = None
 if Platform == "Windows":
     # this file will be at install\
     bdtInstallDir = BDT_HomeDir
-    icePyDir = bdtInstallDir+"\\dependency\\IcePy"
-    bdtPyDir = bdtInstallDir+"\\bdt\\bdtPy"
+    icePyDir = os.path.abspath(bdtInstallDir+"/dependency/IcePy")
+    bdtPyDir = os.path.abspath(bdtInstallDir+"/bdt/bdtPy")
     for dir in [icePyDir, bdtPyDir]:
         if dir not in sys.path:
             sys.path.append(dir)
@@ -32,6 +30,7 @@ iBSConfig.BDT_HomeDir = BDT_HomeDir
 import iBSDefines
 import bdtUtil
 import bigMatUtil
+import bigKmeansUtil
 import iBSFCDClient as fcdc
 import iBS
 import Ice
@@ -144,9 +143,9 @@ class BDVDParams:
         if noneIdx != -1:
             raise Usage("{0} not exist".format(providedFiles[noneIdx]))
 
-        self.output_dir = os.path.abspath(custom_out_dir)+"/"
-        self.logging_dir = self.output_dir + "logs/"
-        self.pipeline_rundir=self.output_dir + "run"
+        self.output_dir = os.path.abspath(custom_out_dir)
+        self.logging_dir = os.path.abspath(self.output_dir + "/logs")
+        self.pipeline_rundir=os.path.abspath(self.output_dir + "/run")
 
         return args
 
@@ -178,8 +177,8 @@ def s01_txt2mat():
 # -----------------------------------------------------------
 def s02_kmeansPP(datamatPickle):
     nodeName = "s02_kmeansPP"
-    nodeDir=gParams.pipeline_rundir+"/"+nodeName
-    nodeScriptDir=nodeDir+"-script"
+    nodeDir=os.path.abspath(gParams.pipeline_rundir+"/"+nodeName)
+    nodeScriptDir=os.path.abspath(nodeDir+"-script")
 
     if not os.path.exists(nodeScriptDir):
         os.mkdir(nodeScriptDir)
@@ -198,10 +197,10 @@ def s02_kmeansPP(datamatPickle):
     KMeansContractorWorkerCnt = gParams.kmeansc_workercnt
 
     design_params=(Ks,Distance,MaxIteration,MinExplainedChanged,FeatureIdxFrom,FeatureIdxTo,KMeansContractorWorkerCnt)
-    params_pickle_fn="{0}/design_params.pickle".format(nodeScriptDir)
+    params_pickle_fn=os.path.abspath("{0}/design_params.pickle".format(nodeScriptDir))
     iBSDefines.dumpPickle(design_params, params_pickle_fn)
 
-    design_file=BDT_HomeDir+"/bdt/bdtPy/PipelineDesigns/bigclustKMeansPPDesign.py"
+    design_file=os.path.abspath(BDT_HomeDir+"/bdt/bdtPy/PipelineDesigns/bigclustKMeansPPDesign.py")
     shutil.copy(design_file,nodeScriptDir)
 
     #
@@ -209,7 +208,7 @@ def s02_kmeansPP(datamatPickle):
     #
     design_fn=os.path.abspath(nodeScriptDir)+"/bigclustKMeansPPDesign.py"
     subnode=nodeName
-    cmdpath="{0}/bdt/bdtCmds/bigclust-kmeans++".format(BDT_HomeDir)
+    cmdpath=os.path.abspath("{0}/bdt/bdtCmds/bigclust-kmeans++".format(BDT_HomeDir))
 
     if Platform == "Windows":
         node_cmd = ["py", cmdpath]
@@ -227,16 +226,9 @@ def s02_kmeansPP(datamatPickle):
 
     gRunner.logp("run subtask at: {0}".format(nodeDir))
     proc = subprocess.call(node_cmd)
-    subnode_picke_file="{0}/{1}.pickle".format(nodeDir,nodeName)
+    subnode_picke_file=os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
     gRunner.logp("end subtask \n")
     return (nodeDir,subnode_picke_file)
-
-def preparePipelineResult(kmeansPPNodeDir):
-    outfile="{0}cluster_assignments.bfv".format(gParams.output_dir)
-    shutil.copy("{0}/gid_10001.bfv".format(kmeansPPNodeDir),
-                "{0}cluster_assignments.bfv".format(gParams.output_dir))
-
-    gRunner.logp("cluster_assignments: {0}\n".format(outfile))
 
 def main(argv=None):
     global gParams
@@ -253,7 +245,7 @@ def main(argv=None):
         start_time = datetime.now()
 
         gRunner.prepare_dirs(gParams.output_dir, gParams.logging_dir, gParams.pipeline_rundir)
-        gRunner.init_logger(gParams.logging_dir + "bigKmeans.log")
+        gRunner.init_logger(os.path.abspath(gParams.logging_dir + "/bigKmeans.log"))
 
         gRunner.logp()
         gRunner.log("Beginning bigKmeans run v({0})".format(bdtUtil.get_version()))
@@ -278,7 +270,6 @@ def main(argv=None):
             gParams.dry_run = False
 
         (nodeDir,subnode_picke)=s02_kmeansPP(datamatPickle)
-        preparePipelineResult(nodeDir)
 
         finish_time = datetime.now()
         duration = finish_time - start_time
@@ -287,7 +278,7 @@ def main(argv=None):
 
     except Usage as err:
         gRunner.logp(sys.argv[0].split("/")[-1] + ": " + str(err.msg))
-        gRunner.logp("    for detailed help see url ...")
+        gRunner.logp(" for detailed help see url ...")
         return 2
     
     except:

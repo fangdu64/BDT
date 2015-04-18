@@ -1483,6 +1483,12 @@ iBS::FeatureObserverSimpleInfoPtr CExportRowMatrixBuilder::GetOutputFOI()
 	foiPtr->ObserverGroupSize = (int)m_task.SampleIDs.size();
 	foiPtr->IdxInObserverGroup = 0;
 
+	if (!m_task.OutFile.empty())
+	{
+		foiPtr->StoreLocation = iBS::FeatureValueStoreLocationSpecified;
+		foiPtr->SpecifiedPathPrefix = m_task.OutFile;
+	}
+
 	return foiPtr;
 }
 void CExportRowMatrixBuilder::Export(::Ice::Long ramMb)

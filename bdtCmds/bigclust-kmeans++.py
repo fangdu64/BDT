@@ -16,15 +16,13 @@ from copy import deepcopy
 import random
 
 BDT_HomeDir=os.path.abspath(os.path.dirname(os.path.abspath(__file__))+"../../..")
-if os.getcwd()!=BDT_HomeDir:
-    os.chdir(BDT_HomeDir)
 
 Platform = None
 if Platform == "Windows":
     # this file will be at install\
     bdtInstallDir = BDT_HomeDir
-    icePyDir = bdtInstallDir+"\\dependency\\IcePy"
-    bdtPyDir = bdtInstallDir+"\\bdt\\bdtPy"
+    icePyDir = os.path.abspath(bdtInstallDir+"/dependency/IcePy")
+    bdtPyDir = os.path.abspath(bdtInstallDir+"/bdt/bdtPy")
     for dir in [icePyDir, bdtPyDir]:
         if dir not in sys.path:
             sys.path.append(dir)
@@ -33,6 +31,7 @@ import iBSConfig
 iBSConfig.BDT_HomeDir = BDT_HomeDir
 
 import bdtUtil
+import bigKmeansUtil
 import iBSDefines
 import iBSFCDClient as fcdc
 import iBS
@@ -57,57 +56,18 @@ Advanced Options:
 
 '''
 
+gParams=None
+gRunner=None
+
 class Usage(Exception):
     def __init__(self, msg):
         self.msg = msg
 
-output_dir = "./kmeans++_out/"
-logging_dir = output_dir + "logs/"
-fcdcentral_dir = output_dir + "fcdcentral/"
-kmeanss_dir = output_dir + "kmeanss/"
-kmeansc_dir = output_dir + "kmeansc/"
-script_dir = output_dir + "script/"
-tmp_dir = output_dir + "tmp/"
-bdvd_log_handle = None #main log file handle
-bdvd_logger = None # main logging object
-
-fcdc_popen = None
-fcdc_log_file=None
-
-kmeanss_popen = None
-kmeanss_log_file=None
-
-kmeansc_popen = None
-kmeansc_log_file=None
-
-gParams=None
-
-def init_logger(log_fname):
-    global bdvd_logger
-    bdvd_logger = logging.getLogger('project')
-    formatter = logging.Formatter('%(asctime)s %(message)s', '[%Y-%m-%d %H:%M:%S]')
-    bdvd_logger.setLevel(logging.DEBUG)
-
-    # output logging information to stderr
-    hstream = logging.StreamHandler(sys.stderr)
-    hstream.setFormatter(formatter)
-    bdvd_logger.addHandler(hstream)
-    
-    #
-    # Output logging information to file
-    if os.path.isfile(log_fname):
-        os.remove(log_fname)
-    global bdvd_log_handle
-    logfh = logging.FileHandler(log_fname)
-    logfh.setFormatter(formatter)
-    bdvd_logger.addHandler(logfh)
-    bdvd_log_handle=logfh.stream
-
 class BDVDParams:
 
     def __init__(self):
-
-        #max mem allowed in Mb
+        self.output_dir = None
+        self.bigmat_dir = None
         self.max_mem = 2000
         self.num_threads = 4
         self.fcdc_fvworker_size=self.num_threads
@@ -115,7 +75,6 @@ class BDVDParams:
         self.fcdc_threadpool_size=2
         self.workflow_node = "kmeans++"
         self.result_dumpfile = None
-        self.datacentral_dir = None
         self.datamat_pickle = None
         self.seedsmat_pickle = None
         self.design_file = None
@@ -133,28 +92,17 @@ class BDVDParams:
                                          "num-threads=",
                                          "max-mem=",
                                          "node=",
-                                         "datacentral-dir=",
+                                         "bigmat-dir=",
                                          "datamat=",
                                          "seedsmat=",
                                          "tmp-dir="])
         except getopt.error as msg:
             raise Usage(msg)
 
-        global output_dir
-        global logging_dir
-        global tmp_dir
-        global fcdcentral_dir
-        global kmeanss_dir
-        global kmeansc_dir
-        global script_dir
-
-        custom_tmp_dir = None
-        custom_out_dir = None
-
         # option processing
         for option, value in opts:
             if option in ("-v", "--version"):
-                print("Bigclust v",bdtUtil.get_version())
+                print("bigKmeans v",bdtUtil.get_version())
                 sys.exit(0)
             if option in ("-h", "--help"):
                 raise Usage(use_message)
@@ -164,33 +112,24 @@ class BDVDParams:
             if option in ("-m", "--max-mem"):
                 self.max_mem = int(value)
             if option in ("-o", "--output-dir"):
-                custom_out_dir = value + "/"
-                self.resume_dir = value
+                self.output_dir = value
             if option == "--tmp-dir":
                 custom_tmp_dir = value + "/"
             if option == "--node":
                 self.workflow_node = value
-            if option =="--datacentral-dir":
-                self.datacentral_dir = value
+            if option =="--bigmat-dir":
+                self.bigmat_dir = value
             if option =="--datamat":
                 self.datamat_pickle = value
             if option =="--seedsmat":
                 self.seedsmat_pickle = value
         
         self.result_dumpfile = "{0}.pickle".format(self.workflow_node)
-        if custom_out_dir:
-            output_dir = custom_out_dir
-            logging_dir = output_dir + "logs/"
-            tmp_dir = output_dir + "tmp/"
-            fcdcentral_dir = output_dir + "fcdcentral/"
-            script_dir = output_dir + "script/"
-            kmeanss_dir = output_dir +"kmeanss/"
-            kmeansc_dir = output_dir +"kmeansc/"
-        if custom_tmp_dir:
-            tmp_dir = custom_tmp_dir
+        self.output_dir = os.path.abspath(self.output_dir)
 
-        if self.datacentral_dir is not None:
-            fcdcentral_dir = self.datacentral_dir+"/fcdcentral/"
+        if self.bigmat_dir is None:
+            self.bigmat_dir = self.output_dir+"/bigmat"
+        self.bigmat_dir = os.path.abspath(self.bigmat_dir)
 
         if self.datamat_pickle is None:
             raise Usage(use_message)
@@ -200,180 +139,17 @@ class BDVDParams:
         self.design_file = args[0]
         return args
 
-# The BDVD logging formatter
-def bdvd_log(out_str):
-  if bdvd_logger:
-       bdvd_logger.info(out_str)
-
-# error msg
-def bdvd_logp(out_str=""):
-    print(out_str,file=sys.stderr)
-    if bdvd_log_handle:
-        print(out_str, file=bdvd_log_handle)
-
-def die(msg=None):
-    if msg is not None:
-        bdvd_logp(msg)
-    shutdownKMeansC()
-    shutdownKMeansS()
-    shutdownFCDCentral()
-    sys.exit(1)
-
-def shutdownFCDCentral():
-    global fcdc_popen
-    if fcdc_popen is not None:
-        fcdc_popen.terminate()
-        fcdc_popen.wait()
-        fcdc_popen = None
-        bdvd_log("FCDCentral shutdown")
-    if fcdc_log_file is not None:
-        fcdc_log_file.close()
-
-def shutdownKMeansS():
-    global kmeanss_popen
-    if kmeanss_popen is not None:
-        kmeanss_popen.terminate()
-        kmeanss_popen.wait()
-        kmeanss_popen = None
-        bdvd_log("KMeansS shutdown")
-    if kmeanss_log_file is not None:
-        kmeanss_log_file.close()
-
-def shutdownKMeansC():
-    global kmeansc_popen
-    if kmeansc_popen is not None:
-        kmeansc_popen.terminate()
-        kmeansc_popen.wait()
-        kmeansc_popen = None
-        bdvd_log("KMeansC shutdown")
-    if kmeansc_log_file is not None:
-        kmeansc_log_file.close()
-
-# Ensures that the output, logging, and temp directories are present. If not,
-# they are created
 def prepare_output_dir():
-    if not os.path.exists(output_dir):
-        os.mkdir(output_dir)       
-
-    if not os.path.exists(logging_dir):
-        os.mkdir(logging_dir)
-         
-    if not os.path.exists(script_dir):
-        os.mkdir(script_dir)
-
-    shutil.copy(gParams.design_file,"{0}/bigclustKMeansPPDesign.py".format(script_dir))
-    
-    if not os.path.exists(fcdcentral_dir):
-        os.mkdir(fcdcentral_dir)
-
-    fcdc_db_dir=fcdcentral_dir+"FCDCentralDB"
-    if not os.path.exists(fcdc_db_dir):
-        os.mkdir(fcdc_db_dir)
-
-    fcdc_fvstore_dir=fcdcentral_dir+"FeatureValueStore"
-    if not os.path.exists(fcdc_fvstore_dir):
-        os.mkdir(fcdc_fvstore_dir)
-
-    if not os.path.exists(kmeanss_dir):
-        os.mkdir(kmeanss_dir)
-
-    if not os.path.exists(kmeansc_dir):
-        os.mkdir(kmeansc_dir)
-
-    if not os.path.exists(tmp_dir):
-        try:
-          os.makedirs(tmp_dir)
-        except OSError as o:
-          die("\nError creating directory %s (%s)" % (tmp_dir, o))
-       
-
-def prepare_fcdcentral_config(tcpPort,fvWorkerSize, iceThreadPoolSize ):
-    infile = open("./bdt/config/FCDCentralServer.config")
-    outfile = open(fcdcentral_dir+"FCDCentralServer.config", "w")
-
-    replacements = {"__FCDCentral_TCP_PORT__":str(tcpPort), 
-                    "__FeatureValueWorker.Size__":str(fvWorkerSize), 
-                    "__Ice.ThreadPool.Server.Size__":str(iceThreadPoolSize)}
-
-    for line in infile:
-        for src, target in replacements.items():
-            line = line.replace(src, target)
-        outfile.write(line)
-    infile.close()
-    outfile.close()
-
-def launchFCDCentral():
-    global fcdc_popen
-    global fcdc_log_fhandle
-    fcdcentral_path=os.getcwd()+"/bdt/bin/bigMat"
-    fcdc_cmd = [fcdcentral_path]
-    bdvd_log("Launching bigMat ...")
-    fcdc_log_file = open(logging_dir + "fcdc.log","w")
-    fcdc_popen = subprocess.Popen(fcdc_cmd, cwd=fcdcentral_dir, stdout=fcdc_log_file)
-
-def prepare_kmeansserver_config(fcdc_tcp_port,kmeanss_tcp_port):
-    infile = open("./bdt/config/KMeansServer.config")
-    outfile = open(kmeanss_dir+"KMeansServer.config", "w")
-    replacements = {"__FCDCentral_TCP_PORT__":str(fcdc_tcp_port),
-                    "__KMeansServer_TCP_PORT__":str(kmeanss_tcp_port)}
-    for line in infile:
-        for src, target in replacements.items():
-            line = line.replace(src, target)
-        outfile.write(line)
-    infile.close()
-    outfile.close()
-
-def launchKMeansServer():
-    global kmeanss_popen
-    global kmeanss_log_fhandle
-    kmeansserver_path=os.getcwd()+"/bdt/bin/bigKmeansServer"
-    kmeanss_cmd = [kmeansserver_path]
-    bdvd_log("Launching bigKmeansServer ...")
-    kmeanss_log_file = open(logging_dir + "kmeanss.log","w")
-    kmeanss_popen = subprocess.Popen(kmeanss_cmd, cwd=kmeanss_dir, stdout=kmeanss_log_file)
-
-def prepare_kmeansc_config(fcdc_tcp_port,kmeansc_tcp_port):
-    global gParams
-    designPath=os.path.abspath(script_dir)
-    if designPath not in sys.path:
-         sys.path.append(designPath)
-    import bigclustKMeansPPDesign as design
-    gParams.kmeansc_workercnt =design.KMeansContractorWorkerCnt
-    gParams.kmeansc_ramsize =design.KMeansContractorRAMSize
-
-    infile = open("./bdt/config/KMeansContractor.config")
-    outfile = open(kmeansc_dir+"KMeansContractor.config", "w")
-    replacements = {"__FCDCentral_TCP_PORT__":str(fcdc_tcp_port),
-                    "__FCDCentral_HOST__":"localhost",
-                    "__KMeansContractor_TCP_PORT__":str(kmeansc_tcp_port),
-                    "__KMeansContractor_WorkerCnt__":str(design.KMeansContractorWorkerCnt),
-                    "__KMeansContractor_RAMSIZE__":str(design.KMeansContractorRAMSize)}
-    for line in infile:
-        for src, target in replacements.items():
-            line = line.replace(src, target)
-        outfile.write(line)
-    infile.close()
-    outfile.close()
-
-def launchKMeansContractor():
-    global kmeansc_popen
-    global kmeansc_log_fhandle
-    kmeanscontractor_path=os.getcwd()+"/bdt/bin/bigKmeansContractor"
-    kmeansc_cmd = [kmeanscontractor_path]
-    bdvd_log("Launching KMeansContractor ...")
-    kmeansc_log_file = open(logging_dir + "kmeansc.log","w")
-    kmeansc_popen = subprocess.Popen(kmeansc_cmd, cwd=kmeansc_dir, stdout=kmeansc_log_file)
+    shutil.copy(gParams.design_file,
+                os.path.abspath("{0}/bigclustKMeansPPDesign.py".format(gRunner.script_dir)))
 
 def attachBigMatrix(bigmat,fcdcPrx):
-    bdvd_log("attach bigmat: {0} x {1} from {2}".format(bigmat.RowCnt,bigmat.ColCnt,bigmat.StorePathPrefix))
+    gRunner.log("attach bigmat: {0} x {1} from {2}".format(bigmat.RowCnt,bigmat.ColCnt,bigmat.StorePathPrefix))
     (rt, outOIDs)=fcdcPrx.AttachBigMatrix(bigmat.ColCnt,bigmat.RowCnt,bigmat.ColNames,bigmat.StorePathPrefix)
-    #bdvd_log("assigned colIDs: {0}".format(str(outOIDs)))
-    #osis=bigmat.ColStats
-    #rt=fcdcPrx.SetObserverStats(osis)
     return outOIDs
 
 def prepareKMeansProject(facetAdminPrx, fcdcPrx, kmeansSAdminPrx, dataOIDs, dataMat, seedOIDs):
-    designPath=os.path.abspath(script_dir)
+    designPath=os.path.abspath(gRunner.script_dir)
     if designPath not in sys.path:
          sys.path.append(designPath)
     import bigclustKMeansPPDesign as design
@@ -399,7 +175,7 @@ def prepareKMeansProject(facetAdminPrx, fcdcPrx, kmeansSAdminPrx, dataOIDs, data
             rqstProj.BatchKs.remove(1)
     rqstProj.BatchKs=sorted(list(set(rqstProj.BatchKs)))
     rqstProj.BatchTasks=[iBS.KMeansTaskEnum.KMeansTaskRunKMeans]*len(rqstProj.BatchKs)
-    bdvd_log("Ks = {0}".format(str(rqstProj.BatchKs)))
+    gRunner.log("Ks = {0}".format(str(rqstProj.BatchKs)))
     rqstProj.Distance = design.Distance
     rqstProj.MaxIteration = design.MaxIteration
     rqstProj.MinChangeCnt = 1 # design.MinChangeCnt
@@ -437,7 +213,7 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
     foi.SetPolicy = iBS.FeatureValueSetPolicyEnum.FeatureValueSetPolicyNoRAMImmediatelyToStore
     rt=fcdcPrx.SetFeatureObservers([foi])
 
-    bdvd_log("save cluster membership for {0} rows, oid {1} ".format(dataRowCnt, OID_KMembers))
+    gRunner.log("save cluster membership for {0} rows, oid {1} ".format(dataRowCnt, OID_KMembers))
     remainCnt =dataRowCnt
     batchRowCnt=(1024*1024*128)/(8*1)
     featureIdxFrom=0
@@ -459,7 +235,8 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
 
     #now prepare output infomation
     (rt,bigvec_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(OID_KMembers)
-    bdvd_log("k-members store: {0}".format(bigvec_store_pathprefix))
+    bigvec_store_pathprefix = os.path.abspath(bigvec_store_pathprefix)
+    gRunner.log("k-members store: {0}".format(bigvec_store_pathprefix))
     bigvec = iBSDefines.BigVecMetaInfo()
     bigvec.Name = "k-members"
     bigvec.StorePathPrefix = bigvec_store_pathprefix
@@ -467,7 +244,7 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
     bigvec.ColName= foi.ObserverName
     bigvec.RowCnt = foi.DomainSize
     outObj.KMembersVec = bigvec
-    bdvd_log("save cluster membership for {0} rows [done]".format(dataRowCnt))
+    gRunner.log("save cluster membership for {0} rows [done]".format(dataRowCnt))
 
     exportKMembers(fcdcPrx, computePrx, OID_KMembers, outObj.KMembersVec)
 
@@ -490,7 +267,8 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
     (rt, kclusters)=kmeansServerPrx.GetKClusters(projectID)
     fcdcPrx.SetDoublesRowMatrix(observerGroupID,0,K,kclusters)
     (rt,bigmat_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(observerGroupID)
-    bdvd_log("k-clusters store: {0}".format(bigmat_store_pathprefix))
+    bigmat_store_pathprefix = os.path.abspath(bigmat_store_pathprefix)
+    gRunner.log("k-clusters store: {0}".format(bigmat_store_pathprefix))
     bigmat = iBSDefines.BigMatrixMetaInfo()
     bigmat.Name = "k-clusters"
     bigmat.StorePathPrefix = bigmat_store_pathprefix
@@ -499,7 +277,7 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
     bigmat.RowCnt = K
     bigmat.ColCnt=dataColCnt
     outObj.CentroidsMat = bigmat
-    bdvd_log("save cluster centroids, {0} rows {1} cols".format(K,dataColCnt))
+    gRunner.log("save cluster centroids, {0} rows {1} cols".format(K,dataColCnt))
 
     #
     # Save K Seeds
@@ -520,7 +298,8 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
     (rt, kseeds)=kmeansServerPrx.GetKSeeds(projectID)
     fcdcPrx.SetDoublesRowMatrix(observerGroupID,0,K,kseeds)
     (rt,bigmat_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(observerGroupID)
-    bdvd_log("k-seeds store: {0}".format(bigmat_store_pathprefix))
+    bigmat_store_pathprefix = os.path.abspath(bigmat_store_pathprefix)
+    gRunner.log("k-seeds store: {0}".format(bigmat_store_pathprefix))
     bigmat = iBSDefines.BigMatrixMetaInfo()
     bigmat.Name = "k-seeds"
     bigmat.StorePathPrefix = bigmat_store_pathprefix
@@ -529,7 +308,7 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
     bigmat.RowCnt = K
     bigmat.ColCnt=dataColCnt
     outObj.SeedsMat = bigmat
-    bdvd_log("save seeds, {0} rows {1} cols".format(K,dataColCnt))
+    gRunner.log("save seeds, {0} rows {1} cols".format(K,dataColCnt))
 
     #
     # Save K Cnts
@@ -546,7 +325,8 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
     featureIdxTo=foi.DomainSize
     rt=fcdcPrx.SetDoublesColumnVector(OID_KCnts,featureIdxFrom,featureIdxTo,values)
     (rt,bigvec_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(OID_KCnts)
-    bdvd_log("k-cnts store: {0}".format(bigvec_store_pathprefix))
+    bigvec_store_pathprefix = os.path.abspath(bigvec_store_pathprefix)
+    gRunner.log("k-cnts store: {0}".format(bigvec_store_pathprefix))
     bigvec = iBSDefines.BigVecMetaInfo()
     bigvec.Name = "k-cnts"
     bigvec.StorePathPrefix = bigvec_store_pathprefix
@@ -554,14 +334,14 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
     bigvec.ColName= foi.ObserverName
     bigvec.RowCnt = foi.DomainSize
     outObj.KCntsVec = bigvec
-    bdvd_log("save cluster member counts")
+    gRunner.log("save cluster member counts")
 
     #
     # Save Run Statistics
     #
     (rt, krets)=kmeansServerPrx.GetKMeansResults(proj.ProjectID)
     # output matrix
-    results_mat_fn="{0}results_mats.txt".format(output_dir);
+    results_mat_fn=os.path.abspath("{0}/results_mats.txt".format(gParams.output_dir))
     outf = open(results_mat_fn, "w")
     outf.write("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\n".format("K","Iteration","Distorsion","ChangedCnt","Explained","WallTime","RowCnt","ColCnt","Seeding","Distance"))
     i=0
@@ -593,31 +373,28 @@ def exportKMembers(fcdcPrx, computePrx, kmembersOID, kmembersVec):
     task.FeatureIdxFrom=0
     task.FeatureIdxTo=kmembersVec.RowCnt
     task.OutID = 10001
-    task.OutPath=os.path.abspath(output_dir)
+    task.OutPath=os.path.abspath(gParams.output_dir)
+    task.OutFile = os.path.abspath("{0}/cluster_assignments.bfv".format(gParams.output_dir))
     task.ConvertToType = iBS.FeatureValueEnum.FeatureValueInt32
-    bdvd_log("Export KMembers ...")
-    fcdcHelper.exportMatByRange(bdvd_log,fcdcPrx,computePrx,task)
-    bfvFile = "{0}/gid_{1}.bfv".format(task.OutPath,task.OutID)
+    gRunner.log("Export cluster_assignments ...")
+    fcdcHelper.exportMatByRange(gRunner.log,fcdcPrx,computePrx,task)
+    bfvFile = task.OutFile
+    gRunner.logp("cluster_assignments: {0}\n".format(bfvFile))
     return bfvFile
 
 def dumpOutput(kmeansOut):
-    fn = "{0}{1}".format(output_dir,gParams.result_dumpfile)
+    fn = os.path.abspath("{0}/{1}".format(gParams.output_dir,gParams.result_dumpfile))
     iBSDefines.dumpPickle(kmeansOut,fn)
-    bdvd_log("output: {0}".format(fn))
+    gRunner.log("output: {0}".format(fn))
 
 def main(argv=None):
 
     # Initialize default parameter values
     global gParams
+    global gRunner
     gParams = BDVDParams()
+    gRunner = bigKmeansUtil.singleNodeKmeansRunner(iBSConfig.BDT_HomeDir)
     run_argv = sys.argv[:]
-
-    global fcdc_popen
-    fcdc_popen = None
-    global kmeanss_popen
-    kmeanss_popen=None
-    global kmeansc_popen
-    kmeansc_popen=None
 
     try:
         if argv is None:
@@ -628,22 +405,23 @@ def main(argv=None):
 
         start_time = datetime.now()
 
+        gRunner.prepare_dirs(gParams.output_dir, gParams.bigmat_dir)
         prepare_output_dir()
-        init_logger(logging_dir + "bdvd.log")
+        gRunner.init_logger("kmeans++.log")
 
-        bdvd_logp()
-        bdvd_log("Beginning bigclust kmeans++ seeds run (v"+bdtUtil.get_version()+")")
-        bdvd_logp("-----------------------------------------------")
+        gRunner.logp()
+        gRunner.log("Beginning bigclust kmeans++ seeds run (v"+bdtUtil.get_version()+")")
+        gRunner.logp("-----------------------------------------------")
 
         # -----------------------------------------------------------
-        # launch FCDCentral
+        # launch bigMat
         # -----------------------------------------------------------
         gParams.fcdc_tcp_port = bdtUtil.getUsableTcpPort()
-        prepare_fcdcentral_config(gParams.fcdc_tcp_port, 
+        gRunner.prepare_bigmat_config(gParams.fcdc_tcp_port, 
                                   gParams.fcdc_fvworker_size, 
                                   gParams.fcdc_threadpool_size)
         #print("fcdc_tcp_port = ",gParams.fcdc_tcp_port)
-        launchFCDCentral()
+        gRunner.launch_bigMat()
         fcdc.Init();
         fcdcHost="localhost -p "+str(gParams.fcdc_tcp_port)
 
@@ -663,7 +441,7 @@ def main(argv=None):
         computePrx=fcdc.GetComputeProxy(fcdcHost)
         samplePrx=fcdc.GetSeqSampleProxy(fcdcHost)
     
-        bdvd_log("FCDCentral activated")
+        gRunner.log("bigMat activated")
         dataMat = iBSDefines.loadPickle(gParams.datamat_pickle).BigMat
         dataOIDs = attachBigMatrix(dataMat,fcdcPrx)
         seedOIDs=[0]
@@ -679,10 +457,9 @@ def main(argv=None):
         # launch KMeans Server
         # -----------------------------------------------------------
         gParams.kmeanss_tcp_port = bdtUtil.getUsableTcpPort()
-        prepare_kmeansserver_config(gParams.fcdc_tcp_port, 
+        gRunner.prepare_kmeansserver_config(gParams.fcdc_tcp_port, 
                                   gParams.kmeanss_tcp_port)
-        #print("kmeanss_tcp_port = ",gParams.kmeanss_tcp_port)
-        launchKMeansServer()
+        gRunner.launchKMeansServer()
 
         kmeanssHost="KMeanServerAdminService:default -h localhost -p {0}".format(gParams.kmeanss_tcp_port)
         kmeansSAdminPrx = None
@@ -699,7 +476,7 @@ def main(argv=None):
 
         kmeansServerPrx=kmeansSAdminPrx.GetKMeansSeverProxy()
     
-        bdvd_log("KMeans Server activated")
+        gRunner.log("KMeans Server activated")
 
         rqstProj = prepareKMeansProject(facetAdminPrx, fcdcPrx, kmeansSAdminPrx, dataOIDs, dataMat, seedOIDs)
         (rt,retProj) = kmeansSAdminPrx.CreateProjectAndWaitForContractors(rqstProj)
@@ -708,10 +485,10 @@ def main(argv=None):
         # launch KMeans Contractor
         # -----------------------------------------------------------
         gParams.kmeansc_tcp_port = bdtUtil.getUsableTcpPort()
-        prepare_kmeansc_config(gParams.fcdc_tcp_port, 
+        gRunner.prepare_kmeansc_config(gParams.fcdc_tcp_port, 
                                   gParams.kmeansc_tcp_port)
         #print("kmeansc_tcp_port = ",gParams.kmeansc_tcp_port)
-        launchKMeansContractor()
+        gRunner.launchKMeansContractor()
 
         kmeanscHost="KMeanContractorAdminService:default -h localhost -p {0}".format(gParams.kmeansc_tcp_port)
         kmeansCAdminPrx = None
@@ -725,7 +502,7 @@ def main(argv=None):
 
         if kmeansCAdminPrx is None:
             raise Usage("connection timeout")  
-        bdvd_log("KMeans Contractor activated")
+        gRunner.log("KMeans Contractor activated")
 
         # -----------------------------------------------------------
         # Run KMeans
@@ -736,46 +513,46 @@ def main(argv=None):
 
         preMsg=""
         amdTaskFinished=False
-        bdvd_log("")
-        bdvd_log("Running KMeans++ seeds with {0} threads".format(gParams.kmeansc_workercnt))
+        gRunner.log("")
+        gRunner.log("Running KMeans++ seeds with {0} threads".format(gParams.kmeansc_workercnt))
         while (not amdTaskFinished):
             (rt,amdTaskInfo)=kmeansSAdminPrx.GetAMDTaskInfo(amdTaskID)
             thisMsg="task: {0}, batch processed: {1}/{2}".format(amdTaskInfo.TaskName, amdTaskInfo.FinishedCnt, amdTaskInfo.TotalCnt)
             if preMsg!=thisMsg:
                 preMsg = thisMsg
-                bdvd_log(thisMsg)
+                gRunner.log(thisMsg)
             if amdTaskInfo.Status!=iBS.AMDTaskStatusEnum.AMDTaskStatusNormal:
                 amdTaskFinished = True;
             else:
                 time.sleep(4)
         
-        bdvd_log("Running KMeans [done]")
+        gRunner.log("Running KMeans [done]")
 
         # -----------------------------------------------------------
         # Output Results
         # -----------------------------------------------------------
         saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,retProj, dataMat)
 
-        shutdownKMeansC()
-        shutdownKMeansS()
-        shutdownFCDCentral()
+        gRunner.shutdown_kmeansc()
+        gRunner.shutdown_kmeanss()
+        gRunner.shutdown_bigMat()
 
         finish_time = datetime.now()
         duration = finish_time - start_time
-        bdvd_logp("-----------------------------------------------")
-        bdvd_log("Run complete: %s elapsed" %  bdtUtil.formatTD(duration))
+        gRunner.logp("-----------------------------------------------")
+        gRunner.log("Run complete: %s elapsed" %  bdtUtil.formatTD(duration))
 
     except Usage as err:
-        shutdownKMeansC()
-        shutdownKMeansS()
-        shutdownFCDCentral()
-        bdvd_logp(sys.argv[0].split("/")[-1] + ": " + str(err.msg))
-        bdvd_logp("    for detailed help see url ...")
+        gRunner.shutdown_kmeansc()
+        gRunner.shutdown_kmeanss()
+        gRunner.shutdown_bigMat()
+        gRunner.logp(sys.argv[0].split("/")[-1] + ": " + str(err.msg))
+        gRunner.logp("    for detailed help see url ...")
         return 2
     
     except:
-        bdvd_logp(traceback.format_exc())
-        die()
+        gRunner.logp(traceback.format_exc())
+        gRunner.die()
 
 
 if __name__ == "__main__":

@@ -26,9 +26,9 @@ class bigMatRunner:
     # they are created
     def prepare_dirs(self, outDir, bigMatDir):
         self.output_dir = outDir
-        self.logging_dir = self.output_dir + "/logs"
+        self.logging_dir = os.path.abspath(self.output_dir + "/logs")
         self.bigmat_dir = bigMatDir
-        self.script_dir = self.output_dir + "/script"
+        self.script_dir = os.path.abspath(self.output_dir + "/script")
 
         if not os.path.exists(self.output_dir):
             os.mkdir(self.output_dir)
@@ -42,16 +42,16 @@ class bigMatRunner:
         if not os.path.exists(self.bigmat_dir):
             os.mkdir(self.bigmat_dir)
 
-        db_dir=self.bigmat_dir+"/FCDCentralDB"
+        db_dir=os.path.abspath(self.bigmat_dir+"/FCDCentralDB")
         if not os.path.exists(db_dir):
             os.mkdir(db_dir)
 
-        fvstore_dir=self.bigmat_dir+"/FeatureValueStore"
+        fvstore_dir=os.path.abspath(self.bigmat_dir+"/FeatureValueStore")
         if not os.path.exists(fvstore_dir):
             os.mkdir(fvstore_dir)
 
     def init_logger(self, log_name):
-        log_fname = self.logging_dir + "/" + log_name
+        log_fname = os.path.abspath(self.logging_dir + "/" + log_name)
         self.bdvd_logger = logging.getLogger('project')
         formatter = logging.Formatter('%(asctime)s %(message)s', '[%Y-%m-%d %H:%M:%S]')
         self.bdvd_logger.setLevel(logging.DEBUG)
@@ -96,10 +96,10 @@ class bigMatRunner:
         outfile.close()
     
     def launch_bigMat(self):
-        bigmat_path = "{0}/bdt/bin/bigMat".format(self.bdt_home_dir)
+        bigmat_path = os.path.abspath("{0}/bdt/bin/bigMat".format(self.bdt_home_dir))
         bm_cmd = [bigmat_path]
         self.log("Launching bigMat ...")
-        self.bigmat_log_file = open(self.logging_dir + "/bigmat.log","w")
+        self.bigmat_log_file = open(os.path.abspath(self.logging_dir + "/bigmat.log"),"w")
         self.bigmat_popen = subprocess.Popen(bm_cmd, cwd=self.bigmat_dir, stdout=self.bigmat_log_file)
     
     def shutdown_bigMat(self):
@@ -132,10 +132,10 @@ def run_txt2Mat(
     col_names,
     field_sep):
     
-    nodeDir = "{0}/{1}".format(runDir, nodeName)
+    nodeDir = os.path.abspath("{0}/{1}".format(runDir, nodeName))
     nodeScriptDir = nodeDir + "-script"
 
-    out_picke_file = "{0}/{1}.pickle".format(nodeDir,nodeName)
+    out_picke_file = os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
     if dryRun:
         return out_picke_file
 
@@ -162,10 +162,10 @@ def run_txt2Mat(
 
     CalcStatistics = calculateStatistics
     design_params=(SampleNames,ColCnt,RowCnt,DataFile,FieldSep,CalcStatistics)
-    params_pickle_fn="{0}/design_params.pickle".format(nodeScriptDir)
+    params_pickle_fn=os.path.abspath("{0}/design_params.pickle".format(nodeScriptDir))
     iBSDefines.dumpPickle(design_params, params_pickle_fn)
 
-    design_file=bdtHomeDir+"/bdt/bdtPy/PipelineDesigns/txt2MatDesign.py"
+    design_file=os.path.abspath(bdtHomeDir+"/bdt/bdtPy/PipelineDesigns/txt2MatDesign.py")
     shutil.copy(design_file,nodeScriptDir)
 
     #
@@ -173,7 +173,7 @@ def run_txt2Mat(
     #
     design_fn=os.path.abspath(nodeScriptDir)+"/txt2MatDesign.py"
     subnode=nodeName
-    cmdpath="{0}/bdt/bdtCmds/bigmat-txt2mat".format(bdtHomeDir)
+    cmdpath=os.path.abspath("{0}/bdt/bdtCmds/bigmat-txt2mat".format(bdtHomeDir))
     if platform == "Windows":
         node_cmd = ["py", cmdpath]
     else:
