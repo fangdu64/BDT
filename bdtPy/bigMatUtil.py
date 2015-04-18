@@ -3,6 +3,11 @@ import os
 import socket
 import logging
 import subprocess
+import shutil
+import time
+from datetime import datetime, date
+
+import iBSDefines
 
 # bigMatRunner
 class bigMatRunner:
@@ -111,3 +116,78 @@ class bigMatRunner:
             self.logp(msg)
         self.shutdown_bigMat()
         sys.exit(1)
+
+def run_txt2Mat(
+    gRunner,
+    platform,
+    bdtHomeDir,
+    nodeName,
+    runDir,
+    dryRun,
+    removeBeforeRun,
+    calculateStatistics,
+    col_cnt,
+    row_cnt,
+    data_file,
+    col_names,
+    field_sep):
+    
+    nodeDir = "{0}/{1}".format(runDir, nodeName)
+    nodeScriptDir = nodeDir + "-script"
+
+    out_picke_file = "{0}/{1}.pickle".format(nodeDir,nodeName)
+    if dryRun:
+        return out_picke_file
+
+    if removeBeforeRun and os.path.exists(nodeDir):
+        gRunner.logp("remove existing dir: {0}".format(nodeDir))   
+        shutil.rmtree(nodeDir)
+
+    if not os.path.exists(nodeScriptDir):
+        os.mkdir(nodeScriptDir)
+
+    #
+    # prepare design file
+    #
+    ColCnt = col_cnt
+    RowCnt = row_cnt
+    DataFile = data_file
+    FieldSep = " "
+    if field_sep is not None:
+        FieldSep = field_sep
+
+    SampleNames=["V{0}".format(v) for v in range(1,ColCnt+1)]
+    if col_names is not None:
+        SampleNames = col_names
+
+    CalcStatistics = calculateStatistics
+    design_params=(SampleNames,ColCnt,RowCnt,DataFile,FieldSep,CalcStatistics)
+    params_pickle_fn="{0}/design_params.pickle".format(nodeScriptDir)
+    iBSDefines.dumpPickle(design_params, params_pickle_fn)
+
+    design_file=bdtHomeDir+"/bdt/bdtPy/PipelineDesigns/txt2MatDesign.py"
+    shutil.copy(design_file,nodeScriptDir)
+
+    #
+    # Run node
+    #
+    design_fn=os.path.abspath(nodeScriptDir)+"/txt2MatDesign.py"
+    subnode=nodeName
+    cmdpath="{0}/bdt/bdtCmds/bigmat-txt2mat".format(bdtHomeDir)
+    if platform == "Windows":
+        node_cmd = ["py", cmdpath]
+    else:
+        node_cmd = [cmdpath]
+    node_cmd.extend(["--node", nodeName,
+                "--num-threads", "4",
+                "--out",nodeDir,
+                design_fn])
+      
+    shell_cmd=""
+    for strCmd in node_cmd:
+        shell_cmd=shell_cmd+strCmd+" "
+
+    gRunner.logp("run subtask: {0}\n".format(nodeName))
+    proc = subprocess.call(node_cmd)
+    gRunner.logp("end subtask: {0}\n".format(nodeName))
+    return out_picke_file

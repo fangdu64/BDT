@@ -1,10 +1,7 @@
 #!__PYTHON_BIN_PATH__
 
 """
-bdvd-bam2mat.py
-
-Created by Fang Du on 2014-07-24.
-Copyright (c) 2014 Fang Du. All rights reserved.
+bigclust-kmeans++
 """
 
 import sys, traceback
@@ -18,8 +15,24 @@ import logging
 from copy import deepcopy
 import random
 
+BDT_HomeDir=os.path.abspath(os.path.dirname(os.path.abspath(__file__))+"../../..")
+if os.getcwd()!=BDT_HomeDir:
+    os.chdir(BDT_HomeDir)
+
+Platform = None
+if Platform == "Windows":
+    # this file will be at install\
+    bdtInstallDir = BDT_HomeDir
+    icePyDir = bdtInstallDir+"\\dependency\\IcePy"
+    bdtPyDir = bdtInstallDir+"\\bdt\\bdtPy"
+    for dir in [icePyDir, bdtPyDir]:
+        if dir not in sys.path:
+            sys.path.append(dir)
+
 import iBSConfig
-import iBSUtil
+iBSConfig.BDT_HomeDir = BDT_HomeDir
+
+import bdtUtil
 import iBSDefines
 import iBSFCDClient as fcdc
 import iBS
@@ -141,7 +154,7 @@ class BDVDParams:
         # option processing
         for option, value in opts:
             if option in ("-v", "--version"):
-                print("Bigclust v",iBSUtil.get_version())
+                print("Bigclust v",bdtUtil.get_version())
                 sys.exit(0)
             if option in ("-h", "--help"):
                 raise Usage(use_message)
@@ -239,9 +252,6 @@ def shutdownKMeansC():
 # Ensures that the output, logging, and temp directories are present. If not,
 # they are created
 def prepare_output_dir():
-
-    bdvd_log("Preparing output location "+output_dir)
-
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)       
 
@@ -278,7 +288,7 @@ def prepare_output_dir():
        
 
 def prepare_fcdcentral_config(tcpPort,fvWorkerSize, iceThreadPoolSize ):
-    infile = open("./iBS/config/FCDCentralServer.config")
+    infile = open("./bdt/config/FCDCentralServer.config")
     outfile = open(fcdcentral_dir+"FCDCentralServer.config", "w")
 
     replacements = {"__FCDCentral_TCP_PORT__":str(tcpPort), 
@@ -295,14 +305,14 @@ def prepare_fcdcentral_config(tcpPort,fvWorkerSize, iceThreadPoolSize ):
 def launchFCDCentral():
     global fcdc_popen
     global fcdc_log_fhandle
-    fcdcentral_path=os.getcwd()+"/iBS/bin/FCDCentral"
+    fcdcentral_path=os.getcwd()+"/bdt/bin/bigMat"
     fcdc_cmd = [fcdcentral_path]
-    bdvd_log("Launching FCDCentral ...")
+    bdvd_log("Launching bigMat ...")
     fcdc_log_file = open(logging_dir + "fcdc.log","w")
     fcdc_popen = subprocess.Popen(fcdc_cmd, cwd=fcdcentral_dir, stdout=fcdc_log_file)
 
 def prepare_kmeansserver_config(fcdc_tcp_port,kmeanss_tcp_port):
-    infile = open("./iBS/config/KMeansServer.config")
+    infile = open("./bdt/config/KMeansServer.config")
     outfile = open(kmeanss_dir+"KMeansServer.config", "w")
     replacements = {"__FCDCentral_TCP_PORT__":str(fcdc_tcp_port),
                     "__KMeansServer_TCP_PORT__":str(kmeanss_tcp_port)}
@@ -316,9 +326,9 @@ def prepare_kmeansserver_config(fcdc_tcp_port,kmeanss_tcp_port):
 def launchKMeansServer():
     global kmeanss_popen
     global kmeanss_log_fhandle
-    kmeansserver_path=os.getcwd()+"/iBS/bin/KMeansServer"
+    kmeansserver_path=os.getcwd()+"/bdt/bin/bigKmeansServer"
     kmeanss_cmd = [kmeansserver_path]
-    bdvd_log("Launching KMeansServer ...")
+    bdvd_log("Launching bigKmeansServer ...")
     kmeanss_log_file = open(logging_dir + "kmeanss.log","w")
     kmeanss_popen = subprocess.Popen(kmeanss_cmd, cwd=kmeanss_dir, stdout=kmeanss_log_file)
 
@@ -331,7 +341,7 @@ def prepare_kmeansc_config(fcdc_tcp_port,kmeansc_tcp_port):
     gParams.kmeansc_workercnt =design.KMeansContractorWorkerCnt
     gParams.kmeansc_ramsize =design.KMeansContractorRAMSize
 
-    infile = open("./iBS/config/KMeansContractor.config")
+    infile = open("./bdt/config/KMeansContractor.config")
     outfile = open(kmeansc_dir+"KMeansContractor.config", "w")
     replacements = {"__FCDCentral_TCP_PORT__":str(fcdc_tcp_port),
                     "__FCDCentral_HOST__":"localhost",
@@ -348,7 +358,7 @@ def prepare_kmeansc_config(fcdc_tcp_port,kmeansc_tcp_port):
 def launchKMeansContractor():
     global kmeansc_popen
     global kmeansc_log_fhandle
-    kmeanscontractor_path=os.getcwd()+"/iBS/bin/KMeansContractor"
+    kmeanscontractor_path=os.getcwd()+"/bdt/bin/bigKmeansContractor"
     kmeansc_cmd = [kmeanscontractor_path]
     bdvd_log("Launching KMeansContractor ...")
     kmeansc_log_file = open(logging_dir + "kmeansc.log","w")
@@ -622,13 +632,13 @@ def main(argv=None):
         init_logger(logging_dir + "bdvd.log")
 
         bdvd_logp()
-        bdvd_log("Beginning bigclust kmeans++ seeds run (v"+iBSUtil.get_version()+")")
+        bdvd_log("Beginning bigclust kmeans++ seeds run (v"+bdtUtil.get_version()+")")
         bdvd_logp("-----------------------------------------------")
 
         # -----------------------------------------------------------
         # launch FCDCentral
         # -----------------------------------------------------------
-        gParams.fcdc_tcp_port = iBSUtil.getUsableTcpPort()
+        gParams.fcdc_tcp_port = bdtUtil.getUsableTcpPort()
         prepare_fcdcentral_config(gParams.fcdc_tcp_port, 
                                   gParams.fcdc_fvworker_size, 
                                   gParams.fcdc_threadpool_size)
@@ -668,7 +678,7 @@ def main(argv=None):
         # -----------------------------------------------------------
         # launch KMeans Server
         # -----------------------------------------------------------
-        gParams.kmeanss_tcp_port = iBSUtil.getUsableTcpPort()
+        gParams.kmeanss_tcp_port = bdtUtil.getUsableTcpPort()
         prepare_kmeansserver_config(gParams.fcdc_tcp_port, 
                                   gParams.kmeanss_tcp_port)
         #print("kmeanss_tcp_port = ",gParams.kmeanss_tcp_port)
@@ -697,7 +707,7 @@ def main(argv=None):
         # -----------------------------------------------------------
         # launch KMeans Contractor
         # -----------------------------------------------------------
-        gParams.kmeansc_tcp_port = iBSUtil.getUsableTcpPort()
+        gParams.kmeansc_tcp_port = bdtUtil.getUsableTcpPort()
         prepare_kmeansc_config(gParams.fcdc_tcp_port, 
                                   gParams.kmeansc_tcp_port)
         #print("kmeansc_tcp_port = ",gParams.kmeansc_tcp_port)
@@ -753,7 +763,7 @@ def main(argv=None):
         finish_time = datetime.now()
         duration = finish_time - start_time
         bdvd_logp("-----------------------------------------------")
-        bdvd_log("Run complete: %s elapsed" %  iBSUtil.formatTD(duration))
+        bdvd_log("Run complete: %s elapsed" %  bdtUtil.formatTD(duration))
 
     except Usage as err:
         shutdownKMeansC()

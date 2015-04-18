@@ -29,8 +29,9 @@ if Platform == "Windows":
 
 import iBSConfig
 iBSConfig.BDT_HomeDir = BDT_HomeDir
-import bdtUtil
 import iBSDefines
+import bdtUtil
+import bigMatUtil
 import iBSFCDClient as fcdc
 import iBS
 import Ice
@@ -99,7 +100,7 @@ class BDVDParams:
         # option processing
         for option, value in opts:
             if option in ("-v", "--version"):
-                print("bigKmeans v",iBSUtil.get_version())
+                print("bigKmeans v",bdtUtil.get_version())
                 sys.exit(0)
             if option in ("-h", "--help"):
                 raise Usage(use_message)
@@ -153,61 +154,24 @@ class BDVDParams:
 # Input Data to BigMat
 # -----------------------------------------------------------
 def s01_txt2mat():
-    nodeName = "s01_txt2mat"
-    nodeDir = gParams.pipeline_rundir + "/" + nodeName
-    nodeScriptDir = nodeDir + "-script"
-
-    subnode_picke_file = "{0}/{1}.pickle".format(nodeDir,nodeName)
-    if gParams.dry_run:
-        return subnode_picke_file
-
-    if gParams.remove_before_run and os.path.exists(nodeDir):
-        gRunner.logp("remove existing dir: {0}".format(nodeDir))   
-        shutil.rmtree(nodeDir)
-
-    if not os.path.exists(nodeScriptDir):
-        os.mkdir(nodeScriptDir)
-
-    #
-    # prepare design file
-    #
-    ColCnt = gParams.col_cnt
-    RowCnt = gParams.row_cnt
-    DataFile = gParams.data_file
-    FieldSep = " "
-    SampleNames=["V{0}".format(v) for v in range(1,ColCnt+1)]
-    CalcStatistics = False
-    design_params=(SampleNames,ColCnt,RowCnt,DataFile,FieldSep,CalcStatistics)
-    params_pickle_fn="{0}/design_params.pickle".format(nodeScriptDir)
-    iBSDefines.dumpPickle(design_params, params_pickle_fn)
-
-    design_file=BDT_HomeDir+"/bdt/bdtPy/PipelineDesigns/bdvdTxt2MatDesign.py"
-    shutil.copy(design_file,nodeScriptDir)
-
-    #
-    # Run node
-    #
-    design_fn=os.path.abspath(nodeScriptDir)+"/bdvdTxt2MatDesign.py"
-    subnode=nodeName
-    cmdpath="{0}/bdt/bdtCmds/bigmat-txt2mat".format(BDT_HomeDir)
-    if Platform == "Windows":
-        node_cmd = ["py", cmdpath]
-    else:
-        node_cmd = [cmdpath]
-    node_cmd.extend(["--node", nodeName,
-                "--num-threads", "4",
-                "--out",nodeDir,
-                design_fn])
-      
-    shell_cmd=""
-    for strCmd in node_cmd:
-        shell_cmd=shell_cmd+strCmd+" "
-    #print(shell_cmd)
-
-    gRunner.logp("run subtask at: {0}".format(nodeDir))
-    proc = subprocess.call(node_cmd)
-    gRunner.logp("end subtask \n")
-    return subnode_picke_file
+    nodeName = gSteps[0]
+    calcStatistics = False
+    colNames = None
+    field_sep = None
+    return bigMatUtil.run_txt2Mat(
+        gRunner,
+        Platform,
+        BDT_HomeDir,
+        nodeName,
+        gParams.pipeline_rundir,
+        gParams.dry_run,
+        gParams.remove_before_run,
+        calcStatistics,
+        gParams.col_cnt,
+        gParams.row_cnt,
+        gParams.data_file,
+        colNames,
+        field_sep)
 
 # -----------------------------------------------------------
 # KMeans ++
@@ -237,7 +201,7 @@ def s02_kmeansPP(datamatPickle):
     params_pickle_fn="{0}/design_params.pickle".format(nodeScriptDir)
     iBSDefines.dumpPickle(design_params, params_pickle_fn)
 
-    design_file=BDT_HomeDir+"/iBS/iBSPy/PipelineDesigns/bigclustKMeansPPDesign.py"
+    design_file=BDT_HomeDir+"/bdt/bdtPy/PipelineDesigns/bigclustKMeansPPDesign.py"
     shutil.copy(design_file,nodeScriptDir)
 
     #
@@ -245,16 +209,20 @@ def s02_kmeansPP(datamatPickle):
     #
     design_fn=os.path.abspath(nodeScriptDir)+"/bigclustKMeansPPDesign.py"
     subnode=nodeName
-    cmdpath="{0}/bigclust-kmeans++.py".format(BDT_HomeDir)
-    node_cmd = [cmdpath,
-                "--node",nodeName,
+    cmdpath="{0}/bdt/bdtCmds/bigclust-kmeans++".format(BDT_HomeDir)
+
+    if Platform == "Windows":
+        node_cmd = ["py", cmdpath]
+    else:
+        node_cmd = [cmdpath]
+    node_cmd.extend(["--node",nodeName,
                 "--datamat", datamatPickle,
                 "--output-dir",nodeDir,
-                design_fn]
-      
+                design_fn])
+   
     shell_cmd=""
-    for str in node_cmd:
-        shell_cmd=shell_cmd+str+" "
+    for strCmd in node_cmd:
+        shell_cmd=shell_cmd+strCmd+" "
     #print(shell_cmd)
 
     gRunner.logp("run subtask at: {0}".format(nodeDir))
@@ -264,9 +232,9 @@ def s02_kmeansPP(datamatPickle):
     return (nodeDir,subnode_picke_file)
 
 def preparePipelineResult(kmeansPPNodeDir):
-    outfile="{0}cluster_assignments.bfv".format(output_dir)
+    outfile="{0}cluster_assignments.bfv".format(gParams.output_dir)
     shutil.copy("{0}/gid_10001.bfv".format(kmeansPPNodeDir),
-                "{0}cluster_assignments.bfv".format(output_dir))
+                "{0}cluster_assignments.bfv".format(gParams.output_dir))
 
     gRunner.logp("cluster_assignments: {0}\n".format(outfile))
 
@@ -293,8 +261,7 @@ def main(argv=None):
 
         # -----------------------------------------------------------
         # launch bigMat
-        # -----------------------------------------------------------
-       
+        # -----------------------------------------------------------     
         if gParams.dry_run and gParams.start_from == gSteps[0]:
             gParams.dry_run = False
 
@@ -316,7 +283,7 @@ def main(argv=None):
         finish_time = datetime.now()
         duration = finish_time - start_time
         gRunner.logp("-----------------------------------------------")
-        gRunner.log("Run complete: %s elapsed" %  iBSUtil.formatTD(duration))
+        gRunner.log("Run complete: %s elapsed" %  bdtUtil.formatTD(duration))
 
     except Usage as err:
         gRunner.logp(sys.argv[0].split("/")[-1] + ": " + str(err.msg))

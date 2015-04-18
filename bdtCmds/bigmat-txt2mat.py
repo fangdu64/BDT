@@ -15,7 +15,6 @@ import logging
 from copy import deepcopy
 
 BDT_HomeDir=os.path.abspath(os.path.dirname(os.path.abspath(__file__))+"../../..")
-print(BDT_HomeDir)
 if os.getcwd()!=BDT_HomeDir:
     os.chdir(BDT_HomeDir)
 
@@ -123,13 +122,13 @@ class BDVDParams:
         return args
 
 def prepare_output_dir():
-    shutil.copy(gParams.design_file,"{0}/bdvdTxt2MatDesign.py".format(gRunner.script_dir))
+    shutil.copy(gParams.design_file,"{0}/txt2MatDesign.py".format(gRunner.script_dir))
 
 def uploadData(fcdcPrx):
     designPath=os.path.abspath(gRunner.script_dir)
     if designPath not in sys.path:
          sys.path.append(designPath)
-    import bdvdTxt2MatDesign as design
+    import txt2MatDesign as design
     sampleNames = design.SampleNames
     (rt, observerIDs) = fcdcPrx.RqstNewFeatureObserversInGroup(len(sampleNames),False)
     observerGroupID=observerIDs[0]
