@@ -1,7 +1,7 @@
 #!__PYTHON_BIN_PATH__
 
 """
-bigmat-bam2mat
+import matrix from txt file
 """
 
 import sys, traceback
@@ -20,8 +20,8 @@ Platform = None
 if Platform == "Windows":
     # this file will be at install\
     bdtInstallDir = BDT_HomeDir
-    icePyDir = bdtInstallDir+"\\dependency\\IcePy"
-    bdtPyDir = bdtInstallDir+"\\bdt\\bdtPy"
+    icePyDir = os.path.abspath(bdtInstallDir+"/dependency/IcePy")
+    bdtPyDir = os.path.abspath(bdtInstallDir+"/bdt/bdtPy")
     for dir in [icePyDir, bdtPyDir]:
         if dir not in sys.path:
             sys.path.append(dir)
@@ -83,7 +83,7 @@ class BDVDParams:
                                          "num-threads=",
                                          "max-mem=",
                                          "node=",
-                                         "datacentral-dir=",
+                                         "bigmat-dir=",
                                          "tmp-dir="])
         except getopt.error as msg:
             raise Usage(msg)

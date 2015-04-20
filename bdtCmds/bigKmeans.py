@@ -36,10 +36,10 @@ import iBS
 import Ice
 
 use_message = '''
-KMeans++ (multihreads, local node)
+bigKmeans
 
 Usage:
-    pipeline-kmeans++.py [options] <--data data_file> <--nrow row_cnt> <--ncol col_cnt> <--k cluster_num> <--out out_dir>
+    bigKmeans [options] <--data data_file> <--nrow row_cnt> <--ncol col_cnt> <--k cluster_num> <--out out_dir>
 
 Options:
     -v/--version
@@ -94,8 +94,6 @@ class BDVDParams:
         except getopt.error as msg:
             raise Usage(msg)
 
-        custom_out_dir = None
-
         # option processing
         for option, value in opts:
             if option in ("-v", "--version"):
@@ -106,7 +104,7 @@ class BDVDParams:
             if option in ("-p", "--thread-num"):
                 self.kmeansc_workercnt = int(value)
             if option in ("-o", "--out"):
-                custom_out_dir = value
+                self.output_dir = value
             if option =="--start-from":
                 allowedValues = gSteps;
                 if value not in allowedValues:
@@ -133,7 +131,7 @@ class BDVDParams:
                     raise Usage('invalid --k')
 
         requiredNames = ['--data', '--k', '--out', '--ncol', '--nrow']
-        providedValues = [self.data_file, self.kmeans_ks, custom_out_dir, self.col_cnt, self.row_cnt]
+        providedValues = [self.data_file, self.kmeans_ks, self.output_dir, self.col_cnt, self.row_cnt]
         noneIdx = bdtUtil.getFirstNone(providedValues)
         if noneIdx != -1:
             raise Usage("{0} is required".format(requiredNames[noneIdx]))
@@ -143,14 +141,14 @@ class BDVDParams:
         if noneIdx != -1:
             raise Usage("{0} not exist".format(providedFiles[noneIdx]))
 
-        self.output_dir = os.path.abspath(custom_out_dir)
+        self.output_dir = os.path.abspath(self.output_dir)
         self.logging_dir = os.path.abspath(self.output_dir + "/logs")
         self.pipeline_rundir=os.path.abspath(self.output_dir + "/run")
 
         return args
 
 # -----------------------------------------------------------
-# Input Data to BigMat
+# import data matrix from txt format
 # -----------------------------------------------------------
 def s01_txt2mat():
     nodeName = gSteps[0]
@@ -176,7 +174,7 @@ def s01_txt2mat():
 # KMeans ++
 # -----------------------------------------------------------
 def s02_kmeansPP(datamatPickle):
-    nodeName = "s02_kmeansPP"
+    nodeName = gSteps[1]
     nodeDir=os.path.abspath(gParams.pipeline_rundir+"/"+nodeName)
     nodeScriptDir=os.path.abspath(nodeDir+"-script")
 

@@ -34,7 +34,7 @@
     <Compile Include="iBSFCDClient.py" />
     <Compile Include="bdtUtil.py" />
     <Compile Include="PipelineDesigns\bdvdBam2MatDesign.py" />
-    <Compile Include="PipelineDesigns\bdvdBFV2MatDesign.py" />
+    <Compile Include="PipelineDesigns\bfv2MatDesign.py" />
     <Compile Include="PipelineDesigns\bdvdIDs2MatDesign.py" />
     <Compile Include="PipelineDesigns\bdvdRUVDesign.py" />
     <Compile Include="PipelineDesigns\txt2MatDesign.py" />
