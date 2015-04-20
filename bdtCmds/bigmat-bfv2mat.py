@@ -140,8 +140,6 @@ def attachData(fcdcPrx,facetAdminPrx):
    
     gRunner.log("attach bigmat: {0} x {1} from {2}".format(design.RowCnt,design.ColCnt,design.StorePathPrefix))
     (rt, outOIDs)=fcdcPrx.AttachBigMatrix(design.ColCnt,design.RowCnt,design.ColNames,design.StorePathPrefix)
-    gRunner.log("assigned colIDs: {0}".format(str(outOIDs)))
-
     #recalculate statistics
     bigMatrixID= outOIDs[0]
     bmPrx=facetAdminPrx.GetBigMatrixFacet(bigMatrixID)
@@ -187,7 +185,7 @@ def attachData(fcdcPrx,facetAdminPrx):
     dumpOutput(bfv2mat)
 
 def dumpOutput(bfv2mat):
-    fn = "{0}{1}".format(output_dir,gParams.result_dumpfile)
+    fn = os.path.abspath("{0}/{1}".format(gRunner.output_dir, gParams.result_dumpfile))
     iBSDefines.dumpPickle(bfv2mat,fn)
 
 def main(argv=None):
@@ -247,7 +245,7 @@ def main(argv=None):
         finish_time = datetime.now()
         duration = finish_time - start_time
         gRunner.logp("-----------------------------------------------")
-        gRunner.log("Run complete: %s elapsed" %  iBSUtil.formatTD(duration))
+        gRunner.log("Run complete: %s elapsed" %  bdtUtil.formatTD(duration))
 
     except Usage as err:
         gRunner.shutdown_bigMat()

@@ -4,8 +4,8 @@ SET pathConfigBat=%~dp0..\..\..\config\bdt_path_win.bat
 call %pathConfigBat%
 
 py %bdtInstallDir%\bigKmeans ^
-	--input-type text-mat ^
-	--data %bdtDatasetsDir%\txtMat\dnase_test.txt ^
+	--input-type binary-mat ^
+	--data %bdtDatasetsDir%\binaryMat\dnase_test.bfv ^
 	--nrow 92554 ^
 	--ncol 45 ^
 	--k 100 ^

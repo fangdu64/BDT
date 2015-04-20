@@ -117,6 +117,8 @@ class bigMatRunner:
         self.shutdown_bigMat()
         sys.exit(1)
 
+inputTypes = ['text-mat', 'binary-mat', 'bam-files']
+
 def run_txt2Mat(
     gRunner,
     platform,
@@ -225,16 +227,13 @@ def run_bfv2Mat(
     #
     ColCnt = col_cnt
     RowCnt = row_cnt
-    DataFile = data_file
-    FieldSep = " "
-    if field_sep is not None:
-        FieldSep = field_sep
+    StorePathPrefix = data_file
 
     ColNames=["V{0}".format(v) for v in range(1,ColCnt+1)]
     if col_names is not None:
         ColNames = col_names
 
-    CalcStatistics = calculateStatistics
+    CalculateStatistics = calculateStatistics
     design_params=(StorePathPrefix,CalculateStatistics,RowCnt,ColCnt,ColNames)
     params_pickle_fn=os.path.abspath("{0}/design_params.pickle".format(nodeScriptDir))
     iBSDefines.dumpPickle(design_params, params_pickle_fn)

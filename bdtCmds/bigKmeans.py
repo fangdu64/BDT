@@ -53,6 +53,7 @@ Advanced Options:
 gParams=None
 gRunner=None
 gSteps = ['1-input-mat', '2-run-kmeans']
+gInputTypes = ['text-mat', 'binary-mat']
 
 class Usage(Exception):
     def __init__(self, msg):
@@ -66,6 +67,7 @@ class BDVDParams:
         self.dry_run = True
         self.remove_before_run = True
         self.pipeline_rundir = None
+        self.input_type = None
         self.data_file = None
         self.kmeansc_workercnt = 4
         self.dist_type = "Euclidean"
@@ -81,6 +83,7 @@ class BDVDParams:
                 ["version",
                 "help",
                 "start-from=",
+                "input-type=",
                 "data=",
                 "out=",
                 "thread-num=",
@@ -110,6 +113,11 @@ class BDVDParams:
                 if value not in allowedValues:
                     raise Usage('--start-from should be one of the {0}'.format(allowedValues))
                 self.start_from = value
+            if option =="--input-type":
+                allowedValues = gInputTypes;
+                if value not in allowedValues:
+                    raise Usage('--input-type should be one of the {0}'.format(allowedValues))
+                self.input_type = value
             if option == "--data":
                 self.data_file = os.path.abspath(value)
             if option in ("--ncol"):
@@ -169,6 +177,27 @@ def s01_txt2mat():
         gParams.data_file,
         colNames,
         field_sep)
+
+# -----------------------------------------------------------
+# import data matrix from txt format (*.bfv)
+# -----------------------------------------------------------
+def s01_bfv2mat():
+    nodeName = gSteps[0]
+    calcStatistics = False
+    colNames = None
+    return bigMatUtil.run_bfv2Mat(
+        gRunner,
+        Platform,
+        BDT_HomeDir,
+        nodeName,
+        gParams.pipeline_rundir,
+        gParams.dry_run,
+        gParams.remove_before_run,
+        calcStatistics,
+        gParams.col_cnt,
+        gParams.row_cnt,
+        gParams.data_file,
+        colNames)
 
 # -----------------------------------------------------------
 # KMeans ++
@@ -255,7 +284,11 @@ def main(argv=None):
         if gParams.dry_run and gParams.start_from == gSteps[0]:
             gParams.dry_run = False
 
-        datamatPickle = s01_txt2mat()
+        datamatPickle = None
+        if (gParams.input_type == gInputTypes[0]):
+            datamatPickle = s01_txt2mat()
+        elif (gParams.input_type == gInputTypes[1]):
+            datamatPickle = s01_bfv2mat()
 
         if gParams.dry_run:
             gRunner.log("retrieve existing result for: {0}".format(gSteps[0]))
