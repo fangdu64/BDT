@@ -33,7 +33,7 @@ def main(argv=None):
 	print(bdtCmdsDir)
 	print(cmdFiles)
 	for cmdFile in cmdFiles:
-		if cmdFile in ["install-linux.py", "install-win.py"]:
+		if cmdFile in ['install-linux.py', 'install-win.py', 'bdtPy.pyproj']:
 			continue
 		destDir = iBSConfig.BDT_HomeDir + "/bdt/bdtCmds"
 		if cmdFile in shortCutCmds:

@@ -33,7 +33,7 @@
     <Compile Include="bigmat-bfv2mat.py" />
     <Compile Include="bigmat-txt2mat.py" />
     <Compile Include="install-win.py" />
-    <Compile Include="install.py" />
+    <Compile Include="install-linux.py" />
   </ItemGroup>
   <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />
   <Import Condition="!Exists($(PtvsTargetsFile))" Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
