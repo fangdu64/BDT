@@ -28,7 +28,8 @@ def main(argv=None):
 	
 	shortCutCmds = [
 		'bigKmeans.py',
-		'bdvd.py']
+		'bdvd.py',
+        'bigMat.py']
 
 	print(bdtCmdsDir)
 	print(cmdFiles)

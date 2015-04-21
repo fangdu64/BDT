@@ -113,5 +113,5 @@ __pycache__/
 # ================================
 # examples out dir
 # ================================
-/examples/bigKMeans/txtData/windows/out/
-/examples/bigKMeans/binaryData/windows/out/
+/examples/bigKMeans/txtData/windows/*out/
+/examples/bigKMeans/binaryData/windows/*out/

@@ -164,7 +164,7 @@ class singleNodeKmeansRunner:
         designPath=os.path.abspath(self.script_dir)
         if designPath not in sys.path:
              sys.path.append(designPath)
-        import bigclustKMeansPPDesign as design
+        import bigKmeansSingleNodeDesign as design
         self.kmeansc_workercnt =design.KMeansContractorWorkerCnt
         self.kmeansc_ramsize =design.KMeansContractorRAMSize
 

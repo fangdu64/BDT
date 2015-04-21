@@ -1,7 +1,7 @@
 #!__PYTHON_BIN_PATH__
 
 """
-command line tools for big k-means 
+command line tools to generate a matrix
 """
 
 import os
@@ -29,22 +29,16 @@ import iBSConfig
 iBSConfig.BDT_HomeDir = BDT_HomeDir
 import iBSDefines
 import bdtUtil
-import bigKmeansUtil
 import iBSFCDClient as fcdc
 import bigMatUtil
 import iBS
 import Ice
 
 use_message = '''
-bigKmeans
+bigMat
 
 Usage:
-    bigKmeans [options] <--data data_file> <--nrow row_cnt> <--ncol col_cnt> <--k cluster_num> <--out out_dir>
-
-Options:
-    -v/--version
-    -p/--thread-num                <int>       [ default: 4             ]
-    --dist-type                    <string>    [ Euclidean, Correlation ]
+    bigMat [options] <--data data_file> <--nrow row_cnt> <--ncol col_cnt> <--k cluster_num> <--out out_dir>
 
 Advanced Options:
 
@@ -52,9 +46,12 @@ Advanced Options:
 
 gParams=None
 gRunner=None
-gSteps = ['1-input-mat', '2-run-kmeans']
-gInputTypes = ['text-mat', 'binary-mat']
-gSeedingMethod = ['kmeans++', 'random', 'provided']
+gSteps = ['1-input-mat', 'end']
+gInputTypes = [
+    'text-mat',
+    'binary-mat',
+    'kmeans-seeds-mat',
+    'kmeans-centroids-mat']
 
 class Usage(Exception):
     def __init__(self, msg):
@@ -69,35 +66,22 @@ class BDVDParams:
         self.remove_before_run = True
         self.pipeline_rundir = None
         self.input_type = None
+        self.data_dir = None
         self.data_file = None
-        self.kmeansc_workercnt = 4
-        self.dist_type = "Euclidean"
-        self.kmeans_ks = None
         self.row_cnt = None
         self.col_cnt = None
-        self.kmeans_maxiter = 100
-        self.kmeans_minexplainedchange = 0.0001
-        self.seeding_method = gSeedingMethod[0]
-        self.seeds_mat = None
 
     def parse_options(self, argv):
         try:
             opts, args = getopt.getopt(argv[1:], "hvp:m:o:",
                 ["version",
                 "help",
-                "start-from=",
                 "input-type=",
                 "data=",
+                "in-dir=",
                 "out=",
-                "thread-num=",
-                "dist-type=",
                 "ncol=",
-                "nrow=",
-                "k=",
-                "max-iter=",
-                "min-expchg=",
-                "seeding-method=",
-                "seeds-mat="])
+                "nrow="])
 
         except getopt.error as msg:
             raise Usage(msg)
@@ -109,8 +93,6 @@ class BDVDParams:
                 sys.exit(0)
             if option in ("-h", "--help"):
                 raise Usage(use_message)
-            if option in ("-p", "--thread-num"):
-                self.kmeansc_workercnt = int(value)
             if option in ("-o", "--out"):
                 self.output_dir = value
             if option =="--start-from":
@@ -125,44 +107,24 @@ class BDVDParams:
                 self.input_type = value
             if option == "--data":
                 self.data_file = os.path.abspath(value)
+            if option == "--in-dir":
+                self.data_dir = os.path.abspath(value)
             if option in ("--ncol"):
                 self.col_cnt = int(value)
             if option in ("--nrow"):
                 self.row_cnt = int(value)
-            if option in ("--max-iter"):
-                self.kmeans_maxiter = int(value)
-            if option in ("--min-expchg"):
-                self.kmeans_minexplainedchange = float(value)
-            if option =="--dist_type":
-                allowedValues = ('Euclidean', 'Correlation');
-                if value not in allowedValues:
-                    raise Usage('--dist_type should be one of the {0}'.format(allowedValues))
-                self.dist_type = value
-            if option =="--k":
-                self.kmeans_ks = bdtUtil.parseIntSeq(value)
-                if len(self.kmeans_ks)<1:
-                    raise Usage('invalid --k')
-            if option == "--seeding-method":
-                allowedValues = gSeedingMethod
-                if value not in allowedValues:
-                    raise Usage('--seeding-method should be one of the {0}'.format(allowedValues))
-                self.seeding_method = value
-            if option == "--seeds-mat":
-                self.seeds_mat =  os.path.abspath(value)
-                self.seeds_mat = bdtUtil.derivePickleFile(self.seeds_mat)
+        if self.input_type in  ['text-mat', 'binary-mat']:
+            requiredNames = ['--data', '--out', '--ncol', '--nrow']
+            providedValues = [self.data_file, self.output_dir, self.col_cnt, self.row_cnt]
+            providedFiles = [self.data_file]
+        elif self.input_type in ['kmeans-seeds-mat', 'kmeans-centroids-mat']:
+            requiredNames = ['--in-dir', '--out']
+            providedValues = [self.data_dir, self.output_dir]
+            providedFiles = [self.data_dir]
 
-        requiredNames = ['--data', '--k', '--out', '--ncol', '--nrow']
-        providedValues = [self.data_file, self.kmeans_ks, self.output_dir, self.col_cnt, self.row_cnt]
-        if self.seeding_method == gSeedingMethod[2]:
-            requiredNames.append('--seeds-mat')
-            providedValues.append(self.seeds_mat)
         noneIdx = bdtUtil.getFirstNone(providedValues)
         if noneIdx != -1:
             raise Usage("{0} is required".format(requiredNames[noneIdx]))
-
-        providedFiles = [self.data_file]
-        if self.seeds_mat is not None:
-            providedFiles.append(self.seeds_mat)
 
         noneIdx = bdtUtil.getFirstNotExistFile(providedFiles)
         if noneIdx != -1:
@@ -219,66 +181,27 @@ def s01_bfv2mat():
         colNames)
 
 # -----------------------------------------------------------
-# KMeans ++
+# import data matrix from bigKmeans output
 # -----------------------------------------------------------
-def s02_kmeansPP(datamatPickle):
-    nodeName = gSteps[1]
-    nodeDir=os.path.abspath(gParams.pipeline_rundir+"/"+nodeName)
-    nodeScriptDir=os.path.abspath(nodeDir+"-script")
+def s01_fromKmeansResult():
+    nodeName = gSteps[0]
+    inputPickle = bdtUtil.derivePickleFile(gParams.data_dir)
+    kmeansOutObj = iBSDefines.loadPickle(inputPickle)
+    nodeDir = os.path.abspath("{0}/{1}".format(gParams.pipeline_rundir, nodeName))
+    out_picke_file = os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
+    if gParams.dry_run:
+        return out_picke_file
+    if gParams.remove_before_run and os.path.exists(nodeDir):
+        shutil.rmtree(nodeDir)
+    if not os.path.exists(nodeDir):
+        os.mkdir(nodeDir)
 
-    if not os.path.exists(nodeScriptDir):
-        os.mkdir(nodeScriptDir)
+    if gParams.input_type == 'kmeans-seeds-mat':
+        iBSDefines.dumpPickle(kmeansOutObj.SeedsMat, out_picke_file)
+    elif gParams.input_type == 'kmeans-centroids-mat':
+        iBSDefines.dumpPickle(kmeansOutObj.CentroidsMat, out_picke_file)
 
-    #
-    # prepare design file
-    #
-    Ks = gParams.kmeans_ks
-    Distance = iBS.KMeansDistEnum.KMeansDistEuclidean
-    if gParams.dist_type=="Correlation":
-        Distance = iBS.KMeansDistEnum.KMeansDistCorrelation
-    MaxIteration = gParams.kmeans_maxiter
-    MinExplainedChanged = gParams.kmeans_minexplainedchange
-    FeatureIdxFrom = None
-    FeatureIdxTo = None
-    KMeansContractorWorkerCnt = gParams.kmeansc_workercnt
-    Seeding = iBS.KMeansSeedingEnum.KMeansSeedingKMeansPlusPlus
-    if gParams.seeding_method == gSeedingMethod[1]:
-        Seeding = iBS.KMeansSeedingEnum.KMeansSeedingKMeansRandom
-
-    design_params=(Ks,Distance,MaxIteration,MinExplainedChanged,FeatureIdxFrom,FeatureIdxTo,KMeansContractorWorkerCnt,Seeding)
-    params_pickle_fn=os.path.abspath("{0}/design_params.pickle".format(nodeScriptDir))
-    iBSDefines.dumpPickle(design_params, params_pickle_fn)
-
-    design_file=os.path.abspath(BDT_HomeDir+"/bdt/bdtPy/PipelineDesigns/bigKmeansSingleNodeDesign.py")
-    shutil.copy(design_file,nodeScriptDir)
-
-    #
-    # Run node
-    #
-    design_fn=os.path.abspath(nodeScriptDir)+"/bigKmeansSingleNodeDesign.py"
-    subnode=nodeName
-    cmdpath=os.path.abspath("{0}/bdt/bdtCmds/bigclust-kmeans++".format(BDT_HomeDir))
-
-    if Platform == "Windows":
-        node_cmd = ["py", cmdpath]
-    else:
-        node_cmd = [cmdpath]
-    node_cmd.extend(["--node",nodeName,
-                "--datamat", datamatPickle,
-                "--output-dir",nodeDir])
-    if gParams.seeds_mat is not None:
-       node_cmd.extend(["--seeds-mat", gParams.seeds_mat])
-    node_cmd.append(design_fn)
-    shell_cmd=""
-    for strCmd in node_cmd:
-        shell_cmd=shell_cmd+strCmd+" "
-    #print(shell_cmd)
-
-    gRunner.logp("run subtask at: {0}".format(nodeDir))
-    proc = subprocess.call(node_cmd)
-    subnode_picke_file=os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
-    gRunner.logp("end subtask \n")
-    return (nodeDir,subnode_picke_file)
+    return out_picke_file
 
 def main(argv=None):
     global gParams
@@ -295,7 +218,7 @@ def main(argv=None):
         start_time = datetime.now()
 
         gRunner.prepare_dirs(gParams.output_dir, gParams.logging_dir, gParams.pipeline_rundir)
-        gRunner.init_logger(os.path.abspath(gParams.logging_dir + "/bigKmeans.log"))
+        gRunner.init_logger(os.path.abspath(gParams.logging_dir + "/bigMat.log"))
 
         gRunner.logp()
         gRunner.log("Beginning bigKmeans run v({0})".format(bdtUtil.get_version()))
@@ -312,6 +235,8 @@ def main(argv=None):
             datamatPickle = s01_txt2mat()
         elif (gParams.input_type == gInputTypes[1]):
             datamatPickle = s01_bfv2mat()
+        elif (gParams.input_type in [gInputTypes[2], gInputTypes[3]]):
+            datamatPickle = s01_fromKmeansResult()
 
         if gParams.dry_run:
             gRunner.log("retrieve existing result for: {0}".format(gSteps[0]))
@@ -319,11 +244,6 @@ def main(argv=None):
             if not os.path.exists(datamatPickle):
                 gRunner.die('file not exist')
             gRunner.log("")
-        
-        if gParams.dry_run and gParams.start_from == gSteps[1]:
-            gParams.dry_run = False
-
-        (nodeDir,subnode_picke)=s02_kmeansPP(datamatPickle)
 
         finish_time = datetime.now()
         duration = finish_time - start_time
@@ -332,7 +252,6 @@ def main(argv=None):
 
     except Usage as err:
         gRunner.logp(sys.argv[0].split("/")[-1] + ": " + str(err.msg))
-        gRunner.logp(" for detailed help see url ...")
         return 2
     
     except:

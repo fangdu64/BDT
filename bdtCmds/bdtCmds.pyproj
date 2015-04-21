@@ -28,6 +28,7 @@
   <ItemGroup>
     <Compile Include="bdvd.py" />
     <Compile Include="bigclust-kmeans++.py" />
+    <Compile Include="bigMat.py" />
     <Compile Include="bigKmeans.py" />
     <Compile Include="bigmat-bam2mat.py" />
     <Compile Include="bigmat-bfv2mat.py" />

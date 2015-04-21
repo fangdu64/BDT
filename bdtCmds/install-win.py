@@ -87,8 +87,9 @@ def main(argv=None):
     # install bdtCmds
     cmdFiles = next(os.walk(bdtCmdsDir))[2]
     shortCutCmds = [
-		'bigKmeans.py',
-		'bdvd.py']
+        'bigKmeans.py',
+        'bdvd.py',
+        'bigMat.py']
     for cmdFile in cmdFiles:
         if cmdFile[-3:] != '.py':
             continue

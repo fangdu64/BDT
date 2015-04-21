@@ -94,7 +94,7 @@ class BDVDParams:
                                          "node=",
                                          "bigmat-dir=",
                                          "datamat=",
-                                         "seedsmat=",
+                                         "seeds-mat=",
                                          "tmp-dir="])
         except getopt.error as msg:
             raise Usage(msg)
@@ -121,7 +121,7 @@ class BDVDParams:
                 self.bigmat_dir = value
             if option =="--datamat":
                 self.datamat_pickle = value
-            if option =="--seedsmat":
+            if option =="--seeds-mat":
                 self.seedsmat_pickle = value
         
         self.result_dumpfile = "{0}.pickle".format(self.workflow_node)
@@ -141,7 +141,7 @@ class BDVDParams:
 
 def prepare_output_dir():
     shutil.copy(gParams.design_file,
-                os.path.abspath("{0}/bigclustKMeansPPDesign.py".format(gRunner.script_dir)))
+                os.path.abspath("{0}/bigKmeansSingleNodeDesign.py".format(gRunner.script_dir)))
 
 def attachBigMatrix(bigmat,fcdcPrx):
     gRunner.log("attach bigmat: {0} x {1} from {2}".format(bigmat.RowCnt,bigmat.ColCnt,bigmat.StorePathPrefix))
@@ -152,7 +152,7 @@ def prepareKMeansProject(facetAdminPrx, fcdcPrx, kmeansSAdminPrx, dataOIDs, data
     designPath=os.path.abspath(gRunner.script_dir)
     if designPath not in sys.path:
          sys.path.append(designPath)
-    import bigclustKMeansPPDesign as design
+    import bigKmeansSingleNodeDesign as design
     domainSize = dataMat.RowCnt
     RowCnt=dataMat.RowCnt
     (rt, rqstProj)=kmeansSAdminPrx.GetBlankProject()
@@ -202,7 +202,6 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
     projectID = proj.ProjectID
     K = max(proj.BatchKs)
 
-    
     waitForMatrixIds =[]
     waitForVectorIds =[]
     outObj=iBSDefines.BigClustKMeansOutputDefine()
@@ -455,9 +454,11 @@ def main(argv=None):
         if gParams.seedsmat_pickle is not None:
             seedmatObj=iBSDefines.loadPickle(gParams.seedsmat_pickle)
             if hasattr(seedmatObj,"SeedsMat"):
-                seedsMat = iBSDefines.loadPickle(gParams.seedsmat_pickle).SeedsMat
+                seedsMat = seedmatObj.SeedsMat
+            elif hasattr(seedmatObj,"BigMat"):
+                seedsMat = seedmatObj.BigMat
             else:
-                seedsMat = iBSDefines.loadPickle(gParams.seedsmat_pickle).BigMat
+                seedsMat = seedmatObj
             seedOIDs = attachBigMatrix(seedsMat,fcdcPrx)
 
         # -----------------------------------------------------------

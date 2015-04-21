@@ -37,7 +37,7 @@
     <Compile Include="PipelineDesigns\bdvdIDs2MatDesign.py" />
     <Compile Include="PipelineDesigns\bdvdRUVDesign.py" />
     <Compile Include="PipelineDesigns\txt2MatDesign.py" />
-    <Compile Include="PipelineDesigns\bigclustKMeansPPDesign.py" />
+    <Compile Include="PipelineDesigns\bigKmeansSingleNodeDesign.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="PipelineDesigns\" />
