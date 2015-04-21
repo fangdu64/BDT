@@ -92,7 +92,7 @@ def main(argv=None):
     for cmdFile in cmdFiles:
         if cmdFile[-3:] != '.py':
             continue
-        if cmdFile in ['install-linux.py', 'install-win.py', 'bdtPy.pyproj']:
+        if cmdFile in ['install-linux.py', 'install-win.py']:
             continue
         destDir = bdtInstallDir+"\\bdt\\bdtCmds"
         if cmdFile in shortCutCmds:
