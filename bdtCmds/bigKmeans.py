@@ -29,9 +29,9 @@ import iBSConfig
 iBSConfig.BDT_HomeDir = BDT_HomeDir
 import iBSDefines
 import bdtUtil
-import bigMatUtil
 import bigKmeansUtil
 import iBSFCDClient as fcdc
+import bigMatUtil
 import iBS
 import Ice
 

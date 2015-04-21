@@ -34,9 +34,9 @@ import bdtUtil
 import bigKmeansUtil
 import iBSDefines
 import iBSFCDClient as fcdc
+import bigMatUtil
 import iBS
 import Ice
-import iBSFcdcHelper as fcdcHelper
 
 use_message = '''
 KMeans++ (multihreads, local node)
@@ -202,6 +202,9 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
     projectID = proj.ProjectID
     K = max(proj.BatchKs)
 
+    
+    waitForMatrixIds =[]
+    waitForVectorIds =[]
     outObj=iBSDefines.BigClustKMeansOutputDefine()
     #
     # Save KMembers
@@ -230,23 +233,7 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
         featureIdxFrom+=thisBatchCnt
         remainCnt-=thisBatchCnt
     
-    #concurrency issue, wait until OID_KMembers has aready been saved
-    (rt,values) = fcdcPrx.GetDoublesColumnVector(OID_KMembers,0,1)
-
-    #now prepare output infomation
-    (rt,bigvec_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(OID_KMembers)
-    bigvec_store_pathprefix = os.path.abspath(bigvec_store_pathprefix)
-    gRunner.log("k-members store: {0}".format(bigvec_store_pathprefix))
-    bigvec = iBSDefines.BigVecMetaInfo()
-    bigvec.Name = "k-members"
-    bigvec.StorePathPrefix = bigvec_store_pathprefix
-    bigvec.ColID = foi.ObserverID
-    bigvec.ColName= foi.ObserverName
-    bigvec.RowCnt = foi.DomainSize
-    outObj.KMembersVec = bigvec
-    gRunner.log("save cluster membership for {0} rows [done]".format(dataRowCnt))
-
-    exportKMembers(fcdcPrx, computePrx, OID_KMembers, outObj.KMembersVec)
+    waitForVectorIds.append(OID_KMembers)
 
     #
     # Save K Clusters
@@ -266,11 +253,12 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
 
     (rt, kclusters)=kmeansServerPrx.GetKClusters(projectID)
     fcdcPrx.SetDoublesRowMatrix(observerGroupID,0,K,kclusters)
+    waitForMatrixIds.append(observerGroupID)
     (rt,bigmat_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(observerGroupID)
     bigmat_store_pathprefix = os.path.abspath(bigmat_store_pathprefix)
-    gRunner.log("k-clusters store: {0}".format(bigmat_store_pathprefix))
+    gRunner.log("k-centroids at: {0}".format(bigmat_store_pathprefix))
     bigmat = iBSDefines.BigMatrixMetaInfo()
-    bigmat.Name = "k-clusters"
+    bigmat.Name = "k-centroids"
     bigmat.StorePathPrefix = bigmat_store_pathprefix
     bigmat.ColIDs = OIDs_KClusters
     bigmat.ColNames= [v.ObserverName for v in dataFois]
@@ -297,18 +285,19 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
 
     (rt, kseeds)=kmeansServerPrx.GetKSeeds(projectID)
     fcdcPrx.SetDoublesRowMatrix(observerGroupID,0,K,kseeds)
+    waitForMatrixIds.append(observerGroupID)
     (rt,bigmat_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(observerGroupID)
     bigmat_store_pathprefix = os.path.abspath(bigmat_store_pathprefix)
-    gRunner.log("k-seeds store: {0}".format(bigmat_store_pathprefix))
     bigmat = iBSDefines.BigMatrixMetaInfo()
-    bigmat.Name = "k-seeds"
+    bigmat.Name = "K-seeds"
     bigmat.StorePathPrefix = bigmat_store_pathprefix
     bigmat.ColIDs = OIDs_KSeeds
     bigmat.ColNames= [v.ObserverName for v in dataFois]
     bigmat.RowCnt = K
     bigmat.ColCnt=dataColCnt
     outObj.SeedsMat = bigmat
-    gRunner.log("save seeds, {0} rows {1} cols".format(K,dataColCnt))
+    gRunner.log("Save K-seeds, {0} rows {1} cols".format(K,dataColCnt))
+    gRunner.log("K-seeds at: {0}".format(bigmat_store_pathprefix))
 
     #
     # Save K Cnts
@@ -324,9 +313,10 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
     featureIdxFrom=0
     featureIdxTo=foi.DomainSize
     rt=fcdcPrx.SetDoublesColumnVector(OID_KCnts,featureIdxFrom,featureIdxTo,values)
+    waitForVectorIds.append(OID_KCnts)
     (rt,bigvec_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(OID_KCnts)
     bigvec_store_pathprefix = os.path.abspath(bigvec_store_pathprefix)
-    gRunner.log("k-cnts store: {0}".format(bigvec_store_pathprefix))
+    #gRunner.log("k-cnts store: {0}".format(bigvec_store_pathprefix))
     bigvec = iBSDefines.BigVecMetaInfo()
     bigvec.Name = "k-cnts"
     bigvec.StorePathPrefix = bigvec_store_pathprefix
@@ -334,7 +324,24 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
     bigvec.ColName= foi.ObserverName
     bigvec.RowCnt = foi.DomainSize
     outObj.KCntsVec = bigvec
-    gRunner.log("save cluster member counts")
+    #gRunner.log("save cluster member counts")
+
+    # make sure all matrices and vectors have been saved befor shuting down the bigMat server
+    #concurrency issue, wait until OID_KMembers has aready been saved
+    rt = bigMatUtil.waitForMatricesReadable(fcdcPrx, waitForMatrixIds)
+    rt = bigMatUtil.waitForVectorsReadable(fcdcPrx, waitForVectorIds)
+
+    #now prepare output infomation
+    (rt,bigvec_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(OID_KMembers)
+    bigvec_store_pathprefix = os.path.abspath(bigvec_store_pathprefix)
+    bigvec = iBSDefines.BigVecMetaInfo()
+    bigvec.Name = "clusterMembership"
+    bigvec.StorePathPrefix = bigvec_store_pathprefix
+    bigvec.ColID = foi.ObserverID
+    bigvec.ColName= foi.ObserverName
+    bigvec.RowCnt = foi.DomainSize
+    outObj.KMembersVec = bigvec
+    exportKMembers(fcdcPrx, computePrx, OID_KMembers, outObj.KMembersVec)
 
     #
     # Save Run Statistics
@@ -372,14 +379,14 @@ def exportKMembers(fcdcPrx, computePrx, kmembersOID, kmembersVec):
     task.SampleIDs = [kmembersOID]
     task.FeatureIdxFrom=0
     task.FeatureIdxTo=kmembersVec.RowCnt
-    task.OutID = 10001
+    task.OutID = 10001 # not used
     task.OutPath=os.path.abspath(gParams.output_dir)
     task.OutFile = os.path.abspath("{0}/cluster_assignments.bfv".format(gParams.output_dir))
     task.ConvertToType = iBS.FeatureValueEnum.FeatureValueInt32
-    gRunner.log("Export cluster_assignments ...")
-    fcdcHelper.exportMatByRange(gRunner.log,fcdcPrx,computePrx,task)
+    gRunner.log("Export cluster assignments ...")
+    bigMatUtil.exportMatByRange(gRunner.log,fcdcPrx,computePrx,task)
     bfvFile = task.OutFile
-    gRunner.logp("cluster_assignments: {0}\n".format(bfvFile))
+    gRunner.log("Cluster assignments at: {0}\n".format(bfvFile))
     return bfvFile
 
 def dumpOutput(kmeansOut):

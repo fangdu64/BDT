@@ -6,8 +6,41 @@ import subprocess
 import shutil
 import time
 from datetime import datetime, date
-
 import iBSDefines
+import iBS
+
+def exportMatByRange(bdt_log,fcdcPrx, computePrx, task):
+    (rt,amdTaskID)=computePrx.ExportRowMatrix(task)
+    preMsg=""
+    amdTaskFinished=False
+    while (not amdTaskFinished):
+        (rt,amdTaskInfo)=fcdcPrx.GetAMDTaskInfo(amdTaskID)
+        thisMsg="task: {0}, batch processed: {1}/{2}".format(amdTaskInfo.TaskName, amdTaskInfo.FinishedCnt, amdTaskInfo.TotalCnt)
+        if preMsg!=thisMsg:
+            preMsg = thisMsg
+            bdt_log(thisMsg)
+        if amdTaskInfo.Status!=iBS.AMDTaskStatusEnum.AMDTaskStatusNormal:
+            amdTaskFinished = True;
+        else:
+            time.sleep(1)
+
+def waitForMatrixReadable(fcdcPrx, gid):
+    (rt,values) = fcdcPrx.GetDoublesRowMatrix(gid,0,1)
+    return rt
+
+def waitForMatricesReadable(fcdcPrx, gids):
+    for gid in gids:
+        (rt,values) = fcdcPrx.GetDoublesRowMatrix(gid,0,1)
+    return rt
+
+def waitForVectorReadable(fcdcPrx, oid):
+    (rt,values) = fcdcPrx.GetDoublesColumnVector(oid,0,1)
+    return rt
+
+def waitForVectorsReadable(fcdcPrx, oids):
+    for oid in oids:
+        (rt,values) = fcdcPrx.GetDoublesColumnVector(oid,0,1)
+    return rt
 
 # bigMatRunner
 class bigMatRunner:

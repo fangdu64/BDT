@@ -322,6 +322,7 @@ CComputeServiceImpl::GetBlankExportRowMatrixTask(const Ice::Current& current)
 	task.ConvertToType = iBS::FeatureValueDouble;
 	task.RowAdjust = ::iBS::RowAdjustNone;
 	task.ValueAdjust = ::iBS::ValueAdjustNone;
+	task.TaskName = "Export Matrix";
 	return task;
 }
 
@@ -333,7 +334,7 @@ const Ice::Current& current)
 	if (task.SampleIDs.empty())
 	{
 		::iBS::ArgumentException ex;
-		ex.reason = "empty sampleIDs";
+		ex.reason = "empty column IDs";
 		cb->ice_exception(ex);
 		return;
 	}
@@ -342,7 +343,7 @@ const Ice::Current& current)
 	CGlobalVars::get()->theObserversDB.GetFeatureObservers(task.SampleIDs, fois);
 
 	Ice::Long taskID = CGlobalVars::get()->theFeatureValueWorkerMgr->RegisterAMDTask(
-		"ExportRowMatrix", 0);
+		task.TaskName, 0);
 	cb->ice_response(1,taskID);
 
 	::iBS::ExportRowMatrixTask task_d(task);

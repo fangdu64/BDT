@@ -30,7 +30,6 @@
     <Compile Include="bigMatUtil.py" />
     <Compile Include="iBSConfig.py" />
     <Compile Include="iBSDefines.py" />
-    <Compile Include="iBSFcdcHelper.py" />
     <Compile Include="iBSFCDClient.py" />
     <Compile Include="bdtUtil.py" />
     <Compile Include="PipelineDesigns\bdvdBam2MatDesign.py" />
