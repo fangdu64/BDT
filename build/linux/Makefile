@@ -12,7 +12,7 @@ iBS_iBSPySrcDir =$(bdt_topdir)/bdtPy
 iBS_iBSShortcutCmdDestDir =$(BDT_Install)
 iBS_iBSCmdDestDir =$(BDT_Install)/bdt/bdtCmds
 iBS_pythonBin =$(BDT_Install)/ThirdParty/python/bin/python3.3
-iBS_cmdtoolInstall =$(bdt_topdir)/bdtCmds/install.py
+iBS_cmdtoolInstall =$(bdt_topdir)/bdtCmds/install-linux.py
 
 iBS_iBSConfigDestDir =$(BDT_Install)/bdt/config
 iBS_iBSConfigSrcDir =$(bdt_topdir)/common/config
