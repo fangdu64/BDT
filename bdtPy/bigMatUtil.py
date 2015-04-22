@@ -1,5 +1,6 @@
 import sys
 import os
+import getopt
 import socket
 import logging
 import subprocess
@@ -8,6 +9,7 @@ import time
 from datetime import datetime, date
 import iBSDefines
 import iBS
+import bdtUtil
 
 def exportMatByRange(bdt_log,fcdcPrx, computePrx, task):
     (rt,amdTaskID)=computePrx.ExportRowMatrix(task)
@@ -150,7 +152,116 @@ class bigMatRunner:
         self.shutdown_bigMat()
         sys.exit(1)
 
-inputTypes = ['text-mat', 'binary-mat', 'bam-files']
+bigmat_input_types = [
+    'text-mat',
+    'binary-mat',
+    'kmeans-seeds-mat',
+    'kmeans-centroids-mat',
+    'kmeans-data-mat']
+
+bigmat_use_message = '''
+bigMat
+
+Usage:
+    bigMat [options] <--data data_file> <--nrow row_cnt> <--ncol col_cnt> <--k cluster_num> <--out out_dir>
+
+Advanced Options:
+
+'''
+
+bigmat_steps = ['1-input-mat', 'end']
+
+class BigMatParams:
+    def __init__(self):
+        self.output_dir = None
+        self.logging_dir = None
+        self.start_from = bigmat_steps[0]
+        self.dry_run = True
+        self.remove_before_run = True
+        self.pipeline_rundir = None
+        self.input_type = None
+        self.input_location = None
+        self.row_cnt = None
+        self.col_cnt = None
+
+    def parse_options(self, prefix, argvs):
+        try:
+            opts, args = getopt.getopt(argvs, "hv",
+                ["version",
+                "help",
+                "{0}input=".format(prefix),
+                "{0}out=".format(prefix),
+                "{0}ncol=".format(prefix),
+                "{0}nrow=".format(prefix)])
+
+        except getopt.error as msg:
+            raise Usage(msg)
+
+        # option processing
+        for option, value in opts:
+            if option in ("-v", "--version"):
+                print("Big Data Tools - bigMat v",bdtUtil.get_version())
+                sys.exit(0)
+            if option in ("-h", "--help"):
+                raise iBSDefines.BdtUsage(bigmat_use_message)
+            if option == "--{0}out".format(prefix):
+                self.output_dir = value
+            if option == "--start-from".format(prefix):
+                allowedValues = bigmat_steps;
+                if value not in allowedValues:
+                    raise iBSDefines.BdtUsage('--start-from should be one of the {0}'.format(allowedValues))
+                self.start_from = value
+            if option =="--{0}input".format(prefix):
+                allowedValues = bigmat_input_types
+                (self.input_type, self.input_location) = bdtUtil.parseMatInput(value)
+                if self.input_type is None or self.input_location is None:
+                    raise iBSDefines.BdtUsage('--input should be of the format: type@location')
+                if self.input_type not in allowedValues:
+                    raise iBSDefines.BdtUsage('--input type@location, type should be one of the {0}'.format(allowedValues))
+                self.input_location = os.path.abspath(self.input_location)
+            if option == "--{0}ncol".format(prefix):
+                self.col_cnt = int(value)
+            if option == "--{0}nrow".format(prefix):
+                self.row_cnt = int(value)
+        if self.input_type in  ['text-mat', 'binary-mat']:
+            requiredNames = [
+                '--{0}input'.format(prefix),
+                '--{0}out'.format(prefix),
+                '--{0}ncol'.format(prefix),
+                '--{0}nrow'.format(prefix)]
+            providedValues = [self.input_type, self.output_dir, self.col_cnt, self.row_cnt]
+            providedFiles = [self.input_location]
+        elif self.input_type in ['kmeans-seeds-mat', 'kmeans-centroids-mat', 'kmeans-data-mat']:
+            requiredNames = [
+                '--{0}input',
+                '--{0}out']
+            providedValues = [self.input_type, self.output_dir]
+            providedFiles = [self.input_location]
+
+        noneIdx = bdtUtil.getFirstNone(providedValues)
+        if noneIdx != -1:
+            raise Usage("{0} is required".format(requiredNames[noneIdx]))
+
+        noneIdx = bdtUtil.getFirstNotExistFile(providedFiles)
+        if noneIdx != -1:
+            raise Usage("{0} not exist".format(providedFiles[noneIdx]))
+
+        self.output_dir = os.path.abspath(self.output_dir)
+        self.logging_dir = os.path.abspath(self.output_dir + "/logs")
+        self.pipeline_rundir=os.path.abspath(self.output_dir + "/run")
+        return
+
+    def get_cmds(self):
+        cmds = []
+        if self.output_dir is not None:
+            cmds.extend(['--out', self.output_dir])
+        if self.input_type is not None:
+            cmds.extend(['--input', '{0}@{1}'.format(self.input_type, self.input_location)])
+        if self.col_cnt is not None:
+            cmds.extend(['--ncol', str(self.col_cnt)])
+        if self.row_cnt is not None:
+            cmds.extend(['--nrow', str(self.row_cnt)])
+        return cmds
 
 def run_txt2Mat(
     gRunner,
@@ -288,6 +399,44 @@ def run_bfv2Mat(
                 "--num-threads", "4",
                 "--out",nodeDir,
                 design_fn])
+      
+    shell_cmd=""
+    for strCmd in node_cmd:
+        shell_cmd=shell_cmd+strCmd+" "
+
+    gRunner.logp("run subtask: {0}\n".format(nodeName))
+    proc = subprocess.call(node_cmd)
+    gRunner.logp("end subtask: {0}\n".format(nodeName))
+    return out_picke_file
+
+def run_bigMat(
+    gRunner,
+    platform,
+    bdtHomeDir,
+    nodeName,
+    runDir,
+    dryRun,
+    removeBeforeRun,
+    bigMatParams):
+    
+    nodeDir = os.path.abspath("{0}/{1}".format(runDir, nodeName))
+
+    out_picke_file = os.path.abspath("{0}/run/1-input-mat/1-input-mat.pickle".format(nodeDir))
+    if dryRun:
+        return out_picke_file
+
+    if removeBeforeRun and os.path.exists(nodeDir):
+        gRunner.logp("remove existing dir: {0}".format(nodeDir))
+        shutil.rmtree(nodeDir)
+    #
+    # Run node
+    #
+    cmdpath=os.path.abspath("{0}/bigMat".format(bdtHomeDir))
+    if platform == "Windows":
+        node_cmd = ["py", cmdpath]
+    else:
+        node_cmd = [cmdpath]
+    node_cmd.extend(bigMatParams.get_cmds())
       
     shell_cmd=""
     for strCmd in node_cmd:

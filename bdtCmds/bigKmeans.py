@@ -52,8 +52,7 @@ Advanced Options:
 
 gParams=None
 gRunner=None
-gSteps = ['1-input-mat', '2-run-kmeans']
-gInputTypes = ['text-mat', 'binary-mat', 'existing-mat']
+gSteps = ['1-data-mat', '2-seeds-mat','3-run-kmeans']
 gSeedingMethod = ['kmeans++', 'random', 'provided']
 
 class Usage(Exception):
@@ -68,36 +67,43 @@ class BDVDParams:
         self.dry_run = True
         self.remove_before_run = True
         self.pipeline_rundir = None
-        self.input_type = None
-        self.data_file = None
+        self.data_params = None
+        self.data_indir = None
         self.kmeansc_workercnt = 4
         self.dist_type = "Euclidean"
         self.kmeans_ks = None
-        self.row_cnt = None
-        self.col_cnt = None
         self.kmeans_maxiter = 100
         self.kmeans_minexplainedchange = 0.0001
         self.seeding_method = gSeedingMethod[0]
-        self.seeds_mat = None
+        self.seeds_params = None
+        self.seeds_indir = None
 
     def parse_options(self, argv):
+        dataArgv = []
+        seedsArgv = []
+        bigKmeansArgv = []
+        for i in range(1,len(argv)):
+            arg = argv[i]
+            if len(arg) < 2 or arg[:2] != '--':
+                continue
+            if len(arg) > len('--data') and arg[:6]=='--data':
+                dataArgv.extend([arg, argv[i+1]])
+            elif len(arg) > len('--seeds') and arg[:7]=='--seeds':
+                seedsArgv.extend([arg, argv[i+1]])
+            else:
+                bigKmeansArgv.extend([arg, argv[i+1]])
         try:
-            opts, args = getopt.getopt(argv[1:], "hvp:m:o:",
+            opts, args = getopt.getopt(bigKmeansArgv, "hvp:m:o:",
                 ["version",
                 "help",
                 "start-from=",
-                "input-type=",
-                "data=",
                 "out=",
                 "thread-num=",
                 "dist-type=",
-                "ncol=",
-                "nrow=",
                 "k=",
                 "max-iter=",
                 "min-expchg=",
-                "seeding-method=",
-                "seeds-mat="])
+                "seeding-method="])
 
         except getopt.error as msg:
             raise Usage(msg)
@@ -118,17 +124,6 @@ class BDVDParams:
                 if value not in allowedValues:
                     raise Usage('--start-from should be one of the {0}'.format(allowedValues))
                 self.start_from = value
-            if option =="--input-type":
-                allowedValues = gInputTypes;
-                if value not in allowedValues:
-                    raise Usage('--input-type should be one of the {0}'.format(allowedValues))
-                self.input_type = value
-            if option == "--data":
-                self.data_file = os.path.abspath(value)
-            if option in ("--ncol"):
-                self.col_cnt = int(value)
-            if option in ("--nrow"):
-                self.row_cnt = int(value)
             if option in ("--max-iter"):
                 self.kmeans_maxiter = int(value)
             if option in ("--min-expchg"):
@@ -147,42 +142,33 @@ class BDVDParams:
                 if value not in allowedValues:
                     raise Usage('--seeding-method should be one of the {0}'.format(allowedValues))
                 self.seeding_method = value
-            if option == "--seeds-mat":
-                self.seeds_mat =  os.path.abspath(value)
-                self.seeds_mat = iBSDefines.derivePickleFile(self.seeds_mat)
 
-        requiredNames = ['--data', '--k', '--out', '--ncol', '--nrow']
-        providedValues = [self.data_file, self.kmeans_ks, self.output_dir, self.col_cnt, self.row_cnt]
-        if self.seeding_method == gSeedingMethod[2]:
-            requiredNames.append('--seeds-mat')
-            providedValues.append(self.seeds_mat)
+        requiredNames = ['--k', '--out']
+        providedValues = [self.kmeans_ks, self.output_dir]
         noneIdx = bdtUtil.getFirstNone(providedValues)
         if noneIdx != -1:
             raise Usage("{0} is required".format(requiredNames[noneIdx]))
-
-        providedFiles = [self.data_file]
-        if self.seeds_mat is not None:
-            providedFiles.append(self.seeds_mat)
-
-        noneIdx = bdtUtil.getFirstNotExistFile(providedFiles)
-        if noneIdx != -1:
-            raise Usage("{0} not exist".format(providedFiles[noneIdx]))
 
         self.output_dir = os.path.abspath(self.output_dir)
         self.logging_dir = os.path.abspath(self.output_dir + "/logs")
         self.pipeline_rundir=os.path.abspath(self.output_dir + "/run")
 
+        # parse options for data
+        self.data_indir =os.path.abspath("{0}/{1}".format(self.pipeline_rundir, gSteps[0]))
+        dataArgv.extend(['--data-out',self.data_indir])
+        self.data_params = bigMatUtil.BigMatParams()
+        self.data_params.parse_options("data-", dataArgv)
+        
+        if self.seeding_method == gSeedingMethod[2]:
+            self.seeds_indir=os.path.abspath("{0}/{1}".format(self.pipeline_rundir, gSteps[1]))
+            seedsArgv.extend(['--seeds-out',self.seeds_indir])
+            self.seeds_params = bigMatUtil.BigMatParams()
+            self.seeds_params.parse_options("seeds-", seedsArgv)
         return args
 
-# -----------------------------------------------------------
-# import data matrix from txt format
-# -----------------------------------------------------------
-def s01_txt2mat():
+def s01_data_mat():
     nodeName = gSteps[0]
-    calcStatistics = False
-    colNames = None
-    field_sep = None
-    return bigMatUtil.run_txt2Mat(
+    return bigMatUtil.run_bigMat(
         gRunner,
         Platform,
         BDT_HomeDir,
@@ -190,21 +176,11 @@ def s01_txt2mat():
         gParams.pipeline_rundir,
         gParams.dry_run,
         gParams.remove_before_run,
-        calcStatistics,
-        gParams.col_cnt,
-        gParams.row_cnt,
-        gParams.data_file,
-        colNames,
-        field_sep)
+        gParams.data_params)
 
-# -----------------------------------------------------------
-# import data matrix from txt format (*.bfv)
-# -----------------------------------------------------------
-def s01_bfv2mat():
-    nodeName = gSteps[0]
-    calcStatistics = False
-    colNames = None
-    return bigMatUtil.run_bfv2Mat(
+def s02_seeds_mat():
+    nodeName = gSteps[1]
+    return bigMatUtil.run_bigMat(
         gRunner,
         Platform,
         BDT_HomeDir,
@@ -212,17 +188,12 @@ def s01_bfv2mat():
         gParams.pipeline_rundir,
         gParams.dry_run,
         gParams.remove_before_run,
-        calcStatistics,
-        gParams.col_cnt,
-        gParams.row_cnt,
-        gParams.data_file,
-        colNames)
-
+        gParams.seeds_params)
 # -----------------------------------------------------------
 # KMeans ++
 # -----------------------------------------------------------
-def s02_kmeansPP(datamatPickle):
-    nodeName = gSteps[1]
+def s03_kmeansPP(datamatPickle, seedsmatPickle):
+    nodeName = gSteps[2]
     nodeDir=os.path.abspath(gParams.pipeline_rundir+"/"+nodeName)
     nodeScriptDir=os.path.abspath(nodeDir+"-script")
 
@@ -266,8 +237,8 @@ def s02_kmeansPP(datamatPickle):
     node_cmd.extend(["--node",nodeName,
                 "--datamat", datamatPickle,
                 "--output-dir",nodeDir])
-    if gParams.seeds_mat is not None:
-       node_cmd.extend(["--seeds-mat", gParams.seeds_mat])
+    if seedsmatPickle is not None:
+       node_cmd.extend(["--seeds-mat", seedsmatPickle])
     node_cmd.append(design_fn)
     shell_cmd=""
     for strCmd in node_cmd:
@@ -307,25 +278,25 @@ def main(argv=None):
         if gParams.dry_run and gParams.start_from == gSteps[0]:
             gParams.dry_run = False
 
-        datamatPickle = None
-        if (gParams.input_type == gInputTypes[0]):
-            datamatPickle = s01_txt2mat()
-        elif (gParams.input_type == gInputTypes[1]):
-            datamatPickle = s01_bfv2mat()
-        elif (gParams.input_type == gInputTypes[2]):
-            datamatPickle = iBSDefines.derivePickleFile(gParams.data_file)
-
-        if gParams.dry_run:
+        datamatPickle = s01_data_mat()
+        if gParams.dry_run and not os.path.exists(datamatPickle):
             gRunner.log("retrieve existing result for: {0}".format(gSteps[0]))
             gRunner.log("from: {0}".format(datamatPickle))
-            if not os.path.exists(datamatPickle):
-                gRunner.die('file not exist')
+            gRunner.die('file not exist')
             gRunner.log("")
         
-        if gParams.dry_run and gParams.start_from == gSteps[1]:
-            gParams.dry_run = False
+        seedsmatPickle = None
+        if gParams.seeds_params is not None:
+            if gParams.dry_run and gParams.start_from == gSteps[1]:
+                gParams.dry_run = False
+            seedsmatPickle = s02_seeds_mat()
+            if gParams.dry_run and not os.path.exists(seedsmatPickle):
+                gRunner.log("retrieve existing result for: {0}".format(gSteps[1]))
+                gRunner.log("from: {0}".format(seedsmatPickle))
+                gRunner.die('file not exist')
+                gRunner.log("")
 
-        (nodeDir,subnode_picke)=s02_kmeansPP(datamatPickle)
+        (nodeDir,subnode_picke)=s03_kmeansPP(datamatPickle, seedsmatPickle)
 
         runSummary = iBSDefines.NodeRunSummaryDefine()
         runSummary.NodeDir = gParams.output_dir

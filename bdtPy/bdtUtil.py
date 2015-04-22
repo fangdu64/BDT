@@ -2,6 +2,7 @@ import sys
 import os
 import socket
 import logging
+import re
 
 # check if current working directory is at BDT install dir
 def cwdAtBDT():
@@ -109,6 +110,12 @@ def getFirstNotExistFile(fileList):
         if not os.path.exists(fileList[i]):
             return i
     return -1
+
+def parseMatInput(input):
+    m = re.search('^(?P<type>.+)@(?P<location>.+)$', input)
+    if m is None:
+        return (None, None)
+    return (m.group('type'), m.group('location'))
 
 # bdtRunner
 class bdtRunner:

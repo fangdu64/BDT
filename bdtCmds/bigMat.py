@@ -10,6 +10,7 @@ import getopt
 import subprocess
 import shutil
 import time
+import re
 from datetime import datetime, date
 import random
 
@@ -34,108 +35,10 @@ import bigMatUtil
 import iBS
 import Ice
 
-use_message = '''
-bigMat
-
-Usage:
-    bigMat [options] <--data data_file> <--nrow row_cnt> <--ncol col_cnt> <--k cluster_num> <--out out_dir>
-
-Advanced Options:
-
-'''
-
 gParams=None
 gRunner=None
-gSteps = ['1-input-mat', 'end']
-gInputTypes = [
-    'text-mat',
-    'binary-mat',
-    'kmeans-seeds-mat',
-    'kmeans-centroids-mat',
-    'kmeans-data-mat']
-
-class Usage(Exception):
-    def __init__(self, msg):
-        self.msg = msg
-
-class BDVDParams:
-    def __init__(self):
-        self.output_dir = None
-        self.logging_dir = None
-        self.start_from = gSteps[0]
-        self.dry_run = True
-        self.remove_before_run = True
-        self.pipeline_rundir = None
-        self.input_type = None
-        self.data_dir = None
-        self.data_file = None
-        self.row_cnt = None
-        self.col_cnt = None
-
-    def parse_options(self, argv):
-        try:
-            opts, args = getopt.getopt(argv[1:], "hvp:m:o:",
-                ["version",
-                "help",
-                "input-type=",
-                "data=",
-                "in-dir=",
-                "out=",
-                "ncol=",
-                "nrow="])
-
-        except getopt.error as msg:
-            raise Usage(msg)
-
-        # option processing
-        for option, value in opts:
-            if option in ("-v", "--version"):
-                print("bigKmeans v",bdtUtil.get_version())
-                sys.exit(0)
-            if option in ("-h", "--help"):
-                raise Usage(use_message)
-            if option in ("-o", "--out"):
-                self.output_dir = value
-            if option =="--start-from":
-                allowedValues = gSteps;
-                if value not in allowedValues:
-                    raise Usage('--start-from should be one of the {0}'.format(allowedValues))
-                self.start_from = value
-            if option =="--input-type":
-                allowedValues = gInputTypes;
-                if value not in allowedValues:
-                    raise Usage('--input-type should be one of the {0}'.format(allowedValues))
-                self.input_type = value
-            if option == "--data":
-                self.data_file = os.path.abspath(value)
-            if option == "--in-dir":
-                self.data_dir = os.path.abspath(value)
-            if option in ("--ncol"):
-                self.col_cnt = int(value)
-            if option in ("--nrow"):
-                self.row_cnt = int(value)
-        if self.input_type in  ['text-mat', 'binary-mat']:
-            requiredNames = ['--data', '--out', '--ncol', '--nrow']
-            providedValues = [self.data_file, self.output_dir, self.col_cnt, self.row_cnt]
-            providedFiles = [self.data_file]
-        elif self.input_type in ['kmeans-seeds-mat', 'kmeans-centroids-mat', 'kmeans-data-mat']:
-            requiredNames = ['--in-dir', '--out']
-            providedValues = [self.data_dir, self.output_dir]
-            providedFiles = [self.data_dir]
-
-        noneIdx = bdtUtil.getFirstNone(providedValues)
-        if noneIdx != -1:
-            raise Usage("{0} is required".format(requiredNames[noneIdx]))
-
-        noneIdx = bdtUtil.getFirstNotExistFile(providedFiles)
-        if noneIdx != -1:
-            raise Usage("{0} not exist".format(providedFiles[noneIdx]))
-
-        self.output_dir = os.path.abspath(self.output_dir)
-        self.logging_dir = os.path.abspath(self.output_dir + "/logs")
-        self.pipeline_rundir=os.path.abspath(self.output_dir + "/run")
-
-        return args
+gSteps = bigMatUtil.bigmat_steps
+gInputHandlers = None
 
 # -----------------------------------------------------------
 # import data matrix from txt format
@@ -156,7 +59,7 @@ def s01_txt2mat():
         calcStatistics,
         gParams.col_cnt,
         gParams.row_cnt,
-        gParams.data_file,
+        gParams.input_location,
         colNames,
         field_sep)
 
@@ -178,7 +81,7 @@ def s01_bfv2mat():
         calcStatistics,
         gParams.col_cnt,
         gParams.row_cnt,
-        gParams.data_file,
+        gParams.input_location,
         colNames)
 
 # -----------------------------------------------------------
@@ -186,7 +89,7 @@ def s01_bfv2mat():
 # -----------------------------------------------------------
 def s01_fromKmeansResult():
     nodeName = gSteps[0]
-    inputPickle = iBSDefines.derivePickleFile(gParams.data_dir)
+    inputPickle = iBSDefines.derivePickleFile(gParams.input_location)
     kmeansOutObj = iBSDefines.loadPickle(inputPickle)
     nodeDir = os.path.abspath("{0}/{1}".format(gParams.pipeline_rundir, nodeName))
     out_picke_file = os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
@@ -209,14 +112,23 @@ def s01_fromKmeansResult():
 def main(argv=None):
     global gParams
     global gRunner
-    gParams = BDVDParams()
+    global gInputHandlers
+
+    gParams = bigMatUtil.BigMatParams()
     gRunner = bdtUtil.bdtRunner()
+    gInputHandlers = {
+        'text-mat': s01_txt2mat,
+        'binary-mat': s01_bfv2mat,
+        'kmeans-seeds-mat': s01_fromKmeansResult,
+        'kmeans-centroids-mat': s01_fromKmeansResult,
+        'kmeans-data-mat': s01_fromKmeansResult}
+
     run_argv = sys.argv[:]
 
     try:
         if argv is None:
             argv = sys.argv
-        args = gParams.parse_options(argv)
+        gParams.parse_options("", argv[1:])
        
         start_time = datetime.now()
 
@@ -234,12 +146,7 @@ def main(argv=None):
             gParams.dry_run = False
 
         datamatPickle = None
-        if (gParams.input_type == gInputTypes[0]):
-            datamatPickle = s01_txt2mat()
-        elif (gParams.input_type == gInputTypes[1]):
-            datamatPickle = s01_bfv2mat()
-        elif (gParams.input_type in gInputTypes[2:5]):
-            datamatPickle = s01_fromKmeansResult()
+        datamatPickle = gInputHandlers[gParams.input_type]()
 
         if gParams.dry_run:
             gRunner.log("retrieve existing result for: {0}".format(gSteps[0]))
@@ -259,7 +166,7 @@ def main(argv=None):
         gRunner.logp("-----------------------------------------------")
         gRunner.log("Run complete: %s elapsed" %  bdtUtil.formatTD(duration))
 
-    except Usage as err:
+    except iBSDefines.BdtUsage as err:
         gRunner.logp(sys.argv[0].split("/")[-1] + ": " + str(err.msg))
         return 2
     

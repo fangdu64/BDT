@@ -165,7 +165,7 @@ def getResultPickleFromNodeDir(nodeDir):
         outPickle = "{0}/run/1-input-mat/1-input-mat.pickle".format(os.path.abspath(nodeDir))
         return os.path.abspath(outPickle)
     elif resultSummary.NodeType == "bigKmeans":
-        outPickle = "{0}/run/2-run-kmeans/2-run-kmeans.pickle".format(os.path.abspath(nodeDir))
+        outPickle = "{0}/run/3-run-kmeans/3-run-kmeans.pickle".format(os.path.abspath(nodeDir))
         return os.path.abspath(outPickle)
     else:
         return None
@@ -184,3 +184,7 @@ def appendPickleExtention(filename):
     fn = filename.strip()
     if cmdFile[-7:] != '.pickle':
         return "{0}.pickle".format(fn)
+
+class BdtUsage(Exception):
+    def __init__(self, msg):
+        self.msg = msg
