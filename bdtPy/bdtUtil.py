@@ -110,22 +110,6 @@ def getFirstNotExistFile(fileList):
             return i
     return -1
 
-def derivePickleFile(filenameOrDir):
-    if filenameOrDir is None:
-        return filenameOrDir
-
-    if os.path.isdir(filenameOrDir):
-        baseDir = os.path.basename(os.path.normpath(filenameOrDir))
-        pickleFile = "{0}/{1}.pickle".format(os.path.normpath(filenameOrDir), baseDir)
-    else:
-        pickleFile = appendPickleExtention(filenameOrDir)
-    return pickleFile
-
-def appendPickleExtention(filename):
-    fn = filename.strip()
-    if cmdFile[-7:] != '.pickle':
-        return "{0}.pickle".format(fn)
-
 # bdtRunner
 class bdtRunner:
     def __init__(self):

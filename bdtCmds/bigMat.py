@@ -51,7 +51,8 @@ gInputTypes = [
     'text-mat',
     'binary-mat',
     'kmeans-seeds-mat',
-    'kmeans-centroids-mat']
+    'kmeans-centroids-mat',
+    'kmeans-data-mat']
 
 class Usage(Exception):
     def __init__(self, msg):
@@ -117,7 +118,7 @@ class BDVDParams:
             requiredNames = ['--data', '--out', '--ncol', '--nrow']
             providedValues = [self.data_file, self.output_dir, self.col_cnt, self.row_cnt]
             providedFiles = [self.data_file]
-        elif self.input_type in ['kmeans-seeds-mat', 'kmeans-centroids-mat']:
+        elif self.input_type in ['kmeans-seeds-mat', 'kmeans-centroids-mat', 'kmeans-data-mat']:
             requiredNames = ['--in-dir', '--out']
             providedValues = [self.data_dir, self.output_dir]
             providedFiles = [self.data_dir]
@@ -185,7 +186,7 @@ def s01_bfv2mat():
 # -----------------------------------------------------------
 def s01_fromKmeansResult():
     nodeName = gSteps[0]
-    inputPickle = bdtUtil.derivePickleFile(gParams.data_dir)
+    inputPickle = iBSDefines.derivePickleFile(gParams.data_dir)
     kmeansOutObj = iBSDefines.loadPickle(inputPickle)
     nodeDir = os.path.abspath("{0}/{1}".format(gParams.pipeline_rundir, nodeName))
     out_picke_file = os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
@@ -200,6 +201,8 @@ def s01_fromKmeansResult():
         iBSDefines.dumpPickle(kmeansOutObj.SeedsMat, out_picke_file)
     elif gParams.input_type == 'kmeans-centroids-mat':
         iBSDefines.dumpPickle(kmeansOutObj.CentroidsMat, out_picke_file)
+    elif gParams.input_type == 'kmeans-data-mat':
+        iBSDefines.dumpPickle(kmeansOutObj.DataMat, out_picke_file)
 
     return out_picke_file
 
@@ -221,7 +224,7 @@ def main(argv=None):
         gRunner.init_logger(os.path.abspath(gParams.logging_dir + "/bigMat.log"))
 
         gRunner.logp()
-        gRunner.log("Beginning bigKmeans run v({0})".format(bdtUtil.get_version()))
+        gRunner.log("Beginning bigMat run v({0})".format(bdtUtil.get_version()))
         gRunner.logp("-----------------------------------------------")
 
         # -----------------------------------------------------------
@@ -235,7 +238,7 @@ def main(argv=None):
             datamatPickle = s01_txt2mat()
         elif (gParams.input_type == gInputTypes[1]):
             datamatPickle = s01_bfv2mat()
-        elif (gParams.input_type in [gInputTypes[2], gInputTypes[3]]):
+        elif (gParams.input_type in gInputTypes[2:5]):
             datamatPickle = s01_fromKmeansResult()
 
         if gParams.dry_run:
@@ -244,6 +247,12 @@ def main(argv=None):
             if not os.path.exists(datamatPickle):
                 gRunner.die('file not exist')
             gRunner.log("")
+
+        runSummary = iBSDefines.NodeRunSummaryDefine()
+        runSummary.NodeDir = gParams.output_dir
+        runSummary.NodeType = "bigMat"
+        runSummaryPicke = "{0}/logs/runSummary.pickle".format(gParams.output_dir)
+        iBSDefines.dumpPickle(runSummary, runSummaryPicke)
 
         finish_time = datetime.now()
         duration = finish_time - start_time

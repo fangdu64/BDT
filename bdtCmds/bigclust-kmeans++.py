@@ -232,6 +232,17 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
         featureIdxFrom+=thisBatchCnt
         remainCnt-=thisBatchCnt
     
+    #now prepare output infomation, but do export later
+    (rt,bigvec_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(OID_KMembers)
+    bigvec_store_pathprefix = os.path.abspath(bigvec_store_pathprefix)
+    bigvec = iBSDefines.BigVecMetaInfo()
+    bigvec.Name = "clusterMembership"
+    bigvec.StorePathPrefix = bigvec_store_pathprefix
+    bigvec.ColID = foi.ObserverID
+    bigvec.ColName= foi.ObserverName
+    bigvec.RowCnt = foi.DomainSize
+    outObj.KMembersVec = bigvec
+
     waitForVectorIds.append(OID_KMembers)
 
     #
@@ -330,16 +341,6 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
     rt = bigMatUtil.waitForMatricesReadable(fcdcPrx, waitForMatrixIds)
     rt = bigMatUtil.waitForVectorsReadable(fcdcPrx, waitForVectorIds)
 
-    #now prepare output infomation
-    (rt,bigvec_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(OID_KMembers)
-    bigvec_store_pathprefix = os.path.abspath(bigvec_store_pathprefix)
-    bigvec = iBSDefines.BigVecMetaInfo()
-    bigvec.Name = "clusterMembership"
-    bigvec.StorePathPrefix = bigvec_store_pathprefix
-    bigvec.ColID = foi.ObserverID
-    bigvec.ColName= foi.ObserverName
-    bigvec.RowCnt = foi.DomainSize
-    outObj.KMembersVec = bigvec
     exportKMembers(fcdcPrx, computePrx, OID_KMembers, outObj.KMembersVec)
 
     #
@@ -448,7 +449,11 @@ def main(argv=None):
         samplePrx=fcdc.GetSeqSampleProxy(fcdcHost)
     
         gRunner.log("bigMat activated")
-        dataMat = iBSDefines.loadPickle(gParams.datamat_pickle).BigMat
+        dataMatObj = iBSDefines.loadPickle(gParams.datamat_pickle)
+        if hasattr(dataMatObj,"BigMat"):
+             dataMat = dataMatObj.BigMat
+        else:
+            dataMat = dataMatObj
         dataOIDs = attachBigMatrix(dataMat,fcdcPrx)
         seedOIDs=[0]
         if gParams.seedsmat_pickle is not None:

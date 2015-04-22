@@ -53,7 +53,7 @@ Advanced Options:
 gParams=None
 gRunner=None
 gSteps = ['1-input-mat', '2-run-kmeans']
-gInputTypes = ['text-mat', 'binary-mat']
+gInputTypes = ['text-mat', 'binary-mat', 'existing-mat']
 gSeedingMethod = ['kmeans++', 'random', 'provided']
 
 class Usage(Exception):
@@ -149,7 +149,7 @@ class BDVDParams:
                 self.seeding_method = value
             if option == "--seeds-mat":
                 self.seeds_mat =  os.path.abspath(value)
-                self.seeds_mat = bdtUtil.derivePickleFile(self.seeds_mat)
+                self.seeds_mat = iBSDefines.derivePickleFile(self.seeds_mat)
 
         requiredNames = ['--data', '--k', '--out', '--ncol', '--nrow']
         providedValues = [self.data_file, self.kmeans_ks, self.output_dir, self.col_cnt, self.row_cnt]
@@ -312,6 +312,8 @@ def main(argv=None):
             datamatPickle = s01_txt2mat()
         elif (gParams.input_type == gInputTypes[1]):
             datamatPickle = s01_bfv2mat()
+        elif (gParams.input_type == gInputTypes[2]):
+            datamatPickle = iBSDefines.derivePickleFile(gParams.data_file)
 
         if gParams.dry_run:
             gRunner.log("retrieve existing result for: {0}".format(gSteps[0]))
@@ -324,6 +326,12 @@ def main(argv=None):
             gParams.dry_run = False
 
         (nodeDir,subnode_picke)=s02_kmeansPP(datamatPickle)
+
+        runSummary = iBSDefines.NodeRunSummaryDefine()
+        runSummary.NodeDir = gParams.output_dir
+        runSummary.NodeType = "bigKmeans"
+        runSummaryPicke = "{0}/logs/runSummary.pickle".format(gParams.output_dir)
+        iBSDefines.dumpPickle(runSummary, runSummaryPicke)
 
         finish_time = datetime.now()
         duration = finish_time - start_time

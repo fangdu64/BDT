@@ -147,3 +147,40 @@ class BigClustKMeansPPOutputDefine:
     def __init__(self):
         self.Project = None
         self.Results = None
+
+class NodeRunSummaryDefine:
+    def __init__(self):
+        self.NodeType = None
+        self.NodeName = None
+        self.NodeStatus = None
+        self.NodeDir = None
+
+def getResultPickleFromNodeDir(nodeDir):
+    # runSummary.pickle should be in nodeDir/log
+    runSummaryPickleFile = "{0}/logs/runSummary.pickle".format(os.path.abspath(nodeDir))
+    if not os.path.exists(runSummaryPickleFile):
+        return None
+    resultSummary = loadPickle(runSummaryPickleFile)
+    if resultSummary.NodeType == "bigMat":
+        outPickle = "{0}/run/1-input-mat/1-input-mat.pickle".format(os.path.abspath(nodeDir))
+        return os.path.abspath(outPickle)
+    elif resultSummary.NodeType == "bigKmeans":
+        outPickle = "{0}/run/2-run-kmeans/2-run-kmeans.pickle".format(os.path.abspath(nodeDir))
+        return os.path.abspath(outPickle)
+    else:
+        return None
+
+def derivePickleFile(filenameOrDir):
+    if filenameOrDir is None:
+        return filenameOrDir
+
+    if os.path.isdir(filenameOrDir):
+        pickleFile = getResultPickleFromNodeDir(filenameOrDir)
+    else:
+        pickleFile = appendPickleExtention(filenameOrDir)
+    return pickleFile
+
+def appendPickleExtention(filename):
+    fn = filename.strip()
+    if cmdFile[-7:] != '.pickle':
+        return "{0}.pickle".format(fn)
