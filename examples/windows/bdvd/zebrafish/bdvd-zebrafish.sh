@@ -1,0 +1,21 @@
+
+/dcs01/gcode/fdu1/BDT/pipeline-bdvd.py \
+		--start-from 1-input-mat \
+		--sample-names Ctl1,Ctl3,Ctl5,Trt9,Trt11,Trt13 \
+		--input-type binary-mat \
+		--binary-mat-file /dcs01/gcode/fdu1/projects/BDVD/Zebrafish/data.bfv \
+		--ncol 6 \
+		--nrow 20865 \
+		--out /dcs01/gcode/fdu1/projects/BDVD/Zebrafish \
+		--thread-num 4 \
+		--memory-size 1000 \
+		--pre-normalization column-sum \
+		--common-column-sum median \
+		--sample-groups [1,2,3],[4,5,6] \
+		--known-factors none \
+		--ruv-scale mlog \
+		--ruv-mlog-c 1 \
+		--ruv-type ruvg \
+		--control-rows-method specified-rows \
+		--control-rows-file /dcs01/gcode/fdu1/projects/BDVD/Zebrafish/control-rows.txt \
+		--ruv-rowwise-adjust none
