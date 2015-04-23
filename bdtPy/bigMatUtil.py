@@ -189,12 +189,16 @@ class BigMatParams:
         self.bin_width = None
         self.thread_cnt = 4
         self.memory_size = 2000
+        self.calc_statistics = False
+        self.column_sep = None
+        self.col_names = None
+        self.col_names_original = None
 
     def parse_options(self, prefix, argvs):
         try:
-            opts, args = getopt.getopt(argvs, "hv",
-                ["version",
-                "help",
+            opts, args = getopt.getopt(argvs, "",
+                ["{0}version".format(prefix),
+                "{0}help".format(prefix),
                 "{0}input=".format(prefix),
                 "{0}out=".format(prefix),
                 "{0}ncol=".format(prefix),
@@ -202,21 +206,24 @@ class BigMatParams:
                 "{0}chromosomes=".format(prefix),
                 "{0}bin-width=".format(prefix),
                 "{0}thread-num=".format(prefix),
-                "{0}memory-size=".format(prefix)])
+                "{0}memory-size=".format(prefix),
+                "{0}calc-statistics".format(prefix),
+                "{0}col-sep=".format(prefix),
+                "{0}col-names=".format(prefix)])
 
         except getopt.error as msg:
             raise Usage(msg)
 
         # option processing
         for option, value in opts:
-            if option in ("-v", "--version"):
+            if option == "--{0}version".format(prefix):
                 print("Big Data Tools - bigMat v",bdtUtil.get_version())
                 sys.exit(0)
-            if option in ("-h", "--help"):
+            if option == "--{0}help".format(prefix):
                 raise iBSDefines.BdtUsage(bigmat_use_message)
             if option == "--{0}out".format(prefix):
                 self.output_dir = value
-            if option == "--start-from".format(prefix):
+            if option == "--{0}start-from".format(prefix):
                 allowedValues = bigmat_steps;
                 if value not in allowedValues:
                     raise iBSDefines.BdtUsage('--start-from should be one of the {0}'.format(allowedValues))
@@ -240,10 +247,19 @@ class BigMatParams:
                     raise iBSDefines.BdtUsage("--{0}chromosomes invalid".format(prefix))
             if option == "--{0}bin-width".format(prefix):
                 self.bin_width = int(value)
-            if option == "--thread-num":
+            if option == "--{0}thread-num".format(prefix):
                 self.thread_cnt = int(value)
-            if option == "--memory-size":
+            if option == "--{0}memory-size".format(prefix):
                 self.memory_size = int(value)
+            if option == "--{0}calc-statistics".format(prefix):
+                self.calc_statistics = True
+            if option == "--{0}col-sep".format(prefix):
+                self.column_sep = value
+            if option == "--{0}col-names".format(prefix):
+                self.col_names_original = value
+                self.col_names=value.split(',')
+                if len(self.col_names)<1:
+                    raise iBSDefines.BdtUsage("--{0}col-names invalid".format(prefix))
 
         if self.input_type in  ['text-mat', 'binary-mat']:
             requiredNames = [
@@ -279,12 +295,14 @@ class BigMatParams:
         self.output_dir = os.path.abspath(self.output_dir)
         self.logging_dir = os.path.abspath(self.output_dir + "/logs")
         self.pipeline_rundir=os.path.abspath(self.output_dir + "/run")
-        return
+        return args
 
     def get_cmds(self):
         cmds = []
         if self.output_dir is not None:
             cmds.extend(['--out', self.output_dir])
+        if self.start_from != bigmat_steps[0]:
+            cmds.extend(['--start-from', self.start_from])
         if self.input_type is not None:
             cmds.extend(['--input', '{0}@{1}'.format(self.input_type, self.input_location)])
         if self.col_cnt is not None:
@@ -299,6 +317,12 @@ class BigMatParams:
             cmds.extend(['--thread-num', str(self.thread_cnt)])
         if self.memory_size != 2000:
             cmds.extend(['--memory-size', str(self.memory_size)])
+        if self.calc_statistics is not None:
+            cmds.extend(['--calc-statistics'])
+        if self.column_sep is not None:
+            cmds.extend(['--col-sep', self.column_sep])
+        if self.col_names is not None:
+            cmds.extend(['--col-names', self.col_names_original])
         return cmds
 
 def run_txt2Mat(

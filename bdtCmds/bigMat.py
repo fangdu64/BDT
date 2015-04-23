@@ -45,9 +45,6 @@ gInputHandlers = None
 # -----------------------------------------------------------
 def s01_txt2mat():
     nodeName = gSteps[0]
-    calcStatistics = False
-    colNames = None
-    field_sep = None
     return bigMatUtil.run_txt2Mat(
         gRunner,
         Platform,
@@ -56,20 +53,18 @@ def s01_txt2mat():
         gParams.pipeline_rundir,
         gParams.dry_run,
         gParams.remove_before_run,
-        calcStatistics,
+        gParams.calc_statistics,
         gParams.col_cnt,
         gParams.row_cnt,
         gParams.input_location,
-        colNames,
-        field_sep)
+        gParams.col_names,
+        gParams.column_sep)
 
 # -----------------------------------------------------------
 # import data matrix from binary format (*.bfv)
 # -----------------------------------------------------------
 def s01_bfv2mat():
     nodeName = gSteps[0]
-    calcStatistics = False
-    colNames = None
     return bigMatUtil.run_bfv2Mat(
         gRunner,
         Platform,
@@ -78,19 +73,17 @@ def s01_bfv2mat():
         gParams.pipeline_rundir,
         gParams.dry_run,
         gParams.remove_before_run,
-        calcStatistics,
+        gParams.calc_statistics,
         gParams.col_cnt,
         gParams.row_cnt,
         gParams.input_location,
-        colNames)
+        gParams.col_names)
 
 # -----------------------------------------------------------
 # import data matrix from bam files (*.bam)
 # -----------------------------------------------------------
 def s01_bam2mat():
     nodeName = gSteps[0]
-    calcStatistics = True
-    colNames = None
     return bigMatUtil.run_bam2Mat(
         gRunner,
         Platform,
@@ -99,8 +92,8 @@ def s01_bam2mat():
         gParams.pipeline_rundir,
         gParams.dry_run,
         gParams.remove_before_run,
-        calcStatistics,
-        colNames,
+        gParams.calc_statistics,
+        gParams.col_names,
         gParams.thread_cnt,
         gParams.chromosomes,
         gParams.bin_width,
