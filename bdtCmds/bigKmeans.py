@@ -79,21 +79,16 @@ class BDVDParams:
         self.seeds_indir = None
 
     def parse_options(self, argv):
-        dataArgv = []
-        seedsArgv = []
-        bigKmeansArgv = []
-        for i in range(1,len(argv)):
-            arg = argv[i]
-            if len(arg) < 2 or arg[:2] != '--':
-                continue
-            if len(arg) > len('--data') and arg[:6]=='--data':
-                dataArgv.extend([arg, argv[i+1]])
-            elif len(arg) > len('--seeds') and arg[:7]=='--seeds':
-                seedsArgv.extend([arg, argv[i+1]])
-            else:
-                bigKmeansArgv.extend([arg, argv[i+1]])
+        dataParams = bigMatUtil.BigMatParams()
+        seedsParams = bigMatUtil.BigMatParams()
+        args = argv[1:]
+        args = dataParams.strip_argv('data-', args)
+        args = seedsParams.strip_argv('seeds-', args)
+        dataArgv = dataParams.argv
+        seedsArgv = seedsParams.argv
+        bigKmeansArgv = args
         try:
-            opts, args = getopt.getopt(bigKmeansArgv, "hvp:m:o:",
+            opts, args = getopt.getopt(bigKmeansArgv, "",
                 ["version",
                 "help",
                 "start-from=",

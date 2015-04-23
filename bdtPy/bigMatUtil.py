@@ -174,6 +174,7 @@ bigmat_steps = ['1-input-mat', 'end']
 
 class BigMatParams:
     def __init__(self):
+        self.argv = None
         self.output_dir = None
         self.logging_dir = None
         self.start_from = bigmat_steps[0]
@@ -193,6 +194,33 @@ class BigMatParams:
         self.column_sep = None
         self.col_names = None
         self.col_names_original = None
+
+    def strip_argv(self, prefix, argv):
+        prefixTag = '--{0}'.format(prefix)
+        self.argv = []
+        left_overs =[True]*len(argv)
+        for i in range(len(argv)):
+            arg = argv[i]
+            if len(arg) > len(prefixTag) and arg[:len(prefixTag)]== prefixTag:
+                if self.is_unary_option(prefix, arg):
+                    self.argv.append(arg)
+                    left_overs[i] = False
+                else:
+                    self.argv.extend([arg, argv[i+1]])
+                    left_overs[i] = False
+                    left_overs[i+1] = False
+        args = []
+        for i in range(len(argv)):
+            if left_overs[i]:
+                args.append(argv[i])
+        return args
+
+    def is_unary_option(self, prefix, arg):
+        unaryOptions = [
+            "--{0}version".format(prefix),
+            "--{0}help".format(prefix),
+            "--{0}calc-statistics".format(prefix)]
+        return arg in unaryOptions
 
     def parse_options(self, prefix, argvs):
         try:
