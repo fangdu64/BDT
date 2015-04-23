@@ -59,7 +59,7 @@ class Usage(Exception):
     def __init__(self, msg):
         self.msg = msg
 
-class BDVDParams:
+class BigKmeansParams:
     def __init__(self):
         self.output_dir = None
         self.logging_dir = None
@@ -249,7 +249,7 @@ def s03_kmeansPP(datamatPickle, seedsmatPickle):
 def main(argv=None):
     global gParams
     global gRunner
-    gParams = BDVDParams()
+    gParams = BigKmeansParams()
     gRunner = bdtUtil.bdtRunner()
     run_argv = sys.argv[:]
 

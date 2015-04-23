@@ -1,27 +1,36 @@
 #!__PYTHON_BIN_PATH__
 
 """
-pipeline-bdvd.py
-
+command line tool for bdvd
 """
 import os
-BDT_HomeDir=os.path.dirname(os.path.abspath(__file__))
-if os.getcwd()!=BDT_HomeDir:
-    os.chdir(BDT_HomeDir)
-
 import sys, traceback
 import getopt
 import subprocess
 import shutil
 import time
 from datetime import datetime, date
-import logging
 import random
 
+BDT_HomeDir=os.path.dirname(os.path.abspath(__file__))
+
+Platform = None
+if Platform == "Windows":
+    # this file will be at install\
+    bdtInstallDir = BDT_HomeDir
+    icePyDir = os.path.abspath(bdtInstallDir+"/dependency/IcePy")
+    bdtPyDir = os.path.abspath(bdtInstallDir+"/bdt/bdtPy")
+    for dir in [icePyDir, bdtPyDir]:
+        if dir not in sys.path:
+            sys.path.append(dir)
+
 import iBSConfig
-import bdtUtil
+iBSConfig.BDT_HomeDir = BDT_HomeDir
 import iBSDefines
+import bdtUtil
+import bigKmeansUtil
 import iBSFCDClient as fcdc
+import bigMatUtil
 import iBS
 import Ice
 
@@ -32,22 +41,7 @@ Usage:
     pipeline-bdvd.py <input-options> <ruv-options> <output-options> <--out out_dir>
 
 <input-options>:
---input-type   <string>    [ bam-files, text-mat, binary-mat ]
-
-for [bam-files] the following options are required:
-    --bam-samples-file  <string>
-    --chromosomes       <string> e.g., chr1,chr2
-    --bin-width         <int>
-
-for [text-mat] the following options are required:
-    --text-mat-file     <string>
-    --nrow              <int>
-    --ncol              <int>
-
-for [binary-mat] the following options are required:
-    --binary-mat-file   <string>
-    --nrow              <int>
-    --ncol              <int>
+--data-input   <string>    [ bam-files, text-mat, binary-mat ]
 
 <pre-normalization>:
 --pre-normalization   <string>    [ none, column-sum]
@@ -83,54 +77,17 @@ other options:
 
 '''
 
-class Usage(Exception):
-    def __init__(self, msg):
-        self.msg = msg
-
-output_dir = "~/bdvd/"
-logging_dir = output_dir + "logs/"
-
-bdvd_log_handle = None #main log file handle
-bdvd_logger = None # main logging object
-
 gParams=None
-
-def init_logger(log_fname):
-    global bdvd_logger
-    bdvd_logger = logging.getLogger('project')
-    formatter = logging.Formatter('%(asctime)s %(message)s', '[%Y-%m-%d %H:%M:%S]')
-    bdvd_logger.setLevel(logging.DEBUG)
-
-    # output logging information to stderr
-    hstream = logging.StreamHandler(sys.stderr)
-    hstream.setFormatter(formatter)
-    bdvd_logger.addHandler(hstream)
-    
-    #
-    # Output logging information to file
-    if os.path.isfile(log_fname):
-        os.remove(log_fname)
-    global bdvd_log_handle
-    logfh = logging.FileHandler(log_fname)
-    logfh.setFormatter(formatter)
-    bdvd_logger.addHandler(logfh)
-    bdvd_log_handle=logfh.stream
+gRunner=None
+gSteps = ['1-data-mat', '2-ctrl-rows','3-run-ruv','4-run-vd']
 
 class BDVDParams:
-
     def __init__(self):
         self.pipeline_rundir = None
         self.workercnt = 4
         self.memory_size = 2000
         self.input_type = None
         self.sample_names = None
-        self.bam_samples_file = None
-        self.chromosomes = None
-        self.bin_width = 100
-        self.txt_mat_file = None
-        self.binary_mat_file = None
-        self.row_cnt = None
-        self.col_cnt = None
         self.pre_normalization = None
         self.common_column_sum = None
         self.sample_groups = None
@@ -151,37 +108,29 @@ class BDVDParams:
 
     def parse_options(self, argv):
         try:
-            opts, args = getopt.getopt(argv[1:], "hvp:m:o:",
-                                        ["version",
-                                         "help",
-                                         "input-type=",
-                                         "sample-names=",
-                                         "bam-samples-file=",
-                                         "chromosomes=",
-                                         "bin-width=",
-                                         "text-mat-file=",
-                                         "binary-mat-file=",
-                                         "ncol=",
-                                         "nrow=",
-                                         "thread-num=",
-                                         "memory-size=",
-                                         "out=",
-                                         "pre-normalization=",
-                                         "common-column-sum=",
-                                         "sample-groups=",
-                                         "ruv-scale=",
-                                         "ruv-mlog-c=",
-                                         "ruv-type=",
-                                         "control-rows-method=",
-                                         "weak-signal-lb=",
-                                         "weak-signal-ub=",
-                                         "lower-quantile-threshold=",
-                                         "all-in-quantile-fraction=",
-                                         "control-rows-file=",
-                                         "ruv-rowwise-adjust=",
-                                         "known-factors=",
-                                         "start-from="
-                                         ])
+            opts, args = getopt.getopt(argv[1:], "",
+                ["version",
+                    "help",
+                    "thread-num=",
+                    "memory-size=",
+                    "out=",
+                    "pre-normalization=",
+                    "common-column-sum=",
+                    "sample-groups=",
+                    "ruv-scale=",
+                    "ruv-mlog-c=",
+                    "ruv-type=",
+                    "control-rows-method=",
+                    "weak-signal-lb=",
+                    "weak-signal-ub=",
+                    "lower-quantile-threshold=",
+                    "all-in-quantile-fraction=",
+                    "control-rows-file=",
+                    "ruv-rowwise-adjust=",
+                    "known-factors=",
+                    "start-from="
+                    ])
+
         except getopt.error as msg:
             raise Usage(msg)
 
@@ -192,12 +141,12 @@ class BDVDParams:
 
         # option processing
         for option, value in opts:
-            if option in ("-v", "--version"):
-                print("BDVD v",iBSUtil.get_version())
+            if option == "--version":
+                print("BDVD v",bdtUtil.get_version())
                 sys.exit(0)
-            if option in ("-h", "--help"):
+            if option == "--help":
                 raise Usage(use_message)
-            if option in ("-p", "--thread-num"):
+            if option == "--thread-num":
                 self.workercnt = int(value)
             if option == "--memory-size":
                 self.memory_size = int(value)
@@ -272,26 +221,6 @@ class BDVDParams:
             output_dir = custom_out_dir
             logging_dir = output_dir + "logs/"
         self.pipeline_rundir=output_dir+"run"
-        
-        if (self.input_type is None) or (custom_out_dir is None):
-            raise Usage('invalid --input-type')
-        
-        ## input-type section
-        if (self.input_type == "bam-files"):
-            if (self.bam_samples_file is None) or (self.bin_width is None):
-                raise Usage(use_message)
-            if not os.path.exists(self.bam_samples_file):
-                raise Usage("--bam-samples-file {0} not exist".format(self.bam_samples_file))
-        elif (self.input_type == "text-mat"):
-            if (self.txt_mat_file is None) or (self.col_cnt is None) or (self.row_cnt is None):
-                raise Usage(use_message)
-        elif (self.input_type == "binary-mat"):
-            if (self.binary_mat_file is None):
-               raise Usage('binary-mat not exist')
-            if (self.col_cnt is None) or (self.row_cnt is None):
-               raise Usage('need --ncol, --nrow')
-        else:
-            raise Usage(use_message)
 
         ## pre normalization
         if (self.pre_normalization not in(None,"none","column-sum")):
@@ -320,210 +249,6 @@ class BDVDParams:
             self.ruv_rowwise_adjust = None
 
         return args
-
-# The BDVD logging formatter
-def bdvd_log(out_str):
-  if bdvd_logger:
-       bdvd_logger.info(out_str)
-
-# error msg
-def bdvd_logp(out_str=""):
-    print(out_str,file=sys.stderr)
-    if bdvd_log_handle:
-        print(out_str, file=bdvd_log_handle)
-
-def die(msg=None):
-    if msg is not None:
-        bdvd_logp(msg)
-    sys.exit(1)
-
-# Ensures that the output, logging, and temp directories are present. If not,
-# they are created
-def prepare_output_dir():
-    bdvd_log("Preparing output location "+output_dir)
-    if not os.path.exists(output_dir):
-        os.mkdir(output_dir)
-
-    if not os.path.exists(logging_dir):
-        os.mkdir(logging_dir)
-    
-    if not os.path.exists(gParams.pipeline_rundir):
-        os.mkdir(gParams.pipeline_rundir)
-
-# -----------------------------------------------------------
-# bam to BigMat
-# -----------------------------------------------------------
-def s01_bam2mat():
-    nodeName = "s01_bam2mat"
-    nodeDir=gParams.pipeline_rundir+"/"+nodeName
-    nodeScriptDir=nodeDir+"-script"
-
-    subnode_picke_file = "{0}/{1}.pickle".format(nodeDir,nodeName)
-    if gParams.dry_run:
-        return subnode_picke_file
-
-    if gParams.remove_before_run and os.path.exists(nodeDir):
-        bdvd_logp("remove existing dir: {0}".format(nodeDir))
-        shutil.rmtree(nodeDir)
-
-    if not os.path.exists(nodeScriptDir):
-        os.mkdir(nodeScriptDir)
-
-    #
-    # prepare design file
-    #
-    chromosomes = gParams.chromosomes
-    bin_width = gParams.bin_width
-    with open(gParams.bam_samples_file) as f:
-        sample_table_lines = f.read().splitlines()
-    
-    design_params=(sample_table_lines,chromosomes,bin_width)
-    params_pickle_fn="{0}/design_params.pickle".format(nodeScriptDir)
-    iBSDefines.dumpPickle(design_params, params_pickle_fn)
-
-    design_file=BDT_HomeDir+"/iBS/iBSPy/PipelineDesigns/bdvdBam2MatDesign.py"
-    shutil.copy(design_file,nodeScriptDir)
-
-    #
-    # Run node
-    #
-    design_fn=os.path.abspath(nodeScriptDir)+"/bdvdBam2MatDesign.py"
-    subnode=nodeName
-    cmdpath="{0}/bdvd-bam2mat.py".format(BDT_HomeDir)
-    node_cmd = [cmdpath,
-                "--node",nodeName,
-                "--num-threads", str(gParams.workercnt),
-                "--output-dir",nodeDir,
-                design_fn]
-      
-    shell_cmd=""
-    for strCmd in node_cmd:
-        shell_cmd=shell_cmd+strCmd+" "
-    #print(shell_cmd)
-
-    bdvd_logp("run subtask at: {0}".format(nodeDir))
-    proc = subprocess.call(node_cmd)
-    bdvd_logp("end subtask \n")
-    return subnode_picke_file
-
-# -----------------------------------------------------------
-# text-mat to BigMat
-# -----------------------------------------------------------
-def s01_txt2mat():
-    nodeName = "s01_txt2mat"
-    nodeDir=gParams.pipeline_rundir+"/"+nodeName
-    nodeScriptDir=nodeDir+"-script"
-
-    subnode_picke_file = "{0}/{1}.pickle".format(nodeDir,nodeName)
-    if gParams.dry_run:
-        return subnode_picke_file
-
-    if gParams.remove_before_run and os.path.exists(nodeDir):
-        bdvd_logp("remove existing dir: {0}".format(nodeDir))
-        shutil.rmtree(nodeDir)
-
-    if not os.path.exists(nodeScriptDir):
-        os.mkdir(nodeScriptDir)
-
-    #
-    # prepare design file
-    #
-    ColCnt = gParams.col_cnt
-    RowCnt = gParams.row_cnt
-    DataFile = gParams.txt_mat_file
-    FieldSep = " "
-    if gParams.sample_names is None:
-        SampleNames=["V{0}".format(v) for v in range(1,ColCnt+1)]
-    else:
-        SampleNames = gParams.sample_names
-    CalcStatistics = True
-    design_params=(SampleNames,ColCnt,RowCnt,DataFile,FieldSep,CalcStatistics)
-    params_pickle_fn="{0}/design_params.pickle".format(nodeScriptDir)
-    iBSDefines.dumpPickle(design_params, params_pickle_fn)
-
-    design_file=BDT_HomeDir+"/iBS/iBSPy/PipelineDesigns/bdvdTxt2MatDesign.py"
-    shutil.copy(design_file,nodeScriptDir)
-
-    #
-    # Run node
-    #
-    design_fn=os.path.abspath(nodeScriptDir)+"/bdvdTxt2MatDesign.py"
-    subnode=nodeName
-    cmdpath="{0}/bdvd-txt2mat.py".format(BDT_HomeDir)
-    node_cmd = [cmdpath,
-                "--node",nodeName,
-                "--num-threads", "4",
-                "--output-dir",nodeDir,
-                design_fn]
-      
-    shell_cmd=""
-    for strCmd in node_cmd:
-        shell_cmd=shell_cmd+strCmd+" "
-    #print(shell_cmd)
-
-    bdvd_logp("run subtask at: {0}".format(nodeDir))
-    proc = subprocess.call(node_cmd)
-    bdvd_logp("end subtask \n")
-    return subnode_picke_file
-
-# -----------------------------------------------------------
-# binary-mat to BigMat
-# -----------------------------------------------------------
-def s01_binary2mat():
-    nodeName = "s01_binary2mat"
-    nodeDir=gParams.pipeline_rundir+"/"+nodeName
-    nodeScriptDir=nodeDir+"-script"
-
-    subnode_picke_file = "{0}/{1}.pickle".format(nodeDir,nodeName)
-    if gParams.dry_run:
-        return subnode_picke_file
-
-    if gParams.remove_before_run and os.path.exists(nodeDir):
-        bdvd_logp("remove existing dir: {0}".format(nodeDir))
-        shutil.rmtree(nodeDir)
-
-    if not os.path.exists(nodeScriptDir):
-        os.mkdir(nodeScriptDir)
-
-    #
-    # prepare design file
-    #
-    StorePathPrefix = gParams.binary_mat_file
-    CalculateStatistics = True
-    RowCnt = gParams.row_cnt
-    ColCnt = gParams.col_cnt
-    if gParams.sample_names is None:
-        ColNames=["V{0}".format(v) for v in range(1,ColCnt+1)]
-    else:
-        ColNames = gParams.sample_names
-    design_params=(StorePathPrefix,CalculateStatistics,RowCnt,ColCnt,ColNames)
-    params_pickle_fn="{0}/design_params.pickle".format(nodeScriptDir)
-    iBSDefines.dumpPickle(design_params, params_pickle_fn)
-
-    design_file=BDT_HomeDir+"/iBS/iBSPy/PipelineDesigns/bdvdBFV2MatDesign.py"
-    shutil.copy(design_file,nodeScriptDir)
-
-    #
-    # Run node
-    #
-    design_fn=os.path.abspath(nodeScriptDir)+"/bdvdBFV2MatDesign.py"
-    subnode=nodeName
-    cmdpath="{0}/bdvd-bfv2mat.py".format(BDT_HomeDir)
-    node_cmd = [cmdpath,
-                "--node",nodeName,
-                "--num-threads", "4",
-                "--output-dir",nodeDir,
-                design_fn]
-      
-    shell_cmd=""
-    for strCmd in node_cmd:
-        shell_cmd=shell_cmd+strCmd+" "
-    #print(shell_cmd)
-
-    bdvd_logp("run subtask at: {0}".format(nodeDir))
-    proc = subprocess.call(node_cmd)
-    bdvd_logp("end subtask \n")
-    return subnode_picke_file
 
 def s01_1_ctrlRowMat():
     nodeName = "s01_1_ctrlRowsMat"
@@ -690,7 +415,6 @@ def s02_RUV(datamatPickle, ctrlRowPickle):
     return (nodeDir,subnode_picke_file)
 
 def main(argv=None):
-
     # Initialize default parameter values
     global gParams
     gParams = BDVDParams()
