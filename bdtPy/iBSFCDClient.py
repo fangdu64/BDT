@@ -71,6 +71,20 @@ def GetFacetAdminProxy(serverhostname = "localhost -p 16000"):
         traceback.print_exc()
         status = 1
 
+def GetBdvdFacetAdminProxy(serverhostname = "localhost -p 16000"): 
+    global __ic
+    try:
+        base = __ic.stringToProxy("BdvdFacetAdminService:default -h "+serverhostname)
+
+        facetAdminPrx = iBS.FcdcFacetAdminServicePrx.checkedCast(base)
+        if not facetAdminPrx:
+            raise RuntimeError("Invalid proxy")
+        else:
+            return facetAdminPrx
+    except:
+        traceback.print_exc()
+        status = 1
+
 def GetSeqSampleProxy(serverhostname = "localhost -p 16000"): 
     global __ic
     try:

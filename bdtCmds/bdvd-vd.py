@@ -1,4 +1,4 @@
-#!/dcs01/gcode/fdu1/BDT/python/bin/python3.3
+#!__PYTHON_BIN_PATH__
 
 """
 bdvd-bam2mat.py

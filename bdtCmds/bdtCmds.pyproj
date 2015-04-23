@@ -26,6 +26,8 @@
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="bdvd-ruv.py" />
+    <Compile Include="bdvd-vd.py" />
     <Compile Include="bdvd.py" />
     <Compile Include="bigclust-kmeans++.py" />
     <Compile Include="bigMat.py" />

@@ -61,6 +61,25 @@ def s01_txt2mat():
         gParams.column_sep)
 
 # -----------------------------------------------------------
+# impor rowids from txt format
+# -----------------------------------------------------------
+def s01_txtRowIds2mat():
+    nodeName = gSteps[0]
+    return bigMatUtil.run_txtRowIds2Mat(
+        gRunner,
+        Platform,
+        BDT_HomeDir,
+        nodeName,
+        gParams.pipeline_rundir,
+        gParams.dry_run,
+        gParams.remove_before_run,
+        gParams.calc_statistics,
+        gParams.input_location,
+        gParams.row_index_base,
+        gParams.col_names)
+
+
+# -----------------------------------------------------------
 # import data matrix from binary format (*.bfv)
 # -----------------------------------------------------------
 def s01_bfv2mat():
@@ -134,6 +153,7 @@ def main(argv=None):
     gInputHandlers = {
         'text-mat': s01_txt2mat,
         'binary-mat': s01_bfv2mat,
+        'text-rowids': s01_txtRowIds2mat,
         'bams': s01_bam2mat,
         'kmeans-seeds-mat': s01_fromKmeansResult,
         'kmeans-centroids-mat': s01_fromKmeansResult,

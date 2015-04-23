@@ -46,7 +46,8 @@ def waitForVectorsReadable(fcdcPrx, oids):
 
 # bigMatRunner
 class bigMatRunner:
-    def __init__(self, bdtHomeDir):
+    def __init__(self, bdtHomeDir, runBin = 'bigMat'):
+        self.run_bin = runBin
         self.bdt_home_dir = bdtHomeDir
         self.output_dir = None
         self.logging_dir = None
@@ -131,7 +132,7 @@ class bigMatRunner:
         outfile.close()
     
     def launch_bigMat(self):
-        bigmat_path = os.path.abspath("{0}/bdt/bin/bigMat".format(self.bdt_home_dir))
+        bigmat_path = os.path.abspath("{0}/bdt/bin/{1}".format(self.bdt_home_dir, self.run_bin))
         bm_cmd = [bigmat_path]
         self.log("Launching bigMat ...")
         self.bigmat_log_file = open(os.path.abspath(self.logging_dir + "/bigmat.log"),"w")
@@ -155,6 +156,7 @@ class bigMatRunner:
 bigmat_input_types = [
     'text-mat',
     'binary-mat',
+    'text-rowids',
     'bams',
     'kmeans-seeds-mat',
     'kmeans-centroids-mat',
@@ -194,6 +196,7 @@ class BigMatParams:
         self.column_sep = None
         self.col_names = None
         self.col_names_original = None
+        self.row_index_base = 0
 
     def strip_argv(self, prefix, argv):
         prefixTag = '--{0}'.format(prefix)
@@ -288,6 +291,8 @@ class BigMatParams:
                 self.col_names=value.split(',')
                 if len(self.col_names)<1:
                     raise iBSDefines.BdtUsage("--{0}col-names invalid".format(prefix))
+            if option == "--{0}index-base".format(prefix):
+                self.row_index_base = int(value)
 
         if self.input_type in  ['text-mat', 'binary-mat']:
             requiredNames = [
@@ -297,7 +302,7 @@ class BigMatParams:
                 '--{0}nrow'.format(prefix)]
             providedValues = [self.input_type, self.output_dir, self.col_cnt, self.row_cnt]
             providedFiles = [self.input_location]
-        elif self.input_type in ['kmeans-seeds-mat', 'kmeans-centroids-mat', 'kmeans-data-mat']:
+        elif self.input_type in ['kmeans-seeds-mat', 'kmeans-centroids-mat', 'kmeans-data-mat', 'text-rowids']:
             requiredNames = [
                 '--{0}input',
                 '--{0}out']
@@ -351,6 +356,8 @@ class BigMatParams:
             cmds.extend(['--col-sep', self.column_sep])
         if self.col_names is not None:
             cmds.extend(['--col-names', self.col_names_original])
+        if self.row_index_base != 0:
+            cmds.extend(['--index-base', str(self.row_index_base)])
         return cmds
 
 def run_txt2Mat(
@@ -428,6 +435,73 @@ def run_txt2Mat(
     gRunner.logp("end subtask: {0}\n".format(nodeName))
     return out_picke_file
 
+def run_txtRowIds2Mat(
+    gRunner,
+    platform,
+    bdtHomeDir,
+    nodeName,
+    runDir,
+    dryRun,
+    removeBeforeRun,
+    calculateStatistics,
+    data_file,
+    index_base,
+    col_names):
+    
+    nodeDir = os.path.abspath("{0}/{1}".format(runDir, nodeName))
+    nodeScriptDir = nodeDir + "-script"
+
+    out_picke_file = os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
+    if dryRun:
+        return out_picke_file
+
+    if removeBeforeRun and os.path.exists(nodeDir):
+        gRunner.logp("remove existing dir: {0}".format(nodeDir))   
+        shutil.rmtree(nodeDir)
+
+    if not os.path.exists(nodeScriptDir):
+        os.mkdir(nodeScriptDir)
+
+    #
+    # prepare design file
+    #
+    ColCnt = 1
+    RowCnt = None
+    DataFile = data_file
+    FieldSep = None
+    StartingRowIdx = 0 # no heading
+    AddValue = -index_base
+    SampleNames=["V{0}".format(v) for v in range(1,ColCnt+1)]
+    if col_names is not None:
+        SampleNames = col_names
+    CalcStatistics = calculateStatistics
+    design_params=(SampleNames,ColCnt,RowCnt,DataFile,FieldSep, StartingRowIdx, AddValue, CalcStatistics)
+    params_pickle_fn=os.path.abspath("{0}/design_params.pickle".format(nodeScriptDir))
+    iBSDefines.dumpPickle(design_params, params_pickle_fn)
+
+    design_file=os.path.abspath(bdtHomeDir+"/bdt/bdtPy/PipelineDesigns/IDs2MatDesign.py")
+    shutil.copy(design_file,"{0}/txt2MatDesign.py".format(nodeScriptDir))
+
+    #
+    # Run node
+    #
+    design_fn=os.path.abspath(nodeScriptDir)+"/txt2MatDesign.py"
+    subnode=nodeName
+    cmdpath=os.path.abspath("{0}/bdt/bdtCmds/bigmat-txt2mat".format(bdtHomeDir))
+    if platform == "Windows":
+        node_cmd = ["py", cmdpath]
+    else:
+        node_cmd = [cmdpath]
+    node_cmd.extend(["--node", nodeName,
+                "--num-threads", "4",
+                "--out",nodeDir,
+                design_fn])
+
+    gRunner.logp("run subtask: {0}\n".format(nodeName))
+    proc = subprocess.call(node_cmd)
+    gRunner.logp("end subtask: {0}\n".format(nodeName))
+    return out_picke_file
+
 def run_bfv2Mat(
     gRunner,
     platform,
@@ -479,7 +553,6 @@ def run_bfv2Mat(
     # Run node
     #
     design_fn=os.path.abspath(nodeScriptDir)+"/bfv2MatDesign.py"
-    subnode=nodeName
     cmdpath=os.path.abspath("{0}/bdt/bdtCmds/bigmat-bfv2mat".format(bdtHomeDir))
     if platform == "Windows":
         node_cmd = ["py", cmdpath]
