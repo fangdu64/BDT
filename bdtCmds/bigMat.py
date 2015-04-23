@@ -64,7 +64,7 @@ def s01_txt2mat():
         field_sep)
 
 # -----------------------------------------------------------
-# import data matrix from txt format (*.bfv)
+# import data matrix from binary format (*.bfv)
 # -----------------------------------------------------------
 def s01_bfv2mat():
     nodeName = gSteps[0]
@@ -83,6 +83,28 @@ def s01_bfv2mat():
         gParams.row_cnt,
         gParams.input_location,
         colNames)
+
+# -----------------------------------------------------------
+# import data matrix from bam files (*.bam)
+# -----------------------------------------------------------
+def s01_bam2mat():
+    nodeName = gSteps[0]
+    calcStatistics = True
+    colNames = None
+    return bigMatUtil.run_bam2Mat(
+        gRunner,
+        Platform,
+        BDT_HomeDir,
+        nodeName,
+        gParams.pipeline_rundir,
+        gParams.dry_run,
+        gParams.remove_before_run,
+        calcStatistics,
+        colNames,
+        gParams.thread_cnt,
+        gParams.chromosomes,
+        gParams.bin_width,
+        gParams.input_location)
 
 # -----------------------------------------------------------
 # import data matrix from bigKmeans output
@@ -119,6 +141,7 @@ def main(argv=None):
     gInputHandlers = {
         'text-mat': s01_txt2mat,
         'binary-mat': s01_bfv2mat,
+        'bams': s01_bam2mat,
         'kmeans-seeds-mat': s01_fromKmeansResult,
         'kmeans-centroids-mat': s01_fromKmeansResult,
         'kmeans-data-mat': s01_fromKmeansResult}

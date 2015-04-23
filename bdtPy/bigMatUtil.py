@@ -155,6 +155,7 @@ class bigMatRunner:
 bigmat_input_types = [
     'text-mat',
     'binary-mat',
+    'bams',
     'kmeans-seeds-mat',
     'kmeans-centroids-mat',
     'kmeans-data-mat']
@@ -183,6 +184,11 @@ class BigMatParams:
         self.input_location = None
         self.row_cnt = None
         self.col_cnt = None
+        self.chromosomes = None
+        self.chromosomes_original = None
+        self.bin_width = None
+        self.thread_cnt = 4
+        self.memory_size = 2000
 
     def parse_options(self, prefix, argvs):
         try:
@@ -192,7 +198,11 @@ class BigMatParams:
                 "{0}input=".format(prefix),
                 "{0}out=".format(prefix),
                 "{0}ncol=".format(prefix),
-                "{0}nrow=".format(prefix)])
+                "{0}nrow=".format(prefix),
+                "{0}chromosomes=".format(prefix),
+                "{0}bin-width=".format(prefix),
+                "{0}thread-num=".format(prefix),
+                "{0}memory-size=".format(prefix)])
 
         except getopt.error as msg:
             raise Usage(msg)
@@ -223,6 +233,18 @@ class BigMatParams:
                 self.col_cnt = int(value)
             if option == "--{0}nrow".format(prefix):
                 self.row_cnt = int(value)
+            if option == "--{0}chromosomes".format(prefix):
+                self.chromosomes_original = value
+                self.chromosomes=value.split(',')
+                if len(self.chromosomes)<1:
+                    raise iBSDefines.BdtUsage("--{0}chromosomes invalid".format(prefix))
+            if option == "--{0}bin-width".format(prefix):
+                self.bin_width = int(value)
+            if option == "--thread-num":
+                self.thread_cnt = int(value)
+            if option == "--memory-size":
+                self.memory_size = int(value)
+
         if self.input_type in  ['text-mat', 'binary-mat']:
             requiredNames = [
                 '--{0}input'.format(prefix),
@@ -236,6 +258,14 @@ class BigMatParams:
                 '--{0}input',
                 '--{0}out']
             providedValues = [self.input_type, self.output_dir]
+            providedFiles = [self.input_location]
+        elif self.input_type in ['bams']:
+            requiredNames = [
+                '--{0}input'.format(prefix),
+                '--{0}out'.format(prefix),
+                '--{0}chromosomes'.format(prefix),
+                '--{0}bin-width'.format(prefix)]
+            providedValues = [self.input_type, self.output_dir, self.chromosomes, self.bin_width]
             providedFiles = [self.input_location]
 
         noneIdx = bdtUtil.getFirstNone(providedValues)
@@ -261,6 +291,14 @@ class BigMatParams:
             cmds.extend(['--ncol', str(self.col_cnt)])
         if self.row_cnt is not None:
             cmds.extend(['--nrow', str(self.row_cnt)])
+        if self.chromosomes is not None:
+            cmds.extend(['--chromosomes', self.chromosomes_original])
+        if self.row_cnt is not None:
+            cmds.extend(['--bin-width', str(self.bin_width)])
+        if self.thread_cnt != 4:
+            cmds.extend(['--thread-num', str(self.thread_cnt)])
+        if self.memory_size != 2000:
+            cmds.extend(['--memory-size', str(self.memory_size)])
         return cmds
 
 def run_txt2Mat(
@@ -408,6 +446,72 @@ def run_bfv2Mat(
     proc = subprocess.call(node_cmd)
     gRunner.logp("end subtask: {0}\n".format(nodeName))
     return out_picke_file
+
+def run_bam2Mat(
+    gRunner,
+    platform,
+    bdtHomeDir,
+    nodeName,
+    runDir,
+    dryRun,
+    removeBeforeRun,
+    calculateStatistics,
+    col_names,
+    num_threads,
+    chromosomes,
+    bin_width,
+    bam_samples_file):
+    
+    nodeDir = os.path.abspath("{0}/{1}".format(runDir, nodeName))
+    nodeScriptDir = nodeDir + "-script"
+
+    out_picke_file = os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
+    if dryRun:
+        return out_picke_file
+
+    if removeBeforeRun and os.path.exists(nodeDir):
+        gRunner.logp("remove existing dir: {0}".format(nodeDir))   
+        shutil.rmtree(nodeDir)
+
+    if not os.path.exists(nodeScriptDir):
+        os.mkdir(nodeScriptDir)
+
+    #
+    # prepare design file
+    #
+    with open(bam_samples_file) as f:
+        sample_table_lines = f.read().splitlines()
+
+    design_params=(sample_table_lines,chromosomes,bin_width)
+    params_pickle_fn="{0}/design_params.pickle".format(nodeScriptDir)
+    iBSDefines.dumpPickle(design_params, params_pickle_fn)
+
+    design_file=os.path.abspath(bdtHomeDir+"/bdt/bdtPy/PipelineDesigns/bam2MatDesign.py")
+    shutil.copy(design_file, nodeScriptDir)
+
+    #
+    # Run node
+    #
+    design_fn=os.path.abspath(nodeScriptDir)+"/bam2MatDesign.py"
+    cmdpath=os.path.abspath("{0}/bdt/bdtCmds/bigmat-bam2mat".format(bdtHomeDir))
+    if platform == "Windows":
+        node_cmd = ["py", cmdpath]
+    else:
+        node_cmd = [cmdpath]
+    node_cmd.extend(["--node", nodeName,
+                "--num-threads", str(num_threads),
+                "--out",nodeDir,
+                design_fn])
+      
+    shell_cmd=""
+    for strCmd in node_cmd:
+        shell_cmd=shell_cmd+strCmd+" "
+
+    gRunner.logp("run subtask: {0}\n".format(nodeName))
+    proc = subprocess.call(node_cmd)
+    gRunner.logp("end subtask: {0}\n".format(nodeName))
+    return out_picke_file
+
 
 def run_bigMat(
     gRunner,

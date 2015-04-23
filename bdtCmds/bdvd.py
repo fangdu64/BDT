@@ -19,7 +19,7 @@ import logging
 import random
 
 import iBSConfig
-import iBSUtil
+import bdtUtil
 import iBSDefines
 import iBSFCDClient as fcdc
 import iBS

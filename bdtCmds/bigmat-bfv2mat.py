@@ -86,8 +86,7 @@ class BDVDParams:
                                          "max-mem=",
                                          "node=",
                                          "bigmat-dir=",
-                                         "col-names=",
-                                         "tmp-dir="])
+                                         "col-names="])
         except getopt.error as msg:
             raise Usage(msg)
 
@@ -105,8 +104,6 @@ class BDVDParams:
                 self.max_mem = int(value)
             if option in ("-o", "--out"):
                 self.output_dir = value
-            if option == "--tmp-dir":
-                custom_tmp_dir = value + "/"
             if option == "--node":
                 self.workflow_node = value
             if option =="--bigmat-dir":

@@ -32,7 +32,7 @@
     <Compile Include="iBSDefines.py" />
     <Compile Include="iBSFCDClient.py" />
     <Compile Include="bdtUtil.py" />
-    <Compile Include="PipelineDesigns\bdvdBam2MatDesign.py" />
+    <Compile Include="PipelineDesigns\bam2MatDesign.py" />
     <Compile Include="PipelineDesigns\bfv2MatDesign.py" />
     <Compile Include="PipelineDesigns\bdvdIDs2MatDesign.py" />
     <Compile Include="PipelineDesigns\bdvdRUVDesign.py" />
