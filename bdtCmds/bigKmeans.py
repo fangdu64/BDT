@@ -159,7 +159,7 @@ class BDVDParams:
         self.data_params = bigMatUtil.BigMatParams()
         self.data_params.parse_options("data-", dataArgv)
         
-        if self.seeding_method == gSeedingMethod[2]:
+        if self.seeding_method == "provided" or len(seedsArgv) > 0:
             self.seeds_indir=os.path.abspath("{0}/{1}".format(self.pipeline_rundir, gSteps[1]))
             seedsArgv.extend(['--seeds-out',self.seeds_indir])
             self.seeds_params = bigMatUtil.BigMatParams()

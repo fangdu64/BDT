@@ -5,7 +5,6 @@ call %pathConfigBat%
 
 py %bdtInstallDir%\bigKmeans ^
 	--data-input kmeans-data-mat@%thisScriptPath%01-out ^
-	--seeding-method provided ^
 	--seeds-input kmeans-seeds-mat@%thisScriptPath%01-out ^
 	--k 100 ^
 	--out %thisScriptPath%03-out ^
