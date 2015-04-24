@@ -240,10 +240,11 @@ class BigMatParams:
                 "{0}memory-size=".format(prefix),
                 "{0}calc-statistics".format(prefix),
                 "{0}col-sep=".format(prefix),
-                "{0}col-names=".format(prefix)])
+                "{0}col-names=".format(prefix),
+                "{0}index-base=".format(prefix)])
 
         except getopt.error as msg:
-            raise Usage(msg)
+            raise iBSDefines.BdtUsage(msg)
 
         # option processing
         for option, value in opts:
@@ -344,7 +345,7 @@ class BigMatParams:
             cmds.extend(['--nrow', str(self.row_cnt)])
         if self.chromosomes is not None:
             cmds.extend(['--chromosomes', self.chromosomes_original])
-        if self.row_cnt is not None:
+        if self.bin_width is not None:
             cmds.extend(['--bin-width', str(self.bin_width)])
         if self.thread_cnt != 4:
             cmds.extend(['--thread-num', str(self.thread_cnt)])

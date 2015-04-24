@@ -224,7 +224,7 @@ def s03_RUV(datamatPickle, ctrlRowPickle):
     featureIdxTo = None
     return bdvdUtil.run_bdvd_ruv(
         gRunner,
-        platform,
+        Platform,
         BDT_HomeDir,
         nodeName,
         gParams.pipeline_rundir,
@@ -296,7 +296,7 @@ def main(argv=None):
         if gParams.dry_run and gParams.start_from == gSteps[2]:
             gParams.dry_run = False
 
-        s03_RUV(datamatPickle, ctrlRowPickle)
+        s03_RUV(datamatPickle, ctrlRowsPickle)
 
         runSummary = iBSDefines.NodeRunSummaryDefine()
         runSummary.NodeDir = gParams.output_dir
@@ -309,7 +309,7 @@ def main(argv=None):
         gRunner.logp("-----------------------------------------------")
         gRunner.log("Run complete: %s elapsed" %  bdtUtil.formatTD(duration))
 
-    except Usage as err:
+    except iBSDefines.BdtUsage as err:
         gRunner.logp(sys.argv[0].split("/")[-1] + ": " + str(err.msg))
         return 2
     

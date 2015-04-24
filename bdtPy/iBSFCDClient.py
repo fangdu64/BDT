@@ -76,7 +76,7 @@ def GetBdvdFacetAdminProxy(serverhostname = "localhost -p 16000"):
     try:
         base = __ic.stringToProxy("BdvdFacetAdminService:default -h "+serverhostname)
 
-        facetAdminPrx = iBS.FcdcFacetAdminServicePrx.checkedCast(base)
+        facetAdminPrx = iBS.BdvdFacetAdminServicePrx.checkedCast(base)
         if not facetAdminPrx:
             raise RuntimeError("Invalid proxy")
         else:

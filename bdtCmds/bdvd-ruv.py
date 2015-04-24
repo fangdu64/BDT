@@ -50,7 +50,6 @@ Options:
 
 Advanced Options:
     --place-holder
-
 '''
 
 gParams=None
@@ -82,7 +81,7 @@ class BdvdRuvParams:
                     "max-mem=",
                     "node=",
                     "bigmat-dir=",
-                    "bigmat=",
+                    "data-mat=",
                     "quantile=",
                     "ctrl-rows="])
         except getopt.error as msg:
@@ -93,7 +92,7 @@ class BdvdRuvParams:
                 print("bdvd-ruv v",bdtUtil.get_version())
                 sys.exit(0)
             if option in ("-h", "--help"):
-                raise Usage(use_message)
+                raise iBSDefines.BdtUsage(use_message)
             if option in ("-p", "--num-threads"):
                 self.num_threads = int(value)
                 self.fcdc_fvworker_size = 2
@@ -104,8 +103,8 @@ class BdvdRuvParams:
             if option == "--node":
                 self.workflow_node = value
             if option =="--bigmat-dir":
-                self.datacentral_dir = value
-            if option =="--bigmat":
+                self.bigmat_dir = value
+            if option == "--data-mat":
                 self.input_pickle = value
             if option =="--quantile":
                 self.quantile_pickle = value
@@ -120,9 +119,9 @@ class BdvdRuvParams:
         self.bigmat_dir = os.path.abspath(self.bigmat_dir)
 
         if self.input_pickle is None:
-            raise iBSDefines.BdtUsage(use_message)
+            raise iBSDefines.BdtUsage("--data-mat is required")
         if len(args) < 1:
-            raise iBSDefines.BdtUsage(use_message)
+            raise iBSDefines.BdtUsage("design file is required")
         self.design_file = args[0]
         return args
 
@@ -175,7 +174,7 @@ def setupCtrlQuantiles(bdvdFacetAdminPrx,  rfi,quantile,fraction):
 
 def setupRUVFacet(fcdcPrx, bdvdFacetAdminPrx, sampleIDs, ctrlOIDs):
     # configuration by user
-    designPath=os.path.abspath(script_dir)
+    designPath=os.path.abspath(gRunner.script_dir)
     if designPath not in sys.path:
          sys.path.append(designPath)
     import bdvdRUVDesign
@@ -342,7 +341,7 @@ def main(argv=None):
         gRunner.logp("-----------------------------------------------")
         gRunner.log("Run complete: %s elapsed" %  bdtUtil.formatTD(duration))
 
-    except Usage as err:
+    except iBSDefines.BdtUsage as err:
         gRunner.shutdown_bigMat()
         gRunner.logp(sys.argv[0].split("/")[-1] + ": " + str(err.msg))
         return 2

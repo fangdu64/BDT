@@ -159,12 +159,11 @@ def run_bdvd_ruv(
         node_cmd = ["py", cmdpath]
     else:
         node_cmd = [cmdpath]
-    node_cmd.extend([cmdpath,
-                "--node", nodeName,
+    node_cmd.extend(["--node", nodeName,
                 "--num-threads", str(workercnt),
                 "--max-mem", str(memory_size),
                 "--out", nodeDir,
-                "--bigmat", datamatPickle])
+                "--data-mat", datamatPickle])
     
     if ctrlRowPickle is not None:
         node_cmd.extend(["--ctrl-rows", ctrlRowPickle])
