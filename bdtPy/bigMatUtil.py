@@ -351,7 +351,7 @@ class BigMatParams:
             cmds.extend(['--thread-num', str(self.thread_cnt)])
         if self.memory_size != 2000:
             cmds.extend(['--memory-size', str(self.memory_size)])
-        if self.calc_statistics is not None:
+        if self.calc_statistics is True:
             cmds.extend(['--calc-statistics'])
         if self.column_sep is not None:
             cmds.extend(['--col-sep', self.column_sep])
