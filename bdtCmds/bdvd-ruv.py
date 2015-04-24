@@ -138,6 +138,8 @@ def attachInputBigMatrix(bigmat,fcdcPrx):
     (rt, outOIDs)=fcdcPrx.AttachBigMatrix(bigmat.ColCnt,bigmat.RowCnt,bigmat.ColNames,bigmat.StorePathPrefix)
     #bdvd_log("assigned colIDs: {0}".format(str(outOIDs)))
     minSampleID = min(outOIDs)
+    if bigmat.ColStats is None:
+        raise iBSDefines.BdtUsage("--data-calc-statistics required")
     osis=bigmat.ColStats
     for i in range(len(osis)):
         osi=osis[i]

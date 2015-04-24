@@ -6,6 +6,7 @@ ${bdtInstallDir}/bdvd \
 		--data-nrow 20865 \
 		--data-ncol 6 \
 		--data-col-names Ctl1,Ctl3,Ctl5,Trt9,Trt11,Trt13 \
+		--data-calc-statistics \
 		--out ${thisScriptPath}/01-out \
 		--thread-num 4 \
 		--memory-size 1000 \
