@@ -24,11 +24,12 @@ ifeq ($(R_BinDir),)
 	R_BinDir	= None
 endif
 
-SUBDIRS = bdtUtil bdtCore bigMat bigKmeans/server bigKmeans/contractor
+SUBDIRS = bdtUtil bdtCore bigMat bdvd bigKmeans/server bigKmeans/contractor
 .PHONY: $(SUBDIRS)
 
 bdtCore: bdtUtil
 bigMat: bdtCore
+bdvd: bdtCore
 bigKmeans/server: bigMat
 bigKmeans/contractor: bigMat
 
