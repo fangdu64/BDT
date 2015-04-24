@@ -133,19 +133,20 @@ def dumpOutput(bam2mat):
     fn = "{0}/{1}".format(gParams.output_dir,gParams.result_dumpfile)
     iBSDefines.dumpPickle(bam2mat,fn)
 
-def attachInputBigMatrix(bigmat,fcdcPrx):
+def attachInputBigMatrix(bigmat,fcdcPrx, requireStats):
     gRunner.log("attach bigmat: {0} x {1} from {2}".format(bigmat.RowCnt,bigmat.ColCnt,bigmat.StorePathPrefix))
     (rt, outOIDs)=fcdcPrx.AttachBigMatrix(bigmat.ColCnt,bigmat.RowCnt,bigmat.ColNames,bigmat.StorePathPrefix)
     #bdvd_log("assigned colIDs: {0}".format(str(outOIDs)))
-    minSampleID = min(outOIDs)
-    if bigmat.ColStats is None:
-        raise iBSDefines.BdtUsage("--data-calc-statistics required")
-    osis=bigmat.ColStats
-    for i in range(len(osis)):
-        osi=osis[i]
-        osis[i].ObserverID=outOIDs[i]
-        gRunner.logp("Sample {0}: Max = {1}, Min = {2}, Sum = {3}".format(osi.ObserverID - minSampleID +1, int(osi.Max), int(osi.Min), int(osi.Sum)))
-    rt=fcdcPrx.SetObserverStats(osis)
+    if requireStats:
+        minSampleID = min(outOIDs)
+        if bigmat.ColStats is None:
+            raise iBSDefines.BdtUsage("calc-statistics required")
+        osis=bigmat.ColStats
+        for i in range(len(osis)):
+            osi=osis[i]
+            osis[i].ObserverID=outOIDs[i]
+            gRunner.logp("Sample {0}: Max = {1}, Min = {2}, Sum = {3}".format(osi.ObserverID - minSampleID +1, int(osi.Max), int(osi.Min), int(osi.Sum)))
+        rt=fcdcPrx.SetObserverStats(osis)
     return outOIDs
 
 def setupCtrlQuantiles(bdvdFacetAdminPrx,  rfi,quantile,fraction):
@@ -320,14 +321,14 @@ def main(argv=None):
   
         gRunner.log("bdtCore activated")
         
-        sampleIDs = attachInputBigMatrix(bigmat, fcdcPrx)
+        sampleIDs = attachInputBigMatrix(bigmat, fcdcPrx, True)
 
         ctrlOIDs = None
         if gParams.ctrl_rows_pickle is not None:
             ctrObj = iBSDefines.loadPickle(gParams.ctrl_rows_pickle)
             ctrlMat = ctrObj.BigMat
             gRunner.log("ctrl row cnt = {0}".format(ctrlMat.RowCnt))
-            ctrlOIDs = attachInputBigMatrix(ctrlMat, fcdcPrx)
+            ctrlOIDs = attachInputBigMatrix(ctrlMat, fcdcPrx, False)
 
         rfi=setupRUVFacet(fcdcPrx, bdvdFacetAdminPrx, sampleIDs, ctrlOIDs)
 
