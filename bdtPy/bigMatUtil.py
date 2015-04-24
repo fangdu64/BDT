@@ -320,11 +320,11 @@ class BigMatParams:
 
         noneIdx = bdtUtil.getFirstNone(providedValues)
         if noneIdx != -1:
-            raise Usage("{0} is required".format(requiredNames[noneIdx]))
+            raise iBSDefines.BdtUsage("{0} is required".format(requiredNames[noneIdx]))
 
         noneIdx = bdtUtil.getFirstNotExistFile(providedFiles)
         if noneIdx != -1:
-            raise Usage("{0} not exist".format(providedFiles[noneIdx]))
+            raise iBSDefines.BdtUsage("{0} not exist".format(providedFiles[noneIdx]))
 
         self.output_dir = os.path.abspath(self.output_dir)
         self.logging_dir = os.path.abspath(self.output_dir + "/logs")
