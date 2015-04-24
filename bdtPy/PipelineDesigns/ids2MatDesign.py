@@ -6,7 +6,14 @@ desing_params=os.path.dirname(os.path.abspath(__file__))+"/design_params.pickle"
 desing_params = desing_params.replace('\\', '/')
 desing_params=desing_params.replace("/script/design_params.pickle","-script/design_params.pickle")
 
-SampleNames,ColCnt,RowCnt,DataFile,FieldSep,StartingRowIdx,AddValue,CalcStatistics=iBSDefines.loadPickle(desing_params)
+(SampleNames,
+ ColCnt,
+ RowCnt,
+ DataFile,
+ FieldSep,
+ StartingRowIdx,
+ AddValue,
+ CalcStatistics) = iBSDefines.loadPickle(desing_params)
 # ==================================================================
 # calculate row count
 # ==================================================================

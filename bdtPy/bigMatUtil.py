@@ -480,7 +480,7 @@ def run_txtRowIds2Mat(
     params_pickle_fn=os.path.abspath("{0}/design_params.pickle".format(nodeScriptDir))
     iBSDefines.dumpPickle(design_params, params_pickle_fn)
 
-    design_file=os.path.abspath(bdtHomeDir+"/bdt/bdtPy/PipelineDesigns/IDs2MatDesign.py")
+    design_file=os.path.abspath(bdtHomeDir+"/bdt/bdtPy/PipelineDesigns/ids2MatDesign.py")
     shutil.copy(design_file,"{0}/txt2MatDesign.py".format(nodeScriptDir))
 
     #
