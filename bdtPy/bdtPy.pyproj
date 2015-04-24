@@ -35,7 +35,7 @@
     <Compile Include="bdtUtil.py" />
     <Compile Include="PipelineDesigns\bam2MatDesign.py" />
     <Compile Include="PipelineDesigns\bfv2MatDesign.py" />
-    <Compile Include="PipelineDesigns\IDs2MatDesign.py" />
+    <Compile Include="PipelineDesigns\ids2MatDesign.py" />
     <Compile Include="PipelineDesigns\bdvdRUVDesign.py" />
     <Compile Include="PipelineDesigns\txt2MatDesign.py" />
     <Compile Include="PipelineDesigns\bigKmeansSingleNodeDesign.py" />
