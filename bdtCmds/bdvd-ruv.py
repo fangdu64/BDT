@@ -315,8 +315,7 @@ def main(argv=None):
 
         bdvdFacetAdminPrx = fcdc.GetBdvdFacetAdminProxy(fcdcHost)
         computePrx=fcdc.GetComputeProxy(fcdcHost)
-        samplePrx=fcdc.GetSeqSampleProxy(fcdcHost)
-    
+  
         gRunner.log("bdtCore activated")
         
         sampleIDs = attachInputBigMatrix(bigmat, fcdcPrx)
