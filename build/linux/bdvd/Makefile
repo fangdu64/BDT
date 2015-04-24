@@ -28,7 +28,8 @@ bdvd	= bdvd
 
 TARGETS		= $(bdvd)
 
-OBJS_LOCAL	= RUVFreezeMap.o
+OBJS_LOCAL	= BDVDFreeze.o \
+			RUVFreezeMap
 
 OBJS_RELATIVE=bdvd.o \
 			bdvdFacetAdminImpl.o \
