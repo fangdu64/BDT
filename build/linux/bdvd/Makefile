@@ -29,7 +29,7 @@ bdvd	= bdvd
 TARGETS		= $(bdvd)
 
 OBJS_LOCAL	= BDVDFreeze.o \
-			RUVFreezeMap
+			RUVFreezeMap.o
 
 OBJS_RELATIVE=bdvd.o \
 			bdvdFacetAdminImpl.o \
@@ -86,6 +86,8 @@ $(project_builddir)/%.h %.cpp: $(iBS_slicedir)/%.ice $(SLICE2CPP) $(SLICEPARSERL
 $(project_builddir)/%.o: $(project_srcdir)/%.cpp
 	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) $<
 
+$(project_builddir)/%.o: $(project_srcdir)/%.c
+	$(CC) -c $(CPPFLAGS) $(CFLAGS) $<
 
 $(bdvd): $(OBJS)
 	
