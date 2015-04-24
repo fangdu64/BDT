@@ -1,11 +1,10 @@
 thisScriptPath=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 . ${thisScriptPath}/../../config/bdt_path_linux.sh
 ${bdtInstallDir}/bigKmeans \
-	--data-input text-mat@${bdtDatasetsDir}/txtMat/dnase_test.txt \
-	--data-nrow 92554 \
-	--data-ncol 45 \
+	--data-input kmeans-data-mat@${thisScriptPath}/01-out \
+	--seeds-input kmeans-seeds-mat@%thisScriptPath%01-out \
 	--k 100 \
-	--out ${thisScriptPath}/01-out \
+	--out ${thisScriptPath}/03-out \
 	--thread-num 4 \
 	--dist-type Euclidean \
 	--max-iter 100 \

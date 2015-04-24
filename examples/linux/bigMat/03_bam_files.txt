@@ -1,0 +1,5 @@
+#sample_id,sample_name,bam_dir,bam_file
+1,FatC57bl6MAdult8wksAlnRep1,C:\work\bdtDatasets\bams,wgEncodeUwDnaseFatC57bl6MAdult8wksAlnRep1.bam
+2,FatC57bl6MAdult8wksAlnRep2,,wgEncodeUwDnaseFatC57bl6MAdult8wksAlnRep2.bam
+3,WbrainC57bl6ME14halfAlnRep1,,wgEncodeUwDnaseWbrainC57bl6ME14halfAlnRep1.bam
+4,WbrainC57bl6ME14halfAlnRep2,,wgEncodeUwDnaseWbrainC57bl6ME14halfAlnRep2.bam
