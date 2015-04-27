@@ -59,7 +59,7 @@ class Bam2MatOutputDefine:
         self.BigMat = bigmat
         self.BinMap = binmap
 
-class Csv2MatOutputDefine:
+class Txt2MatOutputDefine:
     def __init__(self,
           bigmat=None):
         self.BigMat = bigmat

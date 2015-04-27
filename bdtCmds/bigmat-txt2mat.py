@@ -250,7 +250,7 @@ def main(argv=None):
         bigmat.RowCnt = rowCnt
         bigmat.ColCnt=len(outOIDs)
 
-        csv2mat=iBSDefines.Csv2MatOutputDefine(bigmat)
+        csv2mat=iBSDefines.Txt2MatOutputDefine(bigmat)
         
         dumpOutput(csv2mat)
 

@@ -1,3 +1,3 @@
 @ECHO OFF
-SET bdtInstallDir=C:\work\BDT\build\windows\install
-SET bdtDatasetsDir=C:\work\bdtDatasets
+SET bdtInstallDir=D:\BDT\build\windows\install
+SET bdtDatasetsDir=D:\bdtDatasets
