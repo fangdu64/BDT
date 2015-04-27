@@ -28,6 +28,7 @@
   <ItemGroup>
     <Compile Include="bigKmeansUtil.py" />
     <Compile Include="bdvdUtil.py" />
+    <Compile Include="bdtR.py" />
     <Compile Include="bigMatUtil.py" />
     <Compile Include="iBSConfig.py" />
     <Compile Include="iBSDefines.py" />
