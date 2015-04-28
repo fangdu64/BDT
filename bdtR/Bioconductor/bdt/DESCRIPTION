@@ -1,0 +1,10 @@
+Package: bdt
+Title: R package for calling and retrieving big data analyses performed by Big Data Tools (BDT)
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Fang", "Du", email = "fangdu64@gmail.com"), role = c("aut", "cre"),
+    person("Hongkai", "Ji", email = "hji@jhu.edu", role = c("aut", "ths"))
+Description: R package for calling and retrieving big data analyses performed by Big Data Tools (BDT)
+Depends: R (>= 3.0.2), latticeExtra
+License: MIT + file LICENSE
+LazyData: true
