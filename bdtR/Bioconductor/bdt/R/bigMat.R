@@ -2,14 +2,14 @@
 #' run bigMat implemented in Big Data Tools (BDT)
 #'
 #' @param bdt_home installation director for bdt
-#' @param data An input dataset of the format: input-type@@location,
+#' @param input An input dataset of the format: input-type@@location,
 #' supported types are:
 #'    text-mat@@path to a text file
 #'    binary-mat@@path to a binary file
 #'    bams@@path to a file listing bam files
 #'
-#' @param nrow The number of rows of the input matrix (if input types are text-mat or binary-mat)
-#' @param ncol The number of columns of the input matrix (if input types are text-mat or binary-mat)
+#' @param row_cnt The number of rows of the input matrix (if input types are text-mat or binary-mat)
+#' @param col_cnt The number of columns of the input matrix (if input types are text-mat or binary-mat)
 #' @param out output dir
 #'
 #' @return fstats A vector of f-statistics
@@ -18,22 +18,23 @@
 #'
 bigMat <- function(
     bdt_home,
-    data,
-    nrow = NULL,
-    ncol = NULL,
+    input,
+    row_cnt = NULL,
+    col_cnt = NULL,
     out) {
 
     cmds = c(
         'py',
         paste0(bdt_home,"/bigMat"),
-        '--out', out)
+        '--input', input,
+        '--out', data_mat)
 
-    if (!is.null(nrow)) {
-        cmds <- append(cmds, c('--nrow', as.character(nrow)))
+    if (!is.null(row_cnt)) {
+        cmds <- append(cmds, c('--nrow', as.character(row_cnt)))
     }
 
-    if (!is.null(ncol)) {
-        cmds <- append(cmds, c('--ncol', as.character(ncol)))
+    if (!is.null(col_cnt)) {
+        cmds <- append(cmds, c('--ncol', as.character(col_cnt)))
     }
 
     if (.Platform$OS.type == "windows") {
