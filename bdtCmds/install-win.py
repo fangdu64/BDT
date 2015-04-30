@@ -79,6 +79,12 @@ def main(argv=None):
     bdtConfigDestDir = bdtInstallDir+"\\bdt\\config"
     install_copyDir(bdtConfigSrcDir, bdtConfigDestDir)
 
+    # install bdtR
+    bdtRSrcDir = os.path.abspath(bdtCmdsDir+"\\..\\bdtR\\outputTemplates")
+    bdtRDestDir = bdtInstallDir+"\\bdt\\bdtR\\outputTemplates"
+    install_copyDir(bdtRSrcDir, bdtRDestDir)
+
+
     # install bdtPy
     bdtPySrcDir = os.path.abspath(bdtCmdsDir+"\\..\\bdtPy")
     bdtPyDestDir = bdtInstallDir+"\\bdt\\bdtPy"

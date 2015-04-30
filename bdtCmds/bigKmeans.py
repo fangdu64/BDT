@@ -246,6 +246,48 @@ def s03_kmeansPP(datamatPickle, seedsmatPickle):
     gRunner.logp("end subtask \n")
     return (nodeDir,subnode_picke_file)
 
+def outputR():
+    obj = iBSDefines.loadPickle(
+        iBSDefines.derivePickleFile(gParams.output_dir))
+
+    infile = open("{0}/bdt/bdtR/outputTemplates/bigKmeansOutputTemplate.R".format(BDT_HomeDir))
+    outfile = open("{0}/logs/output.R".format(gParams.output_dir), "w")
+
+    replacements = {"__DATA_MAT_NAME__": obj.DataMat.Name, 
+                    "__DATA_MAT_STORE_PATH_PREFIX__": obj.DataMat.StorePathPrefix.replace('\\','/'), 
+                    "__DATA_MAT_ROW_CNT__":str(obj.DataMat.RowCnt),
+                    "__DATA_MAT_COL_CNT__":str(obj.DataMat.ColCnt),
+                    "__DATA_MAT_COL_NAMES__":str(obj.DataMat.ColNames).replace('[','').replace(']',''),
+                    "__DATA_MAT_COL_IDS__":str(obj.DataMat.ColIDs).replace('[','').replace(']',''),
+
+                    "__SEEDS_MAT_NAME__": obj.SeedsMat.Name, 
+                    "__SEEDS_MAT_STORE_PATH_PREFIX__": obj.SeedsMat.StorePathPrefix.replace('\\','/'), 
+                    "__SEEDS_MAT_ROW_CNT__":str(obj.SeedsMat.RowCnt),
+                    "__SEEDS_MAT_COL_CNT__":str(obj.SeedsMat.ColCnt),
+                    "__SEEDS_MAT_COL_NAMES__":str(obj.SeedsMat.ColNames).replace('[','').replace(']',''),
+                    "__SEEDS_MAT_COL_IDS__":str(obj.SeedsMat.ColIDs).replace('[','').replace(']',''),
+
+                    "__CENTROIDS_MAT_NAME__": obj.CentroidsMat.Name, 
+                    "__CENTROIDS_MAT_STORE_PATH_PREFIX__": obj.CentroidsMat.StorePathPrefix.replace('\\','/'), 
+                    "__CENTROIDS_MAT_ROW_CNT__":str(obj.CentroidsMat.RowCnt),
+                    "__CENTROIDS_MAT_COL_CNT__":str(obj.CentroidsMat.ColCnt),
+                    "__CENTROIDS_MAT_COL_NAMES__":str(obj.CentroidsMat.ColNames).replace('[','').replace(']',''),
+                    "__CENTROIDS_MAT_COL_IDS__":str(obj.CentroidsMat.ColIDs).replace('[','').replace(']',''),
+
+                    "__CLUST_ASSIGNMENT_VEC_NAME__": obj.KMembersVec.Name, 
+                    "__CLUST_ASSIGNMENT_VEC_STORE_PATH_PREFIX__": obj.KMembersVec.StorePathPrefix.replace('\\','/'), 
+                    "__CLUST_ASSIGNMENT_VEC_ROW_CNT__":str(obj.KMembersVec.RowCnt),
+                    "__CLUST_ASSIGNMENT_VEC_COL_NAME__":obj.KMembersVec.ColName,
+                    "__CLUST_ASSIGNMENT_VEC_COL_ID__":str(obj.KMembersVec.ColID)
+                    }
+
+    for line in infile:
+        for src, target in replacements.items():
+            line = line.replace(src, target)
+        outfile.write(line)
+    infile.close()
+    outfile.close()
+
 def main(argv=None):
     global gParams
     global gRunner
@@ -298,6 +340,8 @@ def main(argv=None):
         runSummary.NodeType = "bigKmeans"
         runSummaryPicke = "{0}/logs/runSummary.pickle".format(gParams.output_dir)
         iBSDefines.dumpPickle(runSummary, runSummaryPicke)
+
+        outputR()
 
         finish_time = datetime.now()
         duration = finish_time - start_time

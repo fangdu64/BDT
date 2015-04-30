@@ -3,8 +3,31 @@
 #' @export
 #'
 readBigMatOutput <- function(outDir) {
-    ee <- new.env()
-    fileName = paste0(outDir,"/log/output.R")
-    sys.source(fileName, ee)
-    return (ee$bigMat)
+    env <- new.env()
+    fileName = paste0(outDir,"/logs/output.R")
+    sys.source(fileName, env)
+    if (env$inputType == 'bams')  {
+        ret <- list(bigMat = env$bigMat,
+                    binMap = env$binMap)
+    } else {
+        ret <- list(bigMat = env$bigMat)
+    }
+
+    return (ret)
+}
+
+#'
+#' read output from bigKmeans
+#' @export
+#'
+readBigKmeansOutput <- function(outDir) {
+    env <- new.env()
+    fileName = paste0(outDir,"/logs/output.R")
+    sys.source(fileName, env)
+    ret = list(dataMat = env$dataMat,
+               seedsMat = env$seedsMat,
+               centroidsMat = env$centroidsMat,
+               clusterAssignmentVec = env$clusterAssignmentVec)
+
+    return (ret)
 }

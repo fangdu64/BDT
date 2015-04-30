@@ -59,5 +59,7 @@ bigKmeans <- function(bdt_home,
 
     system2(command, args)
 
-    return (1)
+    ret <- readBigKmeansOutput(out)
+
+    return (ret)
 }

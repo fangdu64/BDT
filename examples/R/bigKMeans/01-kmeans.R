@@ -1,10 +1,12 @@
 rm(list=ls())
 library("bdt")
-bdt_home = 'D:/BDT/build/windows/install'
-bdtDatasetsDir = 'D:/bdtDatasets'
-thisScriptDir = 'D:/BDT/examples/windows/bigKMeans'
-a = bigKmeans(
-    bdt_home = "D:/BDT/build/windows/install",
+
+bdtDatasetsDir = 'C:/work/bdtDatasets'
+thisScriptDir = 'C:/work/BDT/examples/R/bigKMeans'
+bdt_home = 'C:/work/BDT/build/windows/install'
+
+ret = bigKmeans(
+    bdt_home = bdt_home,
     input = paste0("text-mat@",bdtDatasetsDir,"/txtMat/dnase_test.txt"),
     row_cnt = 92554,
     col_cnt = 45,

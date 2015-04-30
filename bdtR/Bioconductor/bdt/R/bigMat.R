@@ -16,13 +16,11 @@
 #'
 #' @export
 #'
-bigMat <- function(
-    bdt_home,
-    input,
-    row_cnt = NULL,
-    col_cnt = NULL,
-    out) {
-
+bigMat <- function(bdt_home,
+                   input,
+                   row_cnt = NULL,
+                   col_cnt = NULL,
+                   out) {
     cmds = c(
         'py',
         paste0(bdt_home,"/bigMat"),

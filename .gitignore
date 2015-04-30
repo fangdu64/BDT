@@ -115,6 +115,8 @@ __pycache__/
 # ================================
 /examples/windows/bigKMeans/*out/
 /examples/linux/bigKMeans/*out/
+/examples/R/bigKMeans/*out/
 /examples/windows/bigMat/*out/
 /examples/linux/bigMat/*out/
+/examples/R/bigMat/*out/
 /examples/windows/bdvd/zebrafish/*out/

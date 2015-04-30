@@ -2,4 +2,5 @@
 
 export(bigKmeans)
 export(bigMat)
+export(readBigKmeansOutput)
 export(readBigMatOutput)
