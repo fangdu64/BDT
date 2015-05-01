@@ -6,9 +6,6 @@
 #include <limits>
 #include <boost/math/distributions/fisher_f.hpp>
 
-
-
-
 Ice::Double CStatisticsHelper::GetCriticalFStatistics(
 	Ice::Double bgDF, Ice::Double wgDF, Ice::Double pvalue)
 {

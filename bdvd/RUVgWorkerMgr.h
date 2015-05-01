@@ -15,7 +15,7 @@ public:
 
 public:
 
-	bool Initilize(Ice::Long batchValueCnt,int n);
+	bool Initilize(Ice::Long batchValueCnt, int n, int permutationCnt);
 	void RequestShutdownAllWorkers();
 	void UnInitilize();
 

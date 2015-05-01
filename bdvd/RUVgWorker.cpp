@@ -4,12 +4,23 @@
 #include <algorithm>    // std::copy
 #include <GlobalVars.h>
 #include <RUVBuilder.h>
+#include <ctime>
 
-CRUVgWorker::CRUVgWorker(int workerIdx, ::Ice::Long batchValueCnt,int n)
+CRUVgWorker::CRUVgWorker(int workerIdx, ::Ice::Long batchValueCnt, int n, int permutationCnt)
 	:A(n,n,arma::fill::zeros),
 	m_workerIdx(workerIdx), m_needNotify(false), 
-	m_shutdownRequested(false),m_batchValueCnt(batchValueCnt)
+	m_shutdownRequested(false),m_batchValueCnt(batchValueCnt),
+	m_mt19937(static_cast<unsigned int>(std::time(0))),
+	m_colIdxPermutation(m_mt19937, n)
 {
+	if (permutationCnt > 0)
+	{
+		As.reserve(permutationCnt);
+		for (int i = 0; i < permutationCnt; ++i)
+		{
+			As.push_back(::arma::mat(n, n, arma::fill::zeros));
+		}
+	}
 }
 
 

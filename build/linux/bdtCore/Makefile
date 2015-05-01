@@ -60,7 +60,8 @@ OBJS_RELATIVE=BigMatrixFacetImpl.o \
 			FCDCentralServiceImpl.o \
 			FeatureValueWorker.o \
 			FeatureValueWorkerMgr.o \
-			GenomeBpBitset.o
+			GenomeBpBitset.o \
+			RandomHelper.o
 
 OBJS		= $(OBJS_LOCAL) $(OBJS_RELATIVE)
 SRCS_LOCAL = $(OBJS_LOCAL:.o=.cpp)

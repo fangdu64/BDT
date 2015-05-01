@@ -11,7 +11,7 @@
 #include <RUVOutputWorkerMgr.h>
 
 class CFcdcRUVServiceImpl;
-
+class CIndexPermutation;
 
 class CRUVBuilder
 {
@@ -109,6 +109,9 @@ private:
 	bool UpdateYcfYcfT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, 
 		const iBS::ByteVec& controlFeatureFlags, arma::mat& A);
 
+	bool UpdateYcfYcfT_Permuation(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo,
+		const iBS::ByteVec& controlFeatureFlags, CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat> As);
+
 	void NotifyWorkerBecomesFree(int workerIdx);
 	bool createObserverGroupForFilteredY();
 	bool FilterOriginalFeatures(::Ice::Long ramMb );
@@ -123,6 +126,7 @@ private:
 	bool saveEigenValues(const arma::vec& eigenVals);
 	bool getEigenValues(arma::vec& eigenVals);
 	bool createOIDForEigenVectors();
+	bool createOIDForPermutatedEigenValues();
 	bool saveEigenVectors(const ::arma::mat& U);
 	bool getEigenVectors(::arma::mat& U);
 	bool createObserverGroupForTs(int maxK);

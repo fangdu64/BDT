@@ -85,6 +85,7 @@
     <ClCompile Include="..\..\..\..\bdtCore\GlobalVars.cpp" />
     <ClCompile Include="..\..\..\..\bdtCore\ObserverStatsDB.cpp" />
     <ClCompile Include="..\..\..\..\bdtCore\ProxyCentralServiceImpl.cpp" />
+    <ClCompile Include="..\..\..\..\bdtCore\RandomHelper.cpp" />
     <ClCompile Include="..\..\..\..\bdtCore\StatisticsHelper.cpp" />
     <ClCompile Include="ComputeService.cpp" />
     <ClCompile Include="ComputeServiceI.cpp">
@@ -127,6 +128,7 @@
     <ClInclude Include="..\..\..\..\bdtCore\GlobalVars.h" />
     <ClInclude Include="..\..\..\..\bdtCore\ObserverStatsDB.h" />
     <ClInclude Include="..\..\..\..\bdtCore\ProxyCentralServiceImpl.h" />
+    <ClInclude Include="..\..\..\..\bdtCore\RandomHelper.h" />
     <ClInclude Include="..\..\..\..\bdtCore\StatisticsHelper.h" />
     <ClInclude Include="..\..\..\..\common\include\bdtUtil\RowAdjustHelper.h" />
     <ClInclude Include="..\..\..\..\common\include\bdt\bdtBase.h" />

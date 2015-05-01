@@ -127,6 +127,9 @@
     <ClCompile Include="..\..\..\..\bdtCore\GlobalVars.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\bdtCore\RandomHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FCDCentralServiceI.h">
@@ -244,6 +247,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\bdtCore\GlobalVars.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\bdtCore\RandomHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

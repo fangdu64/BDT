@@ -517,6 +517,7 @@ module iBS
 		long	FeatureIdxTo;
 		bool	SubRangeLibrarySizeAdjust; //when dealing with sub ranges
 		RUVInputAdjustEnum InputAdjust;
+		int		PermutationCnt; //# of times to permute each row of data matrix independently to remove any structure in the matrix
 		
 		//no need to set parameters below
 		IntVec		RawCountObserverIDs; //aftere filtering
@@ -536,6 +537,7 @@ module iBS
 		long	ControlFeatureCnt;
 		int		OIDforEigenValue;
 		int		OIDforEigenVectors;
+		int		OIDforPermutatedEigenValues; // PermutationCnt by len(OIDforEigenValue)  matrix
 
 	};
 

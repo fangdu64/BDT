@@ -75,6 +75,8 @@ void CRUVFacetDB::SetRUVFacetInfoBlank(::iBS::RUVFacetInfo& rfi)
 	rfi.InputAdjust = iBS::RUVInputDoLogE;
 	rfi.OIDforEigenValue = 0;
 	rfi.OIDforEigenVectors = 0;
+	rfi.PermutationCnt = 0;
+	rfi.OIDforPermutatedEigenValues = 0;
 }
 
 ::Ice::Int

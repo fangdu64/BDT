@@ -675,6 +675,43 @@ bool CRUVBuilder::UpdateYcfYcfT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice:
 	return true;
 }
 
+bool CRUVBuilder::UpdateYcfYcfT_Permuation(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo,
+	const iBS::ByteVec& controlFeatureFlags, CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat> As)
+{
+	int n = (int)m_RUVInfo.n;
+
+	Ice::Long colCnt = m_RUVInfo.RawCountObserverIDs.size();
+	Ice::Long rowCnt = featureIdxTo - featureIdxFrom;
+	Ice::Long F = rowCnt;
+	int P = (int)As.size();
+
+	bool needCheckControlFeatures = !controlFeatureFlags.empty();
+	for (Ice::Long f = 0; f<F; f++)
+	{
+		bool noneCtrlFeature = needCheckControlFeatures && (controlFeatureFlags[f + featureIdxFrom] == 0);
+		if (noneCtrlFeature)
+			continue;
+
+		Ice::Double* originalY = Y + (f*colCnt);
+
+		for (int p = 0; p < P; p++)
+		{
+			::arma::mat& A = As[p];
+			const iBS::IntVec& colIdxs = colIdxPermuttion.Permutate();
+			for (int i = 0; i<n; i++)
+			{
+				int sampleIdx_i = colIdxs[i];
+				for (int j = i; j<n; j++)
+				{
+					int sampleIdx_j = colIdxs[j];
+					A(i, j) += originalY[sampleIdx_i] * originalY[sampleIdx_j];
+				}
+			}
+		}
+	}
+	return true;
+}
+
 bool CRUVBuilder::createOIDForEigenValues()
 {
 	Ice::Long domainSize = 0;
@@ -734,7 +771,7 @@ bool CRUVBuilder::createOIDForEigenVectors()
 	iBS::IntVec observerIDs;
 	if (m_RUVInfo.OIDforEigenVectors == 0)
 	{
-		CGlobalVars::get()->theObserversDB.RqstNewFeatureObserversInGroup(n, observerIDs, false);
+		CGlobalVars::get()->theObserversDB.RqstNewFeatureObserversInGroup((Ice::Int)n, observerIDs, false);
 		m_RUVInfo.OIDforEigenVectors = observerIDs[0];
 	}
 	else
@@ -749,6 +786,56 @@ bool CRUVBuilder::createOIDForEigenVectors()
 	iBS::FeatureObserverInfoVec fois;
 	CGlobalVars::get()->theObserversDB.GetFeatureObservers(observerIDs, fois);
 	Ice::Long domainSize = n;
+	for (int i = 0; i<n; i++)
+	{
+		iBS::FeatureObserverInfo& foi = fois[i];
+		foi.DomainSize = domainSize;
+		foi.SetPolicy = iBS::FeatureValueSetPolicyDoNothing; //readonly outside, interannly writalbe
+		foi.GetPolicy = iBS::FeatureValueGetPolicyGetForOneTimeRead;
+	}
+
+	CGlobalVars::get()->theObserversDB.SetFeatureObservers(fois);
+
+	return true;
+}
+
+bool CRUVBuilder::createOIDForPermutatedEigenValues()
+{
+	if (m_RUVInfo.PermutationCnt < 1)
+	{
+		return false;
+	}
+
+	Ice::Long domainSize = 0;
+	if (m_RUVInfo.RUVMode == iBS::RUVModeRUVs
+		|| m_RUVInfo.RUVMode == iBS::RUVModeRUVsForVariation)
+	{
+		domainSize = m_RUVInfo.CtrlSampleCnt;
+	}
+	else
+	{
+		domainSize = m_RUVInfo.n;
+	}
+
+	Ice::Long n = m_RUVInfo.PermutationCnt;
+
+	iBS::IntVec observerIDs;
+	if (m_RUVInfo.OIDforPermutatedEigenValues == 0)
+	{
+		CGlobalVars::get()->theObserversDB.RqstNewFeatureObserversInGroup((Ice::Int)n, observerIDs, false);
+		m_RUVInfo.OIDforPermutatedEigenValues = observerIDs[0];
+	}
+	else
+	{
+		observerIDs.resize(n);
+		for (int i = 0; i<n; i++)
+		{
+			observerIDs[i] = m_RUVInfo.OIDforPermutatedEigenValues + i;
+		}
+	}
+
+	iBS::FeatureObserverInfoVec fois;
+	CGlobalVars::get()->theObserversDB.GetFeatureObservers(observerIDs, fois);
 	for (int i = 0; i<n; i++)
 	{
 		iBS::FeatureObserverInfo& foi = fois[i];
@@ -1824,13 +1911,12 @@ bool CRUVBuilder::MultithreadGetA(
 
 	CRUVgWorkerMgr workerMgr(threadCnt);
 	//each worker will allocate Y with size of batchValueCnt 
-	if(workerMgr.Initilize(batchValueCnt,n)==false)
+	if (workerMgr.Initilize(batchValueCnt, n, m_RUVInfo.PermutationCnt) == false)
 	{
 		workerMgr.RequestShutdownAllWorkers();
 		workerMgr.UnInitilize();
 		return false;
 	}
-
 
 	::Ice::Long batchRowCnt=batchValueCnt/colCnt;
 	::Ice::Long remainCnt=J;
@@ -1937,7 +2023,9 @@ bool CRUVBuilder::MultithreadGetA(
 
 			RUVsWorkItemPtr wi=new CRUVgComputeA(
 				*this, workerIdx,featureIdxFrom,featureIdxTo, worker->GetBatchY(),
-				controlFeatureFlags,worker->A);
+				controlFeatureFlags,worker->A,
+				worker->As,
+				worker->GetColIdxPermutation());
 
 			worker->AddWorkItem(wi);
 

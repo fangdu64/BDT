@@ -88,6 +88,14 @@ void
 CRUVgComputeA::DoWork()
 {
 	m_ruvBuilder.UpdateYcfYcfT(m_Y,  m_featureIdxFrom,m_featureIdxTo,m_controlFeatureFlags, m_A);
+
+	if (!m_As.empty())
+	{
+		m_ruvBuilder.UpdateYcfYcfT_Permuation(
+			m_Y, m_featureIdxFrom, m_featureIdxTo,
+			m_controlFeatureFlags,
+			m_colIdxPermutation, m_As);
+	}
 }
 
 void

@@ -15,6 +15,7 @@ CGlobalVars::get()
 
 int CGlobalVars::GetUniformInt(int valFrom, int valTo)
 {
+	//Contrary to common C++ usage uniform_int_distribution does not take a half-open range. Instead it takes a closed range.
 	boost::random::uniform_int_distribution<> dist(valFrom, valTo);
 	return dist(_gen_mt19937);
 }
