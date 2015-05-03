@@ -15,16 +15,14 @@ public:
 
 public:
 
-	bool Initilize(Ice::Long batchValueCnt,int m, int n);
+	bool Initilize(Ice::Long batchValueCnt, int m, int n, int permutationCnt);
 	void RequestShutdownAllWorkers();
 	void UnInitilize();
 
 	int AssignItemToWorker(int workerIdx, const RUVsWorkItemPtr& wi);
 	//get a determined worker by observer info
 	RUVsWorkerPtr GetRUVsWorker(int workerIdx);
-private:
 
-	
 private:
 	const int m_workerNum;
 	typedef std::vector<RUVsWorkerPtr> RUVsWorkers_T;

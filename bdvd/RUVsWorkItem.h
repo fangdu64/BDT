@@ -30,12 +30,16 @@ public:
 			CRUVBuilder& ruvBuilder, int workerIdx, 
 			::Ice::Long featureIdxFrom, ::Ice::Long featureIdxTo, 
 			::Ice::Double *Y, const iBS::ByteVec& controlFeatureFlags,
-			::arma::mat& A, ::arma::mat& B, ::arma::mat& C, bool AequalB)
+			::arma::mat& A, ::arma::mat& B, ::arma::mat& C, bool AequalB,
+			std::vector<::arma::mat>& As,
+			CIndexPermutation& colIdxPermutation)
 			:m_ruvBuilder(ruvBuilder), m_workerIdx(workerIdx),
 			m_featureIdxFrom(featureIdxFrom),m_featureIdxTo(featureIdxTo),
 			m_Y(Y), m_controlFeatureFlags(controlFeatureFlags), 
 			m_A(A), m_B(B),m_C(C),
-			m_AequalB(AequalB)
+			m_AequalB(AequalB),
+			m_As(As),
+			m_colIdxPermutation(colIdxPermutation)
 		{
 		}
 
@@ -57,6 +61,9 @@ public:
 	::arma::mat& m_C;
 
 	bool m_AequalB;
+
+	std::vector<::arma::mat>& m_As;
+	CIndexPermutation& m_colIdxPermutation;
 };
 
 class CRUVComputeRowANOVA :  public  RUVsWorkItemBase
@@ -153,7 +160,6 @@ public:
 	::arma::mat& m_A;
 	std::vector<::arma::mat>& m_As;
 	CIndexPermutation& m_colIdxPermutation;
-
 };
 
 ///////////////////////////////////////////////////

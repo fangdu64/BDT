@@ -12,11 +12,14 @@
 void
 CRUVsComputeABC::DoWork()
 {
-	m_ruvBuilder.UpdateYcsYcsT(m_Y, m_featureIdxFrom,m_featureIdxTo,m_A);
+	m_ruvBuilder.UpdateYcsYcsT(m_Y, m_featureIdxFrom, m_featureIdxTo, m_A, m_colIdxPermutation, m_As);
+
 	if(!m_AequalB)
 	{
-		m_ruvBuilder.UpdateYcscfYcscfT(m_Y, m_featureIdxFrom,m_featureIdxTo,m_controlFeatureFlags, m_B);
+		m_ruvBuilder.UpdateYcscfYcscfT(m_Y, m_featureIdxFrom, m_featureIdxTo, m_controlFeatureFlags, m_B,
+			false, m_colIdxPermutation, m_As);
 	}
+
 	m_ruvBuilder.UpdateYcfYcscfT(m_Y,  m_featureIdxFrom,m_featureIdxTo,m_controlFeatureFlags, m_C);
 	
 }

@@ -13,13 +13,13 @@ CRUVsWorkerMgr::~CRUVsWorkerMgr()
 {
 }
 
-bool CRUVsWorkerMgr::Initilize(Ice::Long batchValueCnt, int m, int n)
+bool CRUVsWorkerMgr::Initilize(Ice::Long batchValueCnt, int m, int n, int permutationCnt)
 {
 	cout<<"CRUVsWorkerMgr Initilize begin ..."<<endl; 
 	bool rt=true;
 	for(int i=0;i<m_workerNum;i++)
 	{
-		RUVsWorkerPtr worker= new CRUVsWorker(i,batchValueCnt,m,n);
+		RUVsWorkerPtr worker = new CRUVsWorker(i, batchValueCnt, m, n, permutationCnt);
 		if(worker->AllocateBatchY()==false)
 		{
 			rt=false;

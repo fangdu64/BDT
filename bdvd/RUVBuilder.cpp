@@ -462,16 +462,19 @@ bool CRUVBuilder::SampleYandRowMeans(iBS::LongVec featureIdxs,
 
 
 //thread safe
-bool CRUVBuilder::UpdateYcsYcsT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, arma::mat& A)
+bool CRUVBuilder::UpdateYcsYcsT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, arma::mat& A, 
+	CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat>& As)
 {
 	iBS::ByteVec controlFeatureFlags;
-	bool rt=UpdateYcscfYcscfT(Y, featureIdxFrom,featureIdxTo,controlFeatureFlags, A);
+	bool computePermutation = !As.empty();
+	bool rt = UpdateYcscfYcscfT(Y, featureIdxFrom, featureIdxTo, controlFeatureFlags, A, computePermutation, colIdxPermuttion, As);
 	return rt;
 }
 
 //thread safe
 bool CRUVBuilder::UpdateYcscfYcscfT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, 
-		const iBS::ByteVec& controlFeatureFlags, arma::mat& B)
+	const iBS::ByteVec& controlFeatureFlags, arma::mat& B, bool computePermutation,
+		CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat>& As)
 {
 	int n=(int)m_RUVInfo.n;
 	int m=m_RUVInfo.CtrlSampleCnt;
@@ -479,7 +482,7 @@ bool CRUVBuilder::UpdateYcscfYcscfT(::Ice::Double* Y, Ice::Long featureIdxFrom, 
 	Ice::Long colCnt= m_RUVInfo.RawCountObserverIDs.size();
 	Ice::Long rowCnt=featureIdxTo-featureIdxFrom;
 	Ice::Long F=rowCnt;
-	
+	int P = (int)As.size();
 	Ice::Long conditionCnt=m_RUVInfo.P;
 	iBS::DoubleVec conditionSums(conditionCnt,0);
 	iBS::DoubleVec centeredY(n,0);
@@ -550,6 +553,25 @@ bool CRUVBuilder::UpdateYcscfYcscfT(::Ice::Double* Y, Ice::Long featureIdxFrom, 
 				int sampleIdx_j=m_ctrlSampleIdx2SampleIdx[j];
 				B(i,j)+=centeredY[sampleIdx_i]*centeredY[sampleIdx_j];
 			}
+		}
+
+		if (computePermutation)
+		{
+			for (int p = 0; p < P; p++)
+			{
+				::arma::mat& A = As[p];
+				const iBS::IntVec& colIdxs = colIdxPermuttion.Permutate();
+				for (int i = 0; i<m; i++)
+				{
+					int sampleIdx_i = m_ctrlSampleIdx2SampleIdx[colIdxs[i]];
+					for (int j = i; j<m; j++)
+					{
+						int sampleIdx_j = m_ctrlSampleIdx2SampleIdx[colIdxs[j]];
+						A(i, j) += centeredY[sampleIdx_i] * centeredY[sampleIdx_j];
+					}
+				}
+			}
+
 		}
 	}
 	return true;
@@ -676,7 +698,7 @@ bool CRUVBuilder::UpdateYcfYcfT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice:
 }
 
 bool CRUVBuilder::UpdateYcfYcfT_Permuation(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo,
-	const iBS::ByteVec& controlFeatureFlags, CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat> As)
+	const iBS::ByteVec& controlFeatureFlags, CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat>& As)
 {
 	int n = (int)m_RUVInfo.n;
 
@@ -700,11 +722,11 @@ bool CRUVBuilder::UpdateYcfYcfT_Permuation(::Ice::Double* Y, Ice::Long featureId
 			const iBS::IntVec& colIdxs = colIdxPermuttion.Permutate();
 			for (int i = 0; i<n; i++)
 			{
-				int sampleIdx_i = colIdxs[i];
+				int colIdx_i = colIdxs[i];
 				for (int j = i; j<n; j++)
 				{
-					int sampleIdx_j = colIdxs[j];
-					A(i, j) += originalY[sampleIdx_i] * originalY[sampleIdx_j];
+					int colIdx_j = colIdxs[j];
+					A(i, j) += originalY[colIdx_i] * originalY[colIdx_j];
 				}
 			}
 		}
@@ -1701,14 +1723,12 @@ bool CRUVBuilder::MultithreadGetABC(
 
 	CRUVsWorkerMgr workerMgr(threadCnt);
 	//each worker will allocate Y with size of batchValueCnt 
-	if(workerMgr.Initilize(batchValueCnt,m,n)==false)
+	if(workerMgr.Initilize(batchValueCnt,m,n, m_RUVInfo.PermutationCnt)==false)
 	{
 		workerMgr.RequestShutdownAllWorkers();
 		workerMgr.UnInitilize();
 		return false;
 	}
-
-	
 
 	::Ice::Long batchRowCnt=batchValueCnt/colCnt;
 	::Ice::Long remainCnt=J;
@@ -1823,7 +1843,9 @@ bool CRUVBuilder::MultithreadGetABC(
 			}*/
 			RUVsWorkItemPtr wi=new CRUVsComputeABC(
 				*this, workerIdx,featureIdxFrom,featureIdxTo, worker->GetBatchY(),
-				controlFeatureFlags,worker->A,worker->B,worker->C,AequalB);
+				controlFeatureFlags,worker->A,worker->B,worker->C,AequalB,
+				worker->As,
+				worker->GetColIdxPermutation());
 
 			worker->AddWorkItem(wi);
 
@@ -1851,6 +1873,61 @@ bool CRUVBuilder::MultithreadGetABC(
 		B+=worker->B;
 		C+=worker->C;
 	}
+
+	// creating permutated metrics
+	if (m_RUVInfo.PermutationCnt > 0)
+	{
+		// permutated eigen values matrix
+		Ice::Long pevColCnt = m_RUVInfo.PermutationCnt;
+		Ice::Long pevRowCnt = m;
+
+		::IceUtil::ScopedArray<Ice::Double>  permutatedEigVals(new ::Ice::Double[pevRowCnt*pevColCnt]);
+		if (!permutatedEigVals.get()){
+			return false;
+		}
+
+		for (int p = 0; p < pevColCnt; p++)
+		{
+			::arma::mat A_null(m, m, arma::fill::zeros);
+			for (int i = 0; i<threadCnt; i++)
+			{
+				RUVsWorkerPtr worker = workerMgr.GetRUVsWorker(i);
+				// merge A_null from workers
+				A_null += worker->As[p];
+			}
+
+			// update the lower left triagle of A_null
+			for (int i = 0; i<m; i++)
+			{
+				for (int j = i + 1; j<m; j++)
+				{
+					A_null(j, i) = A_null(i, j);
+				}
+			}
+
+			// eigen decomposition
+			arma::vec eigval;
+			arma::mat U;
+
+			//output is the same as in Matlab's eig, The eigenvalues are in ascending order
+			//right most column of U corresponds largest eigenvalue
+			if (!arma::eig_sym(eigval, U, A_null, "std"))
+			{
+				// add some error log
+				continue;
+			}
+
+			for (Ice::Long i = pevRowCnt - 1; i >= 0; i--)
+			{
+				Ice::Long idx = ((pevRowCnt - 1) - i)*pevColCnt + p; //in desc order
+				permutatedEigVals.get()[idx] = eigval(i);
+			}
+		}
+
+		createOIDForPermutatedEigenValues();
+		savePermutatedEigenValues(permutatedEigVals.get());
+	}
+
 	workerMgr.RequestShutdownAllWorkers();
 	workerMgr.UnInitilize();
 
@@ -2052,12 +2129,66 @@ bool CRUVBuilder::MultithreadGetA(
 		RUVgWorkerPtr worker=workerMgr.GetRUVgWorker(i);
 		A+=worker->A;
 	}
+
+	// creating permutated metrics
+	if (m_RUVInfo.PermutationCnt > 0)
+	{
+		// permutated eigen values matrix
+		Ice::Long pevColCnt = m_RUVInfo.PermutationCnt;
+		Ice::Long pevRowCnt = n;
+
+		::IceUtil::ScopedArray<Ice::Double>  permutatedEigVals(new ::Ice::Double[pevRowCnt*pevColCnt]);
+		if (!permutatedEigVals.get()){
+			return false;
+		}
+
+		for (int p = 0; p < pevColCnt; p++)
+		{
+			::arma::mat A_null(n, n, arma::fill::zeros);
+			for (int i = 0; i<threadCnt; i++)
+			{
+				RUVgWorkerPtr worker = workerMgr.GetRUVgWorker(i);
+				// merge A_null from workers
+				A_null += worker->As[p];
+			}
+
+			// update the lower left triagle of A_null
+			for (int i = 0; i<n; i++)
+			{
+				for (int j = i + 1; j<n; j++)
+				{
+					A_null(j, i) = A_null(i, j);
+				}
+			}
+
+			// eigen decomposition
+			arma::vec eigval;
+			arma::mat U;
+
+			//output is the same as in Matlab's eig, The eigenvalues are in ascending order
+			//right most column of U corresponds largest eigenvalue
+			if (!arma::eig_sym(eigval, U, A_null, "std"))
+			{
+				// add some error log
+				continue;
+			}
+
+			for (Ice::Long i = pevRowCnt - 1; i >= 0; i--)
+			{
+				Ice::Long idx = ((pevRowCnt - 1) - i)*pevColCnt + p; //in desc order
+				permutatedEigVals.get()[idx] = eigval(i);
+			}
+		}
+
+		createOIDForPermutatedEigenValues();
+		savePermutatedEigenValues(permutatedEigVals.get());
+	}
+	
 	workerMgr.RequestShutdownAllWorkers();
 	workerMgr.UnInitilize();
 
 	m_freeWorkerIdxs.clear();
 	m_processingWorkerIdxs.clear();
-
 
 	//update the lower left triagle of A
 	for(int i=0;i<n;i++)
@@ -2129,7 +2260,6 @@ bool CRUVBuilder::RebuildRUVModel_RUVs(::Ice::Int  threadCnt, ::Ice::Long ramMb)
 	//YcfYcscfT
 	::arma::mat C(n,m,arma::fill::zeros);
 
-
 	MultithreadGetABC(A, B, C, threadCnt, ramMb);
 
 	// eigen decomposition
@@ -2175,7 +2305,6 @@ bool CRUVBuilder::RebuildRUVModel_RUVs(::Ice::Int  threadCnt, ::Ice::Long ramMb)
 	if(maxK==0)
 		return false;
 
-	
 	//createObserverGroupForTs(maxK);
 	//createObserverGroupForZs(maxK);
 	//createObserverGroupForGs(maxK);
@@ -2472,6 +2601,51 @@ bool CRUVBuilder::getEigenValues(arma::vec& eigenVals)
 	}
 	return 1;
 }
+
+bool CRUVBuilder::savePermutatedEigenValues(Ice::Double *pValues)
+{
+	iBS::FeatureObserverSimpleInfoPtr foi
+		= CGlobalVars::get()->theObserversDB.GetFeatureObserver(m_RUVInfo.OIDforPermutatedEigenValues);
+
+	Ice::Long domainSize = 0;
+	if (m_RUVInfo.RUVMode == iBS::RUVModeRUVs
+		|| m_RUVInfo.RUVMode == iBS::RUVModeRUVsForVariation)
+	{
+		domainSize = m_RUVInfo.CtrlSampleCnt;
+	}
+	else
+	{
+		domainSize = m_RUVInfo.n;
+	}
+	Ice::Long n = m_RUVInfo.PermutationCnt;
+	Ice::Long totalValueCnt = domainSize * n;
+
+	//save G to store
+	std::pair<const Ice::Double*, const Ice::Double*> values(
+		pValues, pValues + totalValueCnt);
+
+	Ice::Int foiObserverID = foi->ObserverID;
+	Ice::Int foiStoreObserverID = foi->ObserverID;
+
+	Ice::Long foiStoreDomainSize = foi->ObserverGroupSize*foi->DomainSize;
+	Ice::Long foiDomainSize = foi->DomainSize;
+
+	Ice::Long rowIdxFrom = 0;
+	Ice::Long rowIdxTo = domainSize;
+
+	Ice::Long s_featureIdxFrom = rowIdxFrom * foi->ObserverGroupSize; //index in store
+	Ice::Long s_featureIdxTo = rowIdxTo*foi->ObserverGroupSize;  //index in store
+
+	foi->DomainSize = foiStoreDomainSize; //convert to store size
+	foi->ObserverID = foiStoreObserverID;
+	CGlobalVars::get()->theFeatureValueStoreMgr->SaveFeatureValueToStore(
+		foi, s_featureIdxFrom, s_featureIdxTo, values);
+	foi->ObserverID = foiObserverID;
+	foi->DomainSize = foiDomainSize; //convert back
+
+	return true;
+}
+
 
 ::Ice::Int CRUVBuilder::SelectKByEigenVals(::Ice::Double minFraction, 
 	::Ice::Int& k, ::iBS::DoubleVec& fractions)

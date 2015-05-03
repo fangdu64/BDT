@@ -98,10 +98,12 @@ private:
 	bool SampleYandRowMeans(iBS::LongVec featureIdxs, Ice::Double *pRowMeans, ::Ice::Double* pY) const;
 
 	//update YcsYcs' for Y in a given region
-	bool UpdateYcsYcsT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, arma::mat& A);
+	bool UpdateYcsYcsT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, arma::mat& A,
+		CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat>& As);
 
 	bool UpdateYcscfYcscfT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, 
-		const iBS::ByteVec& controlFeatureFlags, arma::mat& B);
+		const iBS::ByteVec& controlFeatureFlags, arma::mat& B, bool computePermutation,
+		CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat>& As);
 
 	bool UpdateYcfYcscfT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, 
 		const iBS::ByteVec& controlFeatureFlags, arma::mat& C);
@@ -110,7 +112,7 @@ private:
 		const iBS::ByteVec& controlFeatureFlags, arma::mat& A);
 
 	bool UpdateYcfYcfT_Permuation(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo,
-		const iBS::ByteVec& controlFeatureFlags, CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat> As);
+		const iBS::ByteVec& controlFeatureFlags, CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat>& As);
 
 	void NotifyWorkerBecomesFree(int workerIdx);
 	bool createObserverGroupForFilteredY();
@@ -127,6 +129,7 @@ private:
 	bool getEigenValues(arma::vec& eigenVals);
 	bool createOIDForEigenVectors();
 	bool createOIDForPermutatedEigenValues();
+	bool savePermutatedEigenValues(Ice::Double *pValues);
 	bool saveEigenVectors(const ::arma::mat& U);
 	bool getEigenVectors(::arma::mat& U);
 	bool createObserverGroupForTs(int maxK);

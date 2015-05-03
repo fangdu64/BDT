@@ -5,6 +5,7 @@
 #include <IceUtil/ScopedArray.h>
 #include <RUVsWorkItem.h>
 #include <armadillo>
+#include <RandomHelper.h>
 
 class CRUVsWorker;
 typedef IceUtil::Handle<CRUVsWorker> RUVsWorkerPtr;
@@ -12,7 +13,7 @@ typedef IceUtil::Handle<CRUVsWorker> RUVsWorkerPtr;
 class CRUVsWorker : public IceUtil::Thread
 {
 public:
-	CRUVsWorker(int workerIdx, ::Ice::Long batchValueCnt,int m,int n);
+	CRUVsWorker(int workerIdx, ::Ice::Long batchValueCnt, int m, int n, int permutationCnt);
 	~CRUVsWorker();
 
 public:
@@ -23,10 +24,14 @@ public:
 
 	 bool AllocateBatchY();
 	 Ice::Double* GetBatchY();
-
+	 CIndexPermutation& GetColIdxPermutation() { return m_colIdxPermutation; }
 public:
 	//YcsYcsT
 	::arma::mat A;
+
+	//permutated As
+	std::vector<::arma::mat> As;
+
 	//YcscfYcscfT
 	::arma::mat B;
 	//YcfYcscfT
@@ -47,7 +52,9 @@ private:
 	 ::IceUtil::ScopedArray<Ice::Double>  m_Y;
 	 const Ice::Long m_batchValueCnt;
 
-	 
+	 boost::random::mt19937 m_mt19937;
+
+	 CIndexPermutation m_colIdxPermutation;
 };
 
 
