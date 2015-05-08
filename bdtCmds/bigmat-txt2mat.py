@@ -212,7 +212,6 @@ def main(argv=None):
         if gParams.calc_statistics:
             #recalculate statistics
             bigMatrixID= outOIDs[0]
-            print(outOIDs)
             bmPrx=facetAdminPrx.GetBigMatrixFacet(bigMatrixID)
             (rt, amdTaskID)=bmPrx.RecalculateObserverStats(250)
             preFinishedCnt=0
@@ -230,11 +229,12 @@ def main(argv=None):
                     time.sleep(2)
 
             (rt, osis)=fcdcPrx.GetObserversStats(outOIDs)
+            minOID = min(outOIDs)
             gRunner.logp("Statistics")
             binCount = int(osis[0].Cnt)
             gRunner.logp("Row Count: "+str(rowCnt))
             for osi in osis:
-                gRunner.logp("Sample {0}: Max = {1:.2f}, Min = {2:.2f}, Sum = {3:.2f}".format(osi.ObserverID, osi.Max, osi.Min, osi.Sum))
+                gRunner.logp("Column {0} {1}: Max = {2:.2f}, Min = {3:.2f}, Sum = {4:.2f}".format(osi.ObserverID - minOID +1, sampleNames[osi.ObserverID - minOID], osi.Max, osi.Min, osi.Sum))
             gRunner.log("Calculting statistics for matrix [done]")
 
         #now prepare output infomation

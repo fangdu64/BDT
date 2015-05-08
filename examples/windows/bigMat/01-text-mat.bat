@@ -7,4 +7,5 @@ py %bdtInstallDir%\bigMat ^
 	--input text-mat@%bdtDatasetsDir%\txtMat\dnase_test.txt ^
 	--nrow 92554 ^
 	--ncol 45 ^
+	--calc-statistics ^
 	--out %thisScriptPath%01-out

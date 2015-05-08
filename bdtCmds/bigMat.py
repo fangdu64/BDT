@@ -58,7 +58,9 @@ def s01_txt2mat():
         gParams.row_cnt,
         gParams.input_location,
         gParams.col_names,
-        gParams.column_sep)
+        gParams.column_sep,
+        gParams.skip_cols,
+        gParams.skip_rows)
 
 # -----------------------------------------------------------
 # impor rowids from txt format
@@ -76,7 +78,10 @@ def s01_txtRowIds2mat():
         gParams.calc_statistics,
         gParams.input_location,
         gParams.row_index_base,
-        gParams.col_names)
+        gParams.col_names,
+        gParams.column_sep,
+        gParams.skip_cols,
+        gParams.skip_rows)
 
 
 # -----------------------------------------------------------

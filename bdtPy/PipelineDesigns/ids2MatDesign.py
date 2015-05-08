@@ -12,6 +12,7 @@ desing_params=desing_params.replace("/script/design_params.pickle","-script/desi
  DataFile,
  FieldSep,
  StartingRowIdx,
+ StartingColIdx,
  AddValue,
  CalcStatistics) = iBSDefines.loadPickle(desing_params)
 # ==================================================================
@@ -45,7 +46,7 @@ def uploadData(fcdcPrx, matID, batchRowCnt):
         fields=line.rstrip('\n').split(FieldSep)
         for j in range(ColCnt):
             #skip first column
-            dataValues.append(float(fields[j+0])+AddValue)
+            dataValues.append(float(fields[j+StartingColIdx])+AddValue)
         
         #===================================
         # No need to change below this line

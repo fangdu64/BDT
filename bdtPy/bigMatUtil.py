@@ -194,6 +194,8 @@ class BigMatParams:
         self.memory_size = 2000
         self.calc_statistics = False
         self.column_sep = None
+        self.skip_cols = None
+        self.skip_rows = None
         self.col_names = None
         self.col_names_original = None
         self.row_index_base = 0
@@ -241,7 +243,9 @@ class BigMatParams:
                 "{0}calc-statistics".format(prefix),
                 "{0}col-sep=".format(prefix),
                 "{0}col-names=".format(prefix),
-                "{0}index-base=".format(prefix)])
+                "{0}index-base=".format(prefix),
+                "{0}skip-cols=".format(prefix),
+                "{0}skip-rows=".format(prefix)])
 
         except getopt.error as msg:
             raise iBSDefines.BdtUsage(msg)
@@ -286,6 +290,8 @@ class BigMatParams:
             if option == "--{0}calc-statistics".format(prefix):
                 self.calc_statistics = True
             if option == "--{0}col-sep".format(prefix):
+                if value.startswith('"') and value.endswith('"'):
+                    value = value[1:-1]
                 self.column_sep = value
             if option == "--{0}col-names".format(prefix):
                 self.col_names_original = value
@@ -294,6 +300,10 @@ class BigMatParams:
                     raise iBSDefines.BdtUsage("--{0}col-names invalid".format(prefix))
             if option == "--{0}index-base".format(prefix):
                 self.row_index_base = int(value)
+            if option == "--{0}skip-cols".format(prefix):
+                self.skip_cols = int(value)
+            if option == "--{0}skip-rows".format(prefix):
+                self.skip_rows = int(value)
 
         if self.input_type in  ['text-mat', 'binary-mat']:
             requiredNames = [
@@ -359,6 +369,10 @@ class BigMatParams:
             cmds.extend(['--col-names', self.col_names_original])
         if self.row_index_base != 0:
             cmds.extend(['--index-base', str(self.row_index_base)])
+        if self.skip_cols is not None:
+            cmds.extend(['--skip-cols', str(self.skip_cols)])
+        if self.skip_rows is not None:
+            cmds.extend(['--skip-rows', str(self.skip_rows)])
         return cmds
 
 def run_txt2Mat(
@@ -374,7 +388,9 @@ def run_txt2Mat(
     row_cnt,
     data_file,
     col_names,
-    field_sep):
+    field_sep,
+    skipCols,
+    skipRows):
     
     nodeDir = os.path.abspath("{0}/{1}".format(runDir, nodeName))
     nodeScriptDir = nodeDir + "-script"
@@ -405,7 +421,22 @@ def run_txt2Mat(
         SampleNames = col_names
 
     CalcStatistics = calculateStatistics
-    design_params=(SampleNames,ColCnt,RowCnt,DataFile,FieldSep,CalcStatistics)
+    StartingRowIdx = 0
+    if skipRows is not None:
+        StartingRowIdx = skipRows
+    StartingColIdx = 0
+    if skipCols is not None:
+        StartingColIdx = skipCols
+
+    design_params=(
+        SampleNames,
+        ColCnt,
+        RowCnt,
+        DataFile,
+        FieldSep,
+        CalcStatistics,
+        StartingRowIdx,
+        StartingColIdx)
     params_pickle_fn=os.path.abspath("{0}/design_params.pickle".format(nodeScriptDir))
     iBSDefines.dumpPickle(design_params, params_pickle_fn)
 
@@ -447,7 +478,10 @@ def run_txtRowIds2Mat(
     calculateStatistics,
     data_file,
     index_base,
-    col_names):
+    col_names,
+    field_sep,
+    skipCols,
+    skipRows):
     
     nodeDir = os.path.abspath("{0}/{1}".format(runDir, nodeName))
     nodeScriptDir = nodeDir + "-script"
@@ -469,14 +503,30 @@ def run_txtRowIds2Mat(
     ColCnt = 1
     RowCnt = None
     DataFile = data_file
-    FieldSep = None
-    StartingRowIdx = 0 # no heading
+    FieldSep = " "
+    if field_sep is not None:
+        FieldSep = field_sep
+    StartingRowIdx = 0
+    if skipRows is not None:
+        StartingRowIdx = skipRows
+    StartingColIdx = 0
+    if skipCols is not None:
+        StartingColIdx = skipCols
     AddValue = -index_base
     SampleNames=["V{0}".format(v) for v in range(1,ColCnt+1)]
     if col_names is not None:
         SampleNames = col_names
     CalcStatistics = calculateStatistics
-    design_params=(SampleNames,ColCnt,RowCnt,DataFile,FieldSep, StartingRowIdx, AddValue, CalcStatistics)
+    design_params=(
+        SampleNames,
+        ColCnt,
+        RowCnt,
+        DataFile,
+        FieldSep,
+        StartingRowIdx,
+        StartingColIdx,
+        AddValue,
+        CalcStatistics)
     params_pickle_fn=os.path.abspath("{0}/design_params.pickle".format(nodeScriptDir))
     iBSDefines.dumpPickle(design_params, params_pickle_fn)
 
