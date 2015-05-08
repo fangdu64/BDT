@@ -76,7 +76,8 @@ def run_bdvd_ruv(
     featureIdxFrom,
     featureIdxTo,
     workercnt,
-    memory_size
+    memory_size,
+    permutation_cnt
     ):
 
     nodeDir = os.path.abspath("{0}/{1}".format(runDir, nodeName))
@@ -143,7 +144,8 @@ def run_bdvd_ruv(
                    AllInQuantileFraction,
                    MaxK,
                    featureIdxFrom,
-                   featureIdxTo)
+                   featureIdxTo,
+                   permutation_cnt)
     params_pickle_fn=os.path.abspath("{0}/design_params.pickle".format(nodeScriptDir))
     iBSDefines.dumpPickle(design_params, params_pickle_fn)
 

@@ -332,7 +332,7 @@ CFcdcRUVServiceImpl::RebuildRUVModel_async(const ::iBS::AMD_FcdcRUVService_Rebui
 	}
 
 	Ice::Long taskID = CGlobalVars::get()->theFeatureValueWorkerMgr->RegisterAMDTask(
-		"RebuildRUVsModel", 100);
+		"RebuildRUVsModel", 0);
 	cb->ice_response(1, taskID);
 
 	FeatureValueWorkItemPtr wi = new ::RUVs::CRebuildRUVsModel(m_ruvBuilder,threadCnt,ramMb,taskID);

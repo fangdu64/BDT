@@ -17,4 +17,5 @@ desing_params=desing_params.replace("/script/design_params.pickle","-script/desi
  AllInQuantileFraction,
  MaxK,
  FeatureIdxFrom,
- FeatureIdxTo)= iBSDefines.loadPickle(desing_params)
+ FeatureIdxTo,
+ PermutationCnt)= iBSDefines.loadPickle(desing_params)

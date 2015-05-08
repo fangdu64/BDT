@@ -189,6 +189,7 @@ def setupRUVFacet(fcdcPrx, bdvdFacetAdminPrx, sampleIDs, ctrlOIDs):
     rfi.CommonLibrarySize=0 #no library size adjustment
     rfi.ControlFeatureMaxCntLowBound =1
     rfi.ControlFeatureMaxCntUpBound = 1000
+    rfi.PermutationCnt = bdvdRUVDesign.PermutationCnt
     #check 
     if bdvdRUVDesign.CommonLibrarySize is not None:
         rfi.CommonLibrarySize=bdvdRUVDesign.CommonLibrarySize

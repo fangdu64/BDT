@@ -70,6 +70,7 @@ class BDVDParams:
         self.ctrl_rows_indir = None
         self.ruv_rowwise_adjust = None
         self.known_factors = None
+        self.permutation_cnt = 0
 
     def parse_options(self, argv):
         dataParams = bigMatUtil.BigMatParams()
@@ -101,7 +102,8 @@ class BDVDParams:
                 "control-rows-file=",
                 "ruv-rowwise-adjust=",
                 "known-factors=",
-                "start-from="])
+                "start-from=",
+                "permutation-num="])
 
         except getopt.error as msg:
             raise iBSDefines.BdtUsage(msg)
@@ -168,6 +170,8 @@ class BDVDParams:
                 if value not in allowedValues:
                     raise iBSDefines.BdtUsage('--start-from should be one of the {0}'.format(allowedValues))
                 self.start_from = value
+            if option == "--permutation-num":
+                self.permutation_cnt = int(value)
 
         requiredNames = ['--out', '--sample-groups', '--ruv-type']
         providedValues = [self.output_dir, self.sample_groups, self.ruv_type]
@@ -246,7 +250,8 @@ def s03_RUV(datamatPickle, ctrlRowPickle):
         featureIdxFrom,
         featureIdxTo,
         gParams.workercnt,
-        gParams.memory_size)
+        gParams.memory_size,
+        gParams.permutation_cnt)
 
 def main(argv=None):
     global gParams
