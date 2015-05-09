@@ -20,4 +20,4 @@ py %bdtInstallDir%\bdvd ^
 	--ruv-mlog-c 1 ^
 	--ruv-type ruvs ^
 	--control-rows-method all ^
-	--permutation-num 10
+	--permutation-num 100

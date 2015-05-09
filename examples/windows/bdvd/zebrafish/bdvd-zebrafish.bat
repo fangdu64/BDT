@@ -8,6 +8,7 @@ py %bdtInstallDir%\bdvd ^
 		--data-nrow 20865 ^
 		--data-ncol 6 ^
 		--data-col-names Ctl1,Ctl3,Ctl5,Trt9,Trt11,Trt13 ^
+		--data-calc-statistics ^
 		--out %thisScriptPath%01-out ^
 		--thread-num 4 ^
 		--memory-size 1000 ^
@@ -19,4 +20,5 @@ py %bdtInstallDir%\bdvd ^
 		--ruv-type ruvg ^
 		--control-rows-method specified-rows ^
 		--ctrl-rows-input text-rowids@%bdtDatasetsDir%\zebrafish\control-rows.txt ^
-		--ctrl-rows-index-base 1
+		--ctrl-rows-index-base 1 ^
+		--permutation-num 100
