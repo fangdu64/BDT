@@ -208,6 +208,9 @@ def main(argv=None):
         
         (sampleNames,outOIDs, rowCnt)= uploadData(fcdcPrx)
         
+        # make sure the program finishes saving the data before being shutdown
+        rt = bigMatUtil.waitForMatrixReadable(fcdcPrx, outOIDs[0])
+
         osis=None
         if gParams.calc_statistics:
             #recalculate statistics
