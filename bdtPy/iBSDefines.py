@@ -155,6 +155,18 @@ class NodeRunSummaryDefine:
         self.NodeStatus = None
         self.NodeDir = None
 
+class BdvdRuvOutDefine:
+    def __init__(self):
+        self.RuvFaceInfo = None
+        self.EigenValues = None
+        self.EigenVectors = None
+        self.PermutatedEigenValues = None
+        self.Wt = None
+
+class BdvdResultsDefine:
+    def __init__(self):
+        self.RuvOut = None
+
 def getResultPickleFromNodeDir(nodeDir):
     # runSummary.pickle should be in nodeDir/log
     runSummaryPickleFile = "{0}/logs/runSummary.pickle".format(os.path.abspath(nodeDir))
@@ -166,6 +178,9 @@ def getResultPickleFromNodeDir(nodeDir):
         return os.path.abspath(outPickle)
     elif resultSummary.NodeType == "bigKmeans":
         outPickle = "{0}/run/3-run-kmeans/3-run-kmeans.pickle".format(os.path.abspath(nodeDir))
+        return os.path.abspath(outPickle)
+    elif resultSummary.NodeType == "bdvd":
+        outPickle = "{0}/logs/results.pickle".format(os.path.abspath(nodeDir))
         return os.path.abspath(outPickle)
     else:
         return None

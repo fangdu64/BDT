@@ -253,6 +253,50 @@ def s03_RUV(datamatPickle, ctrlRowPickle):
         gParams.memory_size,
         gParams.permutation_cnt)
 
+def outputR():
+    obj = iBSDefines.loadPickle(
+        iBSDefines.derivePickleFile(gParams.output_dir))
+
+    infile = open("{0}/bdt/bdtR/outputTemplates/bdvdOutputTemplate.R".format(BDT_HomeDir))
+    outfile = open("{0}/logs/output.R".format(gParams.output_dir), "w")
+
+    ruvOut = obj.RuvOut
+    replacements = {
+                    "__EIGEN_VALUES_VEC_NAME__": ruvOut.EigenValues.Name, 
+                    "__EIGEN_VALUES_VEC_STORE_PATH_PREFIX__": ruvOut.EigenValues.StorePathPrefix.replace('\\','/'), 
+                    "__EIGEN_VALUES_VEC_ROW_CNT__":str(ruvOut.EigenValues.RowCnt),
+                    "__EIGEN_VALUES_VEC_COL_NAME__":ruvOut.EigenValues.ColName,
+                    "__EIGEN_VALUES_VEC_COL_ID__":str(ruvOut.EigenValues.ColID),
+
+                    "__EIGEN_VECTORS_MAT_NAME__": ruvOut.EigenVectors.Name, 
+                    "__EIGEN_VECTORS_MAT_STORE_PATH_PREFIX__": ruvOut.EigenVectors.StorePathPrefix.replace('\\','/'), 
+                    "__EIGEN_VECTORS_MAT_ROW_CNT__":str(ruvOut.EigenVectors.RowCnt),
+                    "__EIGEN_VECTORS_MAT_COL_CNT__":str(ruvOut.EigenVectors.ColCnt),
+                    "__EIGEN_VECTORS_MAT_COL_NAMES__":str(ruvOut.EigenVectors.ColNames).replace('[','').replace(']',''),
+                    "__EIGEN_VECTORS_MAT_COL_IDS__":str(ruvOut.EigenVectors.ColIDs).replace('[','').replace(']',''),
+
+                    "__PERMUTATED_EIGENVAL_MAT_NAME__": ruvOut.PermutatedEigenValues.Name, 
+                    "__PERMUTATED_EIGENVAL_MAT_STORE_PATH_PREFIX__": ruvOut.PermutatedEigenValues.StorePathPrefix.replace('\\','/'), 
+                    "__PERMUTATED_EIGENVAL_MAT_ROW_CNT__":str(ruvOut.PermutatedEigenValues.RowCnt),
+                    "__PERMUTATED_EIGENVAL_MAT_COL_CNT__":str(ruvOut.PermutatedEigenValues.ColCnt),
+                    "__PERMUTATED_EIGENVAL_MAT_COL_NAMES__":str(ruvOut.PermutatedEigenValues.ColNames).replace('[','').replace(']',''),
+                    "__PERMUTATED_EIGENVAL_MAT_COL_IDS__":str(ruvOut.PermutatedEigenValues.ColIDs).replace('[','').replace(']',''),
+
+                    "__Wt_MAT_NAME__": ruvOut.Wt.Name, 
+                    "__Wt_MAT_STORE_PATH_PREFIX__": ruvOut.Wt.StorePathPrefix.replace('\\','/'), 
+                    "__Wt_MAT_ROW_CNT__":str(ruvOut.Wt.RowCnt),
+                    "__Wt_MAT_COL_CNT__":str(ruvOut.Wt.ColCnt),
+                    "__Wt_MAT_COL_NAMES__":str(ruvOut.Wt.ColNames).replace('[','').replace(']',''),
+                    "__Wt_MAT_COL_IDS__":str(ruvOut.Wt.ColIDs).replace('[','').replace(']','')
+                    }
+
+    for line in infile:
+        for src, target in replacements.items():
+            line = line.replace(src, target)
+        outfile.write(line)
+    infile.close()
+    outfile.close()
+
 def main(argv=None):
     global gParams
     global gRunner
@@ -308,6 +352,15 @@ def main(argv=None):
         runSummary.NodeType = "bdvd"
         runSummaryPicke = "{0}/logs/runSummary.pickle".format(gParams.output_dir)
         iBSDefines.dumpPickle(runSummary, runSummaryPicke)
+
+        # dump pickles generated from each step into one pickle
+        allResults = iBSDefines.BdvdResultsDefine()
+        bdvdRuvOutPickle = os.path.abspath("{0}/run/{1}/{1}.pickle".format(gParams.output_dir, gSteps[2]))
+        allResultsPicke = os.path.abspath("{0}/logs/results.pickle".format(gParams.output_dir))
+        allResults.RuvOut = iBSDefines.loadPickle(bdvdRuvOutPickle)
+        iBSDefines.dumpPickle(allResults, allResultsPicke)
+
+        outputR()
 
         finish_time = datetime.now()
         duration = finish_time - start_time

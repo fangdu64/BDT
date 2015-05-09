@@ -265,6 +265,70 @@ def rebuildRUV(fcdcPrx,bdvdFacetAdminPrx,rfi):
             time.sleep(4)
     gRunner.log("Running RUV [done]")
 
+def saveResults(fcdcPrx, bdvdFacetAdminPrx):
+    facetId = 1
+    (rt, rfi) = bdvdFacetAdminPrx.GetRUVFacetInfo(facetId)
+    fn = os.path.abspath("{0}/{1}".format(gParams.output_dir,gParams.result_dumpfile))
+    outObj = iBSDefines.BdvdRuvOutDefine()
+    
+    outObj.RuvFaceInfo = rfi
+
+    # eigen values
+    (rt,bigvec_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(rfi.OIDforEigenValue)
+    bigvec_store_pathprefix = os.path.abspath(bigvec_store_pathprefix)
+    foi = fcdc.GetFeatureObserver(fcdcPrx,rfi.OIDforEigenValue)
+    bigvec = iBSDefines.BigVecMetaInfo()
+    bigvec.Name = "Eigen Values"
+    bigvec.StorePathPrefix = bigvec_store_pathprefix
+    bigvec.ColID = foi.ObserverID
+    bigvec.ColName= foi.ObserverName
+    bigvec.RowCnt = foi.DomainSize
+    outObj.EigenValues = bigvec
+
+    # eigen vectors
+    foi = fcdc.GetFeatureObserver(fcdcPrx,rfi.OIDforEigenVectors)
+    (rt, fois) = fcdcPrx.GetFeatureObservers(list(range(foi.ObserverID, foi.ObserverID + foi.ObserverGroupSize)))
+    (rt,bigmat_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(foi.ObserverID)
+    bigmat_store_pathprefix = os.path.abspath(bigmat_store_pathprefix)
+    bigmat = iBSDefines.BigMatrixMetaInfo()
+    bigmat.Name = "Eigen Vectors"
+    bigmat.StorePathPrefix = bigmat_store_pathprefix
+    bigmat.ColIDs = [v.ObserverID for v in fois]
+    bigmat.ColNames= [v.ObserverName for v in fois]
+    bigmat.RowCnt = foi.DomainSize
+    bigmat.ColCnt=len(fois)
+    outObj.EigenVectors = bigmat
+
+    # permutated eigen values
+    foi = fcdc.GetFeatureObserver(fcdcPrx,rfi.OIDforPermutatedEigenValues)
+    (rt, fois) = fcdcPrx.GetFeatureObservers(list(range(foi.ObserverID, foi.ObserverID + foi.ObserverGroupSize)))
+    (rt,bigmat_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(foi.ObserverID)
+    bigmat_store_pathprefix = os.path.abspath(bigmat_store_pathprefix)
+    bigmat = iBSDefines.BigMatrixMetaInfo()
+    bigmat.Name = "Permutated eigen values"
+    bigmat.StorePathPrefix = bigmat_store_pathprefix
+    bigmat.ColIDs = [v.ObserverID for v in fois]
+    bigmat.ColNames= [v.ObserverName for v in fois]
+    bigmat.RowCnt = foi.DomainSize
+    bigmat.ColCnt=len(fois)
+    outObj.PermutatedEigenValues = bigmat
+
+    # WT
+    foi = fcdc.GetFeatureObserver(fcdcPrx,rfi.ObserverIDforWts)
+    (rt, fois) = fcdcPrx.GetFeatureObservers(list(range(foi.ObserverID, foi.ObserverID + foi.ObserverGroupSize)))
+    (rt,bigmat_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(foi.ObserverID)
+    bigmat_store_pathprefix = os.path.abspath(bigmat_store_pathprefix)
+    bigmat = iBSDefines.BigMatrixMetaInfo()
+    bigmat.Name = "Wts"
+    bigmat.StorePathPrefix = bigmat_store_pathprefix
+    bigmat.ColIDs = [v.ObserverID for v in fois]
+    bigmat.ColNames= [v.ObserverName for v in fois]
+    bigmat.RowCnt = foi.DomainSize
+    bigmat.ColCnt=len(fois)
+    outObj.Wt = bigmat
+
+    iBSDefines.dumpPickle(outObj,fn)
+
 def main(argv=None):
     global gParams
     global gRunner
@@ -336,6 +400,11 @@ def main(argv=None):
         # if MaxK==0, no need to run RUV
         if rfi.MaxK>0:
             rebuildRUV(fcdcPrx,bdvdFacetAdminPrx,rfi)
+
+        # -----------------------------------------------------------
+        # Output Results
+        # -----------------------------------------------------------
+        saveResults(fcdcPrx, bdvdFacetAdminPrx)
 
         gRunner.shutdown_bigMat()
 
