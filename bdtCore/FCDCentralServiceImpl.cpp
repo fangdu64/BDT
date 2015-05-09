@@ -194,7 +194,7 @@ CFcdcReadServiceImpl::rvGetDoublesRowMatrix(const ::iBS::AMD_FcdcReadService_Get
 	int observerID = observerGroupID;
     foi = m_gv.theObserversDB.GetFeatureObserver(observerID);
 
-	if(!foi || foi->ObserverGroupSize<2)
+	if(!foi || foi->ObserverGroupSize<1)
 	{
 		::iBS::ArgumentException ex;
 		ex.reason = "illegal observer group id";
