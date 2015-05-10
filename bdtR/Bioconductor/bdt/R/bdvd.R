@@ -25,8 +25,8 @@ bdvd <- function(bdt_home,
                  thread_num = 4,
                  mem_size = 1000,
                  sample_groups,
-                 pre_normalization = 'column-sum',
-                 common_column_sum = 'median',
+                 pre_normalization = NULL,
+                 common_column_sum = NULL,
                  ruv_scale = 'mlog',
                  ruv_mlog_c = 1,
                  ruv_type = 'ruvs',
@@ -50,8 +50,6 @@ bdvd <- function(bdt_home,
         '--thread-num', as.character(thread_num),
         '--memory-size', as.character(mem_size),
         '--sample-groups', vecListToString(sample_groups),
-        '--pre-normalization', as.character(pre_normalization),
-        '--common-column-sum', as.character(common_column_sum),
         '--ruv-scale', ruv_scale,
         '--ruv-mlog-c', as.character(ruv_mlog_c),
         '--ruv-type', ruv_type,
@@ -107,6 +105,15 @@ bdvd <- function(bdt_home,
     if (!is.null(ctrl_rows_input)) {
         cmds <- append(cmds, c('--ctrl-rows-input', ctrl_rows_input))
     }
+
+    if (!is.null(pre_normalization)) {
+        cmds <- append(cmds, c('--pre-normalization', as.character(pre_normalization)))
+    }
+
+    if (!is.null(common_column_sum)) {
+        cmds <- append(cmds, c('--common-column-sum', as.character(common_column_sum)))
+    }
+
 
     if (!is.null(start_from)) {
         cmds <- append(cmds, c('--start-from', start_from))
