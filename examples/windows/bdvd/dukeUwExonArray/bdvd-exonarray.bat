@@ -11,7 +11,6 @@ py %bdtInstallDir%\bdvd ^
 	--data-skip-cols 1 ^
 	--data-skip-rows 1 ^
 	--data-col-sep "," ^
-	--data-calc-statistics ^
 	--out %thisScriptPath%01-out ^
 	--thread-num 4 ^
 	--memory-size 1000 ^

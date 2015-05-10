@@ -20,6 +20,9 @@ bigMat <- function(bdt_home,
                    input,
                    row_cnt = NULL,
                    col_cnt = NULL,
+                   skip_cols = NULL,
+                   skip_rows = NULL,
+                   col_sep = NULL,
                    out) {
     cmds = c(
         'py',

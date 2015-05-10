@@ -31,3 +31,19 @@ readBigKmeansOutput <- function(outDir) {
 
     return (ret)
 }
+
+#'
+#' read output from bdvd
+#' @export
+#'
+readBdvdOutput <- function(outDir) {
+    env <- new.env()
+    fileName = paste0(outDir,"/logs/output.R")
+    sys.source(fileName, env)
+    ret = list(eigenValues = env$eigenValues,
+               eigenVectors = env$eigenVectors,
+               permutatedEigenValues = env$permutatedEigenValues,
+               Wt = env$Wt)
+
+    return (ret)
+}

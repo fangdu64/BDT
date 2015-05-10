@@ -1,5 +1,41 @@
-# CONSTANTS
-# ANNOTATION_DATA_DIR
+#'
+#' read output from bigMat
+#' @export
+#'
+readMat <- function(matInfo) {
+    mat = readBigMatrixAuto(matInfo$colCnt, matInfo$rowCnt, matInfo$storePathPrefix)
+    return (mat)
+}
+
+#'
+#' read output from bigMat
+#' @export
+#'
+readVec <- function(matInfo) {
+    mat = readBigMatrixAuto(1, matInfo$rowCnt, matInfo$storePathPrefix)
+    return (mat)
+}
+
+#'
+#' read output from bigMat
+#' @export
+#'
+readIntMat <- function(vecInfo) {
+    storePath = paste0(matInfo$storePathPrefix,".bfv")
+    mat = readBigMatrixInt(matInfo$colCnt, matInfo$rowCnt, storePath)
+    return (mat)
+}
+
+#'
+#' read output from bigMat
+#' @export
+#'
+readIntVec <- function(vecInfo) {
+    storePath = paste0(matInfo$storePathPrefix,".bfv")
+    mat = readBigMatrixInt(1, matInfo$rowCnt, storePath)
+    return (mat)
+}
+
 
 readBigMatrix<-function(colCnt,rowCnt,bfvFile)
 {
@@ -84,3 +120,14 @@ readVectorFromTxt<-function(txtFile)
 	vec=vec[,1]
 	return (vec)
 }
+
+vecListToString<-function(vecList)
+{
+    outStr = c()
+    for (v in vecList) {
+        outStr <- append(outStr, paste0('[', paste0(v, collapse=","), ']'))
+    }
+    return (paste0(outStr, collapse=","))
+}
+
+

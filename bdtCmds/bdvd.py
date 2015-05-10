@@ -42,7 +42,7 @@ gCtrlRowsMethods = ["all","weak-signal","lower-quantile", "specified-rows"]
 gPreNormalizationMethods = ["column-sum"]
 gRuvTypes = ["ruvs","ruvg"]
 gRuvScaleMethods = ["mlog"]
-
+gRowwiseAdjustMethods = ['unitary-length']
 class BDVDParams:
     def __init__(self):
         self.output_dir = None
@@ -99,7 +99,6 @@ class BDVDParams:
                 "weak-signal-ub=",
                 "lower-quantile-threshold=",
                 "all-in-quantile-fraction=",
-                "control-rows-file=",
                 "ruv-rowwise-adjust=",
                 "known-factors=",
                 "start-from=",
@@ -160,6 +159,9 @@ class BDVDParams:
             if option == "--all-in-quantile-fraction":
                 self.all_in_quantile_fraction = float(value)
             if option == "--ruv-rowwise-adjust":
+                allowedValues = gRowwiseAdjustMethods;
+                if value not in allowedValues:
+                    raise iBSDefines.BdtUsage('--ruv-rowwise-adjust should be one of the {0}'.format(allowedValues))
                 self.ruv_rowwise_adjust = value
             if option =="--known-factors":
                 self.known_factors = bdtUtil.parseIntSeqSeq(value)
@@ -200,6 +202,7 @@ class BDVDParams:
 
 def s01_data_mat():
     nodeName = gSteps[0]
+    gParams.data_params.calc_statistics = True
     return bigMatUtil.run_bigMat(
         gRunner,
         Platform,

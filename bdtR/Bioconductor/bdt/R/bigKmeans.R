@@ -17,7 +17,7 @@
 #' @param min_expchange min change of explained variance
 #' @param out output dir
 #'
-#' @return fstats A vector of f-statistics
+#' @return ret a list representing bigKmeans results
 #'
 #' @export
 #'
@@ -26,6 +26,9 @@ bigKmeans <- function(bdt_home,
                       data_nrow = NULL,
                       data_ncol = NULL,
                       data_col_names = NULL,
+                      data_skip_cols = NULL,
+                      data_skip_rows = NULL,
+                      data_col_sep = NULL,
                       k = 100,
                       thread_num = 4,
                       dist_type = 'Euclidean',
