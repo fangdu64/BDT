@@ -120,5 +120,6 @@ __pycache__/
 /examples/linux/bigMat/*out/
 /examples/R/bigMat/*out/
 /examples/R/bdvd/zebrafish/*out/
+/examples/R/bdvd/dukeUwExonArray/*out/
 /examples/windows/bdvd/zebrafish/*out/
 /examples/windows/bdvd/dukeUwExonArray/*out/

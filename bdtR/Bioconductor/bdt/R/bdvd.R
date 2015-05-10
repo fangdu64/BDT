@@ -38,7 +38,7 @@ bdvd <- function(bdt_home,
                  known_factors = NULL,
                  control_rows_method = 'all',
                  ctrl_rows_input = NULL,
-                 ctrl_rows_index_base = 1,
+                 ctrl_rows_index_base = NULL,
                  permutation_num = 0,
                  start_from = NULL,
                  out) {
@@ -54,7 +54,6 @@ bdvd <- function(bdt_home,
         '--ruv-mlog-c', as.character(ruv_mlog_c),
         '--ruv-type', ruv_type,
         '--control-rows-method', control_rows_method,
-        '--ctrl-rows-index-base', as.character(ctrl_rows_index_base),
         '--permutation-num', as.character(permutation_num))
 
     if (!is.null(data_nrow)) {
@@ -112,6 +111,10 @@ bdvd <- function(bdt_home,
 
     if (!is.null(common_column_sum)) {
         cmds <- append(cmds, c('--common-column-sum', as.character(common_column_sum)))
+    }
+    
+    if (!is.null(ctrl_rows_index_base)) {
+      cmds <- append(cmds, c('--ctrl-rows-index-base', as.character(ctrl_rows_index_base)))
     }
 
 
