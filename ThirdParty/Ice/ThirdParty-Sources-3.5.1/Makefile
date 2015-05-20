@@ -44,7 +44,7 @@ $(dir_mcpp)::
 		mkdir -p $(install_dir)/mcpp ; \
 		chmod a+rx $(install_dir)/mcpp ; \
 	fi
-	cd $(dir_mcpp) && ./configure CFLAGS="-fPIC -O3 -fno-common -arch i386 -arch x86_64" --enable-mcpplib --disable-shared --prefix=$(install_dir)/mcpp && $(MAKE) install
+	cd $(dir_mcpp) && ./configure CFLAGS="-fPIC -O3 -fno-common -arch x86_64" --enable-mcpplib --disable-shared --prefix=$(install_dir)/mcpp && $(MAKE) install
 
 $(dir_db)::
 	echo "making $@ in $(dir_db)";
@@ -54,7 +54,7 @@ $(dir_db)::
 		mkdir -p $(install_dir)/db ; \
 		chmod a+rx $(install_dir)/db ; \
 	fi
-	cd $(dir_db)/build_unix && ../dist/configure CFLAGS="-fPIC -O3 -arch x86_64" CXX=clang++ CXXFLAGS="-O3 -arch i386 -arch x86_64" --enable-cxx --prefix=$(install_dir)/db && $(MAKE) install
+	cd $(dir_db)/build_unix && ../dist/configure CFLAGS="-fPIC -O3 -arch x86_64" CXX=clang++ CXXFLAGS="-O3 -arch x86_64" --enable-cxx --prefix=$(install_dir)/db && $(MAKE) install
 
 else
 $(dir_mcpp)::
