@@ -39,7 +39,7 @@ OPTIMIZE		= yes
 # OS X. On OS X, use CXXARCHFLAGS bellow to establish the build
 # architectures.
 #
-#LP64			?= yes
+LP64			?= yes
 
 #
 # The build architectures for gcc/llvm based builds. The format of
@@ -48,7 +48,7 @@ OPTIMIZE		= yes
 # "-arch i386 -arch x86_64".  The default is OS version dependent. Be
 # aware that this value may conflict with the setting of LP64 above.
 #
-#CXXARCHFLAGS		     = -arch i386 -arch x86_64
+CXXARCHFLAGS		     = -arch x86_64
 
 #
 # Define USE_READLINE as yes if you want to build parts of Ice using
