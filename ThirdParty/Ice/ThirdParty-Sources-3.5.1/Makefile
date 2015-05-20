@@ -1,6 +1,8 @@
 bdt_topdir	= ../../../
 include $(bdt_topdir)/config/Make.rules
 install_dir=$(BDT_Install)/ThirdParty
+UNAME := $(shell uname)
+
 dir_bzip2=bzip2-1.0.6
 dir_db=db-5.3.21.NC
 dir_mcpp=mcpp-2.7.2
@@ -33,6 +35,28 @@ $(dir_bzip2)::
 	    cd $(install_dir)/bzip2 && ln -s lib lib64 ; \
 	fi
 
+ifeq ($(UNAME),Darwin)
+$(dir_mcpp)::
+	echo "making $@ in $(dir_mcpp)";
+	if test ! -d $(install_dir)/mcpp ; \
+	then \
+		echo "Creating $(install_dir)/mcpp..." ; \
+		mkdir -p $(install_dir)/mcpp ; \
+		chmod a+rx $(install_dir)/mcpp ; \
+	fi
+	cd $(dir_mcpp) && ./configure CFLAGS="-fPIC -xcode=pic32 -m64" --enable-mcpplib --disable-shared --prefix=$(install_dir)/mcpp && $(MAKE) install
+
+$(dir_db)::
+	echo "making $@ in $(dir_db)";
+	if test ! -d $(install_dir)/db ; \
+	then \
+		echo "Creating $(install_dir)/db..." ; \
+		mkdir -p $(install_dir)/db ; \
+		chmod a+rx $(install_dir)/db ; \
+	fi
+	cd $(dir_db)/build_unix && ../dist/configure CFLAGS="-fPIC -O3 -arch x86_64" CXX=clang++ CXXFLAGS="-O3 -arch i386 -arch x86_64" --enable-cxx --prefix=$(install_dir)/db && $(MAKE) install
+
+else
 $(dir_mcpp)::
 	echo "making $@ in $(dir_mcpp)";
 	if test ! -d $(install_dir)/mcpp ; \
@@ -60,3 +84,9 @@ $(dir_db)::
 	then \
 	    cd $(install_dir)/db && ln -s lib lib64 ; \
 	fi
+
+endif
+
+
+
+
