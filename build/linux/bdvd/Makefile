@@ -98,12 +98,12 @@ $(bdvd): $(OBJS)
 	echo "$(embedded_runpath_prefix), $(runpath_libdir)"
 	rm -f $(iBS_bindir)/$@
 
-	if [ "$(BLAS_LAPACK_LIB)" == "ATLAS" ] ; \
+	if [ "$(UNAME)" == "Darwin" ] ; \
 	then \
-		echo "BLAS_LAPACK from ATLAS"; \
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) -lFreeze -lbdtCore -lbdtUtil -lBamtools -lz -latlaslapack -latlasblas $(LIBS); \
+		echo "Darwin"; \
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) -lFreeze -lbdtCore -lbdtUtil -lBamtools -lz -framework Accelerate $(LIBS); \
 	else \
-		echo "BLAS_LAPACK from Netlib"; \
+		echo "Linux"; \
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) -lFreeze -lbdtCore -lbdtUtil -lBamtools -lz -llapack -lrefblas -lgfortran $(LIBS); \
 	fi
 

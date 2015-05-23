@@ -58,7 +58,7 @@ SLICE2CPPFLAGS	:= --ice -I. -I$(iBS_slicedir) $(SLICE2CPPFLAGS)
 LDFLAGS	:= -Wl,-rpath,$(BDT_Install)/ThirdParty/db/lib64 $(LDFLAGS)
 
 ifeq ($(UNAME),Darwin)
-	LDFLAGS 	:= -L$(iBS_libdir) -L$(bamtools_libdir) -framework Accelerate $(LDFLAGS)
+	LDFLAGS 	:= -L$(iBS_libdir) -L$(bamtools_libdir) $(LDFLAGS)
 else
 	LDFLAGS 	:= -L$(iBS_libdir) -L$(bamtools_libdir) -L$(netlib_lapack_libdir) $(LDFLAGS)
 endif
@@ -82,12 +82,12 @@ $(bigMat): $(OBJS)
 	echo "$(embedded_runpath_prefix), $(runpath_libdir)"
 	rm -f $(iBS_bindir)/$@
 
-	if [ "$(BLAS_LAPACK_LIB)" == "ATLAS" ] ; \
+	if [ "$(UNAME)" == "Darwin" ] ; \
 	then \
-		echo "BLAS_LAPACK from ATLAS"; \
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) -lFreeze -lbdtCore -lbdtUtil -lBamtools -lz -latlaslapack -latlasblas $(LIBS); \
+		echo "Darwin"; \
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) -lFreeze -lbdtCore -lbdtUtil -lBamtools -lz -framework Accelerate $(LIBS); \
 	else \
-		echo "BLAS_LAPACK from Netlib"; \
+		echo "Linux"; \
 		$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) -lFreeze -lbdtCore -lbdtUtil -lBamtools -lz -llapack -lrefblas -lgfortran $(LIBS); \
 	fi
 
