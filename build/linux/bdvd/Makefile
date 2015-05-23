@@ -72,12 +72,11 @@ SLICE2CPPFLAGS	:= --ice -I. -I$(iBS_slicedir) $(SLICE2CPPFLAGS)
 
 LDFLAGS	:= -Wl,-rpath,$(BDT_Install)/ThirdParty/db/lib64 $(LDFLAGS)
 
-ifeq ($(BLAS_LAPACK_LIB),ATLAS)
-	LDFLAGS 	:= -L$(iBS_libdir) -L$(bamtools_libdir) -L$(ATLAS_LIBDIR) $(LDFLAGS)
+ifeq ($(UNAME),Darwin)
+	LDFLAGS 	:= -L$(iBS_libdir) -L$(bamtools_libdir) -framework Accelerate $(LDFLAGS)
 else
 	LDFLAGS 	:= -L$(iBS_libdir) -L$(bamtools_libdir) -L$(netlib_lapack_libdir) $(LDFLAGS)
 endif
-
 
 $(project_builddir)/%.h %.cpp: $(iBS_slicedir)/%.ice $(SLICE2CPP) $(SLICEPARSERLIB)
 	rm -f $(project_builddir)/$(*F).h $(*F).cpp
