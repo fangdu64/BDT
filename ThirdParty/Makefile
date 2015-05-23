@@ -1,4 +1,11 @@
-SUBDIRS = Python Ice LAPACK BamTools
+UNAME := $(shell uname)
+
+ifeq ($(UNAME),Darwin)
+	SUBDIRS = Python Ice BamTools
+else
+	SUBDIRS = Python Ice LAPACK BamTools
+endif
+
 .PHONY: $(SUBDIRS)
 
 Ice: Python
