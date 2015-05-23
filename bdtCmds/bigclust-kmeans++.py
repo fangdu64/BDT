@@ -341,8 +341,8 @@ def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
     rt = bigMatUtil.waitForMatricesReadable(fcdcPrx, waitForMatrixIds)
     rt = bigMatUtil.waitForVectorsReadable(fcdcPrx, waitForVectorIds)
 
-    exportKMembers(fcdcPrx, computePrx, OID_KMembers, outObj.KMembersVec)
-
+    outObj.KMembersVec.StorePathPrefix = exportKMembers(fcdcPrx, computePrx, OID_KMembers, outObj.KMembersVec)
+    outObj.KMembersVec.StorePathPrefix = outObj.KMembersVec.StorePathPrefix.replace(".bfv","");
     #
     # Save Run Statistics
     #

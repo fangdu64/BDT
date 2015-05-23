@@ -11,8 +11,8 @@ readMat <- function(matInfo) {
 #' read output from bigMat
 #' @export
 #'
-readVec <- function(matInfo) {
-    mat = readBigMatrixAuto(1, matInfo$rowCnt, matInfo$storePathPrefix)
+readVec <- function(vecInfo) {
+    mat = readBigMatrixAuto(1, vecInfo$rowCnt, vecInfo$storePathPrefix)
     return (mat)
 }
 
@@ -20,7 +20,7 @@ readVec <- function(matInfo) {
 #' read output from bigMat
 #' @export
 #'
-readIntMat <- function(vecInfo) {
+readIntMat <- function(matInfo) {
     storePath = paste0(matInfo$storePathPrefix,".bfv")
     mat = readBigMatrixInt(matInfo$colCnt, matInfo$rowCnt, storePath)
     return (mat)
@@ -31,8 +31,8 @@ readIntMat <- function(vecInfo) {
 #' @export
 #'
 readIntVec <- function(vecInfo) {
-    storePath = paste0(matInfo$storePathPrefix,".bfv")
-    mat = readBigMatrixInt(1, matInfo$rowCnt, storePath)
+    storePath = paste0(vecInfo$storePathPrefix,".bfv")
+    mat = readBigMatrixInt(1, vecInfo$rowCnt, storePath)
     return (mat)
 }
 
