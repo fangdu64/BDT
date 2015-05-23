@@ -33,7 +33,7 @@ OPTIMIZE		= yes
 # Define LP64 as yes if you want to build in 64 bit mode on a platform
 # that supports both 32 and 64 bit.
 #
-#LP64			:= yes
+LP64			:= yes
 
 #
 # The values below can be overridden by defining them as environment
@@ -71,7 +71,7 @@ PYTHON_LIBS	    ?= -L$(PYTHON_LIB_DIR) -l$(PYTHON_LIB_NAME)
 # i386 -arch x86_64".  The default is OS version dependent. Be aware
 # that this value may conflict with the setting of LP64 above.
 #
-#CXXARCHFLAGS                = -arch i386 -arch x86_64
+CXXARCHFLAGS                = -arch x86_64
 
 # ----------------------------------------------------------------------
 # Don't change anything below this line!
