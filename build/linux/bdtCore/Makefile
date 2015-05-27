@@ -19,7 +19,6 @@ ifeq ($(BOOST_TOPDIR),)
 endif
 boost_includedir=$(BOOST_TOPDIR)
 
-STATICLIBS = yes
 iBSLibDir	= $(BDT_Install)/bdt/lib
 LIBFILENAME	= $(call mklibfilename,bdtCore,1.0.0)
 SONAME		= $(call mksoname,bdtCore,10)  
@@ -83,6 +82,13 @@ CPPFLAGS	:= -I. -I$(project_srcdir) -I$(iBS_includedir) -I$(armadillo_includedir
  -I$(bamtools_includedir) -DARMA_USE_LAPACK -DARMA_USE_BLAS -DARMA_NO_DEBUG  $(CPPFLAGS)
 
 CXXFLAGS	:=$(subst -Werror,,$(CXXFLAGS))
+
+ifeq ($(UNAME),Darwin)
+	STATICLIBS = no
+	LINKWITH	:= -L$(iBSLibDir) -L$(bamtools_libdir) -lFreeze -lbdtUtil -lBamtools $(LIBS)
+else
+	STATICLIBS = yes
+endif
 
 SLICE2CPPFLAGS	:= --ice -I. -I$(iBS_slicedir) $(SLICE2CPPFLAGS)
 
