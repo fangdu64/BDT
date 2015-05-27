@@ -9,7 +9,7 @@ top_srcdir		= ../Ice/Ice-3.5.1/cpp
 project_builddir= .
 project_srcdir	= .
 
-iBSLibDir	= ./lib
+iBSLibDir	= $(BDT_Install)/bdt/lib
 LIBFILENAME	= $(call mklibfilename,Bamtools,2.3.0)
 SONAME		= $(call mksoname,Bamtools,23)  
 LIBNAME		= $(call mklibname,Bamtools)
