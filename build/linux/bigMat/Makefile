@@ -58,7 +58,7 @@ SLICE2CPPFLAGS	:= --ice -I. -I$(iBS_slicedir) $(SLICE2CPPFLAGS)
 LDFLAGS	:= -Wl,-rpath,$(BDT_Install)/ThirdParty/db/lib64 $(LDFLAGS)
 
 ifeq ($(UNAME),Darwin)
-	LDFLAGS 	:= -L$(iBS_libdir) $(LDFLAGS)
+	LDFLAGS 	:= -L$(iBS_libdir) -Wl,-rpath,$(BDT_Install)/bdt/lib $(LDFLAGS)
 else
 	LDFLAGS 	:= -L$(iBS_libdir) -L$(netlib_lapack_libdir) $(LDFLAGS)
 endif
