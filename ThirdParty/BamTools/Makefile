@@ -110,6 +110,8 @@ endif
 
 CPPFLAGS	:= -I. -I$(project_srcdir) -DBAMTOOLS_API_LIBRARY -D_FILE_OFFSET_BITS=64 $(CPPFLAGS)
 CXXFLAGS	:=$(subst -Werror,,$(CXXFLAGS))
+LINKWITH        := -lz
+
 $(project_builddir)/%.o: $(project_srcdir)/api/%.cpp
 	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) $<
 
