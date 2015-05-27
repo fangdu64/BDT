@@ -16,7 +16,7 @@ iBS_includedir 	= ../../../common/include
 
 iBSLibDir	= $(BDT_Install)/bdt/lib
 LIBFILENAME	= $(call mklibfilename,bdtUtil,1.0.0)
-SONAME		= $(call mksoname,bdtUtil,10)  
+SONAME		= $(call mksoname,bdtUtil,10)
 LIBNAME		= $(call mklibname,bdtUtil)
 TARGETS		= $(call mklibtargets,$(iBSLibDir)/$(LIBFILENAME),$(iBSLibDir)/$(SONAME),$(iBSLibDir)/$(LIBNAME))
 
@@ -51,7 +51,7 @@ CXXFLAGS	:=$(subst -Werror,,$(CXXFLAGS))
 
 ifeq ($(UNAME),Darwin)
 	STATICLIBS = no
-	CXXFLAGS	:= $(CXXFLAGS) -L$(iBS_libdir) -L$(bamtools_libdir)
+	CXXFLAGS	:= $(CXXFLAGS) -L$(iBSLibDir) -L$(bamtools_libdir)
 	LINKWITH	:= -lBamtools
 else
 	STATICLIBS = yes
