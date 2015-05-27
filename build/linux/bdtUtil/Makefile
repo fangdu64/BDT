@@ -11,9 +11,9 @@ project_srcdir 	= ../../../bdtUtil
 
 iBS_slicedir   	= ../../../common/slice/bdt
 Bamtools_includedir = ../../../ThirdParty/BamTools
+bamtools_libdir = $(bdt_topdir)/ThirdParty/BamTools/lib
 iBS_includedir 	= ../../../common/include
 
-STATICLIBS = yes
 iBSLibDir	= $(BDT_Install)/bdt/lib
 LIBFILENAME	= $(call mklibfilename,bdtUtil,1.0.0)
 SONAME		= $(call mksoname,bdtUtil,10)  
@@ -46,9 +46,16 @@ SLICE_SRCS		= $(addprefix $(iBS_slicedir)/,$(SLICE_SRCS_RELATIVE))
 
 include $(top_srcdir)/config/Make.rules
 
-
 CPPFLAGS	:= -I. -I$(project_srcdir) -I$(iBS_includedir) -I$(Bamtools_includedir) $(CPPFLAGS)
 CXXFLAGS	:=$(subst -Werror,,$(CXXFLAGS))
+
+ifeq ($(UNAME),Darwin)
+	STATICLIBS = no
+	CXXFLAGS	:= $(CXXFLAGS) -L$(iBS_libdir) -L$(bamtools_libdir)
+	LINKWITH	:= -lBamtools
+else
+	STATICLIBS = yes
+endif
 
 $(project_builddir)/%.h %.cpp: $(iBS_slicedir)/%.ice $(SLICE2CPP) $(SLICEPARSERLIB)
 	rm -f $(project_builddir)/$(*F).h $(*F).cpp
