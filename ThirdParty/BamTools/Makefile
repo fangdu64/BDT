@@ -9,7 +9,6 @@ top_srcdir		= ../Ice/Ice-3.5.1/cpp
 project_builddir= .
 project_srcdir	= .
 
-STATICLIBS = yes
 iBSLibDir	= ./lib
 LIBFILENAME	= $(call mklibfilename,Bamtools,2.3.0)
 SONAME		= $(call mksoname,Bamtools,23)  
@@ -103,6 +102,11 @@ SRCS		= $(SRCS_LOCAL) $(SRCS_RELATIVE)
 
 include $(top_srcdir)/config/Make.rules
 
+ifeq ($(UNAME),Darwin)
+	STATICLIBS = no
+else
+	STATICLIBS = yes
+endif
 
 CPPFLAGS	:= -I. -I$(project_srcdir) -DBAMTOOLS_API_LIBRARY -D_FILE_OFFSET_BITS=64 $(CPPFLAGS)
 CXXFLAGS	:=$(subst -Werror,,$(CXXFLAGS))
@@ -135,7 +139,17 @@ $(iBSLibDir)/$(LIBNAME): $(OBJS)
 	rm -f $@
 	$(call mklib,$@,$(OBJS))
 else
+$(iBSLibDir)/$(LIBFILENAME): $(OBJS)
+	rm -f $@
+	$(call mkshlib,$@,$(SONAME),$(OBJS),$(LINKWITH))
 
+$(iBSLibDir)/$(SONAME): $(iBSLibDir)/$(LIBFILENAME)
+	rm -f $@
+	ln -s $(LIBFILENAME) $@
+
+$(iBSLibDir)/$(LIBNAME): $(iBSLibDir)/$(SONAME)
+	rm -f $@
+	ln -s $(SONAME) $@
 endif
 
 install:: all
