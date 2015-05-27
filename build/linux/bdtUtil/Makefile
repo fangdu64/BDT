@@ -51,8 +51,7 @@ CXXFLAGS	:=$(subst -Werror,,$(CXXFLAGS))
 
 ifeq ($(UNAME),Darwin)
 	STATICLIBS = no
-	CXXFLAGS	:= $(CXXFLAGS) -L$(iBSLibDir) -L$(bamtools_libdir)
-	LINKWITH	:= -lBamtools
+	LINKWITH	:= -L$(iBSLibDir) -L$(bamtools_libdir) -lIceUtil -lBamtools
 else
 	STATICLIBS = yes
 endif
