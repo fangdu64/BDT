@@ -1,18 +1,20 @@
-SUBDIRS = build/linux
+SUBDIRS = ThirdParty build/linux
 .PHONY: $(SUBDIRS)
 
+build/linux: ThirdParty
+
 ifneq ($(bdt_home),)
-build/linux: config
+ThirdParty: config
 endif
 
 all install:: $(SUBDIRS)
 
 $(SUBDIRS):
-	@echo "making install in $@"
-	@$(MAKE) install --directory=$@
+    @echo "making install in $@"
+    @$(MAKE) install --directory=$@
 
 clean::
-	@for subdir in $(SUBDIRS); \
+    @for subdir in $(SUBDIRS); \
         do \
             if test -d $$subdir ; \
             then \
@@ -22,6 +24,5 @@ clean::
         done
 
 config::
-	rm -f config/Make.rules
-	@echo BDT_Install=$(bdt_home) > config/Make.rules
-	
+    rm -f config/Make.rules
+    @echo BDT_Install=$(bdt_home) > config/Make.rules
