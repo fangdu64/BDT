@@ -9,6 +9,13 @@ top_srcdir		= ../Ice/Ice-3.5.1/cpp
 project_builddir= .
 project_srcdir	= .
 
+UNAME := $(shell uname)
+ifeq ($(UNAME),Darwin)
+	STATICLIBS = no
+else
+	STATICLIBS = yes
+endif
+
 iBSLibDir	= $(BDT_Install)/bdt/lib
 LIBFILENAME	= $(call mklibfilename,Bamtools,2.3.0)
 SONAME		= $(call mksoname,Bamtools,23)  
@@ -101,12 +108,6 @@ SRCS_RELATIVE =$(addprefix $(project_srcdir)/,$(SRCS_RELATIVE_SHORT))
 SRCS		= $(SRCS_LOCAL) $(SRCS_RELATIVE)
 
 include $(top_srcdir)/config/Make.rules
-
-ifeq ($(UNAME),Darwin)
-	STATICLIBS = no
-else
-	STATICLIBS = yes
-endif
 
 CPPFLAGS	:= -I. -I$(project_srcdir) -DBAMTOOLS_API_LIBRARY -D_FILE_OFFSET_BITS=64 $(CPPFLAGS)
 CXXFLAGS	:=$(subst -Werror,,$(CXXFLAGS))
