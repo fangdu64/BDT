@@ -26,7 +26,7 @@ $(dir_python)::
 		mkdir -p $(install_dir)/python ; \
 		chmod a+rx $(install_dir)/python ; \
 	fi
-	cd $(dir_python) && ./configure CFLAGS=-fPIC --enable-framework && $(MAKE) frameworkinstall
+	cd $(dir_python) && ./configure OPT="-arch x86_64 -fPIC" LDFLAGS="-arch x86_64" --prefix=$(install_dir)/python && $(MAKE) install
 	rm -f $(install_dir)/python/lib/python3.3/site-packages/Ice.pth
 	echo "$(install_dir)/Ice-3.5.1/python" > "$(install_dir)/python/lib/python3.3/site-packages/Ice.pth"
 	rm -f $(install_dir)/python/lib/python3.3/site-packages/bdtPy.pth
