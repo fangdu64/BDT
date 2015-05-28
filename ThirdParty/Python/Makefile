@@ -26,11 +26,11 @@ $(dir_python)::
 		mkdir -p $(install_dir)/python ; \
 		chmod a+rx $(install_dir)/python ; \
 	fi
-	cd $(dir_python) && ./configure CFLAGS="-arch x86_64 -fPIC" LDFLAGS="-arch x86_64" --with-universal-archs=64-bit --enable-framework=$(install_dir)/python && $(MAKE) frameworkinstall
-	rm -f $(install_dir)/python/lib/python3.3/site-packages/Ice.pth
-	echo "$(install_dir)/Ice-3.5.1/python" > "$(install_dir)/python/lib/python3.3/site-packages/Ice.pth"
-	rm -f $(install_dir)/python/lib/python3.3/site-packages/bdtPy.pth
-	echo "$(BDT_Install)/bdt/bdtPy" > "$(install_dir)/python/lib/python3.3/site-packages/bdtPy.pth"
+	cd $(dir_python) && ./configure CFLAGS="-arch x86_64 -fPIC" LDFLAGS="-arch x86_64" --with-universal-archs=64-bit --enable-framework=$(install_dir)/python --prefix=$(install_dir)/python && $(MAKE) frameworkinstall
+	rm -f $(install_dir)/python/Python.framework/Versions/3.3/lib/python3.3/site-packages/Ice.pth
+	echo "$(install_dir)/Ice-3.5.1/python" > "$(install_dir)/python/Python.framework/Versions/3.3/lib/python3.3/site-packages/Ice.pth"
+	rm -f $(install_dir)/python/Python.framework/Versions/3.3/lib/python3.3/site-packages/bdtPy.pth
+	echo "$(BDT_Install)/bdt/bdtPy" > "$(install_dir)/python/Python.framework/Versions/3.3/lib/python3.3/site-packages/bdtPy.pth"
 else
 $(dir_python)::
 	echo "making $@ in $(dir_python)";
