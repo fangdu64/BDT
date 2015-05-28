@@ -65,9 +65,9 @@ CXXFLAGS	:=$(subst -Werror,,$(CXXFLAGS))
 SLICE2CPPFLAGS	:= --ice -I. -I$(iBS_slicedir) $(SLICE2CPPFLAGS)
 
 ifeq ($(UNAME),Darwin)
-	LDFLAGS 	:= -L$(iBS_libdir) -Wl,-rpath,$(BDT_Install)/bdt/lib -Wl,-rpath $(LDFLAGS)
+	LDFLAGS 	:= -L$(iBS_libdir) -Wl,-rpath,$(BDT_Install)/bdt/lib $(LDFLAGS)
 else
-	LDFLAGS 	:= -L$(iBS_libdir) -Wl,-rpath $(LDFLAGS)
+	LDFLAGS 	:= -L$(iBS_libdir) $(LDFLAGS)
 endif
 
 $(bigKmeansContractor): $(OBJS)
