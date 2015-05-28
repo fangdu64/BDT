@@ -2,7 +2,7 @@ SUBDIRS = build/linux
 .PHONY: $(SUBDIRS)
 
 ifneq ($(bdt_home),)
-	build/linux: config
+build/linux: config
 endif
 
 all install:: $(SUBDIRS)
