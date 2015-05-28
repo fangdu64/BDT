@@ -16,7 +16,7 @@ iBS_libdir =$(BDT_Install)/bdt/lib
 iBS_bindir =$(BDT_Install)/bdt/bin
 netlib_lapack_libdir =$(bdt_topdir)/ThirdParty/LAPACK/lapack-3.5.0
 bamtools_includedir = $(bdt_topdir)/ThirdParty/BamTools
-bamtools_libdir = $(bdt_topdir)/ThirdParty/BamTools/lib
+bamtools_libdir = $(iBS_libdir)
 armadillo_includedir=$(bdt_topdir)/ThirdParty/Armadillo/armadillo-4.650.4/include
 
 ifeq ($(BOOST_TOPDIR),)
@@ -73,9 +73,9 @@ SLICE2CPPFLAGS	:= --ice -I. -I$(iBS_slicedir) $(SLICE2CPPFLAGS)
 LDFLAGS	:= -Wl,-rpath,$(BDT_Install)/ThirdParty/db/lib64 $(LDFLAGS)
 
 ifeq ($(UNAME),Darwin)
-	LDFLAGS 	:= -L$(iBS_libdir) -L$(bamtools_libdir) -framework Accelerate $(LDFLAGS)
+	LDFLAGS 	:= -L$(iBS_libdir) -Wl,-rpath,$(BDT_Install)/bdt/lib -framework Accelerate $(LDFLAGS)
 else
-	LDFLAGS 	:= -L$(iBS_libdir) -L$(bamtools_libdir) -L$(netlib_lapack_libdir) $(LDFLAGS)
+	LDFLAGS 	:= -L$(iBS_libdir) -L$(netlib_lapack_libdir) $(LDFLAGS)
 endif
 
 $(project_builddir)/%.h %.cpp: $(iBS_slicedir)/%.ice $(SLICE2CPP) $(SLICEPARSERLIB)

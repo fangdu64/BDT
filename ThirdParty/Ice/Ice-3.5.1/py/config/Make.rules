@@ -71,7 +71,7 @@ PYTHON_LIBS	    ?= -L$(PYTHON_LIB_DIR) -l$(PYTHON_LIB_NAME)
 # i386 -arch x86_64".  The default is OS version dependent. Be aware
 # that this value may conflict with the setting of LP64 above.
 #
-CXXARCHFLAGS                = -arch x86_64
+#CXXARCHFLAGS                = -arch x86_64
 
 # ----------------------------------------------------------------------
 # Don't change anything below this line!
@@ -88,6 +88,10 @@ ifeq ($(shell test -f $(top_srcdir)/config/Make.common.rules && echo 0),0)
     include $(top_srcdir)/config/Make.common.rules
 else
     include $(top_srcdir)/../config/Make.common.rules
+endif
+
+ifeq ($(UNAME),Darwin)
+	CXXARCHFLAGS = -arch x86_64
 endif
 
 #
