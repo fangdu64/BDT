@@ -31,7 +31,7 @@ public:
 	::arma::mat A;
 
 	//permutated As
-	std::vector<::arma::mat> As;
+	std::vector< ::arma::mat> As;
 
 private:
 	int m_workerIdx;

@@ -463,7 +463,7 @@ bool CRUVBuilder::SampleYandRowMeans(iBS::LongVec featureIdxs,
 
 //thread safe
 bool CRUVBuilder::UpdateYcsYcsT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, arma::mat& A, 
-	CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat>& As)
+	CIndexPermutation& colIdxPermuttion, std::vector< ::arma::mat>& As)
 {
 	iBS::ByteVec controlFeatureFlags;
 	bool computePermutation = !As.empty();
@@ -474,7 +474,7 @@ bool CRUVBuilder::UpdateYcsYcsT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice:
 //thread safe
 bool CRUVBuilder::UpdateYcscfYcscfT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, 
 	const iBS::ByteVec& controlFeatureFlags, arma::mat& B, bool computePermutation,
-		CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat>& As)
+		CIndexPermutation& colIdxPermuttion, std::vector< ::arma::mat>& As)
 {
 	int n=(int)m_RUVInfo.n;
 	int m=m_RUVInfo.CtrlSampleCnt;
@@ -698,7 +698,7 @@ bool CRUVBuilder::UpdateYcfYcfT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice:
 }
 
 bool CRUVBuilder::UpdateYcfYcfT_Permuation(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo,
-	const iBS::ByteVec& controlFeatureFlags, CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat>& As)
+	const iBS::ByteVec& controlFeatureFlags, CIndexPermutation& colIdxPermuttion, std::vector< ::arma::mat>& As)
 {
 	int n = (int)m_RUVInfo.n;
 

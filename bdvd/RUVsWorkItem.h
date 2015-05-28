@@ -31,7 +31,7 @@ public:
 			::Ice::Long featureIdxFrom, ::Ice::Long featureIdxTo, 
 			::Ice::Double *Y, const iBS::ByteVec& controlFeatureFlags,
 			::arma::mat& A, ::arma::mat& B, ::arma::mat& C, bool AequalB,
-			std::vector<::arma::mat>& As,
+			std::vector< ::arma::mat>& As,
 			CIndexPermutation& colIdxPermutation)
 			:m_ruvBuilder(ruvBuilder), m_workerIdx(workerIdx),
 			m_featureIdxFrom(featureIdxFrom),m_featureIdxTo(featureIdxTo),
@@ -62,7 +62,7 @@ public:
 
 	bool m_AequalB;
 
-	std::vector<::arma::mat>& m_As;
+	std::vector< ::arma::mat>& m_As;
 	CIndexPermutation& m_colIdxPermutation;
 };
 
@@ -135,7 +135,7 @@ public:
 			::Ice::Long featureIdxFrom, ::Ice::Long featureIdxTo, 
 			::Ice::Double *Y, const iBS::ByteVec& controlFeatureFlags,
 			::arma::mat& A,
-			std::vector<::arma::mat>& As,
+			std::vector< ::arma::mat>& As,
 			CIndexPermutation& colIdxPermutation)
 			:m_ruvBuilder(ruvBuilder), m_workerIdx(workerIdx),
 			m_featureIdxFrom(featureIdxFrom),m_featureIdxTo(featureIdxTo),
@@ -158,7 +158,7 @@ public:
 	const iBS::ByteVec& m_controlFeatureFlags;
 	//YcfYcfT
 	::arma::mat& m_A;
-	std::vector<::arma::mat>& m_As;
+	std::vector< ::arma::mat>& m_As;
 	CIndexPermutation& m_colIdxPermutation;
 };
 

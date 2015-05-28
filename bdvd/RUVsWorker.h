@@ -30,7 +30,7 @@ public:
 	::arma::mat A;
 
 	//permutated As
-	std::vector<::arma::mat> As;
+	std::vector< ::arma::mat> As;
 
 	//YcscfYcscfT
 	::arma::mat B;

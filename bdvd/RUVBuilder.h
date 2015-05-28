@@ -99,11 +99,11 @@ private:
 
 	//update YcsYcs' for Y in a given region
 	bool UpdateYcsYcsT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, arma::mat& A,
-		CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat>& As);
+		CIndexPermutation& colIdxPermuttion, std::vector< ::arma::mat>& As);
 
 	bool UpdateYcscfYcscfT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, 
 		const iBS::ByteVec& controlFeatureFlags, arma::mat& B, bool computePermutation,
-		CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat>& As);
+		CIndexPermutation& colIdxPermuttion, std::vector< ::arma::mat>& As);
 
 	bool UpdateYcfYcscfT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, 
 		const iBS::ByteVec& controlFeatureFlags, arma::mat& C);
@@ -112,7 +112,7 @@ private:
 		const iBS::ByteVec& controlFeatureFlags, arma::mat& A);
 
 	bool UpdateYcfYcfT_Permuation(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo,
-		const iBS::ByteVec& controlFeatureFlags, CIndexPermutation& colIdxPermuttion, std::vector<::arma::mat>& As);
+		const iBS::ByteVec& controlFeatureFlags, CIndexPermutation& colIdxPermuttion, std::vector< ::arma::mat>& As);
 
 	void NotifyWorkerBecomesFree(int workerIdx);
 	bool createObserverGroupForFilteredY();
