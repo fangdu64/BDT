@@ -1,11 +1,9 @@
-ifeq ($(bdt_home),)
-	bdt_home	= /usr/bin/bdt
-endif
-
 SUBDIRS = build/linux
 .PHONY: $(SUBDIRS)
 
-build/linux: config
+ifneq ($(bdt_home),)
+	build/linux: config
+endif
 
 all install:: $(SUBDIRS)
 
