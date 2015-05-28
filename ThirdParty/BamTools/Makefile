@@ -142,6 +142,11 @@ $(iBSLibDir)/$(LIBNAME): $(OBJS)
 	$(call mklib,$@,$(OBJS))
 else
 $(iBSLibDir)/$(LIBFILENAME): $(OBJS)
+	if test ! -d $(iBSLibDir) ; \
+	then \
+		mkdir -p $(iBSLibDir) ; \
+		chmod a+rx $(iBSLibDir) ; \
+	fi
 	rm -f $@
 	$(call mkshlib,$@,$(SONAME),$(OBJS),$(LINKWITH))
 
