@@ -1,6 +1,5 @@
-
-ifeq ($(prefix),)
-	prefix	= ~/bdtHome
+ifeq ($(bdt_home),)
+	bdt_home	= /usr/bin/bdt
 endif
 
 SUBDIRS = build/linux
@@ -26,5 +25,5 @@ clean::
 
 config::
 	rm -f config/Make.rules
-	@echo BDT_Install=\"$(prefix)\" > config/Make.rules
+	@echo BDT_Install=$(bdt_home) > config/Make.rules
 	
