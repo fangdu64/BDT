@@ -179,7 +179,7 @@ class BDVDParams:
         providedValues = [self.output_dir, self.sample_groups, self.ruv_type]
         noneIdx = bdtUtil.getFirstNone(providedValues)
         if noneIdx != -1:
-            raise Usage("{0} is required".format(requiredNames[noneIdx]))
+            raise iBSDefines.BdtUsage("{0} is required".format(requiredNames[noneIdx]))
 
         self.output_dir = os.path.abspath(self.output_dir)
         self.logging_dir = os.path.abspath(self.output_dir + "/logs")

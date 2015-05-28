@@ -327,6 +327,9 @@ class BigMatParams:
                 '--{0}bin-width'.format(prefix)]
             providedValues = [self.input_type, self.output_dir, self.chromosomes, self.bin_width]
             providedFiles = [self.input_location]
+		else:
+			allowedValues = bigmat_input_types
+            raise iBSDefines.BdtUsage('--input type@location, type should be one of the {0}'.format(allowedValues))
 
         noneIdx = bdtUtil.getFirstNone(providedValues)
         if noneIdx != -1:
