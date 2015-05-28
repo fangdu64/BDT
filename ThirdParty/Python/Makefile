@@ -16,6 +16,22 @@ clean::
 
 install::$(SUBDIRS)
 
+UNAME := $(shell uname)
+ifeq ($(UNAME),Darwin)
+$(dir_python)::
+	echo "making $@ in $(dir_python)";
+	if test ! -d $(install_dir)/python ; \
+	then \
+		echo "Creating $(install_dir)/python..." ; \
+		mkdir -p $(install_dir)/python ; \
+		chmod a+rx $(install_dir)/python ; \
+	fi
+	cd $(dir_python) && ./configure CFLAGS=-fPIC --enable-framework --prefix=$(install_dir)/python && $(MAKE) frameworkinstall
+	rm -f $(install_dir)/python/lib/python3.3/site-packages/Ice.pth
+	echo "$(install_dir)/Ice-3.5.1/python" > "$(install_dir)/python/lib/python3.3/site-packages/Ice.pth"
+	rm -f $(install_dir)/python/lib/python3.3/site-packages/bdtPy.pth
+	echo "$(BDT_Install)/bdt/bdtPy" > "$(install_dir)/python/lib/python3.3/site-packages/bdtPy.pth"
+else
 $(dir_python)::
 	echo "making $@ in $(dir_python)";
 	if test ! -d $(install_dir)/python ; \
@@ -29,3 +45,6 @@ $(dir_python)::
 	echo "$(install_dir)/Ice-3.5.1/python" > "$(install_dir)/python/lib/python3.3/site-packages/Ice.pth"
 	rm -f $(install_dir)/python/lib/python3.3/site-packages/bdtPy.pth
 	echo "$(BDT_Install)/bdt/bdtPy" > "$(install_dir)/python/lib/python3.3/site-packages/bdtPy.pth"
+endif
+
+
