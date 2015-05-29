@@ -14,11 +14,10 @@ BDT runs on the following platforms:
 
 ## Installation On Linux
 1. Download the latest source code:  [v0.1.0.tar.gz](https://github.com/fangdu64/BDT/archive/v0.1.0.tar.gz)
-2. Extract and go to the extracted directory: 
-```shell
-$ tar xfz v0.1.0.tar.gz
-$ cd BDT-v0.1.0
-```
+2. Extract and go to the extracted directory:
+  ```
+  $ tar xfz v0.1.0.tar.gz$ cd BDT-v0.1.0
+  ```
 3. Build and install BDT: make bdt_home={install_path}, where {install_path} installation path (has to be absolute path) and will be created in the building process if not exist.
 
 ## Installation On Mac OS X
