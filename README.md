@@ -21,7 +21,7 @@ BDT runs on the following platforms:
 3. Build and install BDT:
 
         $ make bdt_home={install_path}
-where {install_path} is an installation directory (has to be absolute directory). The directory will be created if it does not exist.
+where {install_path} is an installation directory (has to be an absolute directory). The directory will be created if it does not exist.
 
 ## Installation On Mac OS X
 1. Download the latest source code:  [v0.1.0.tar.gz](https://github.com/fangdu64/BDT/archive/v0.1.0.tar.gz)
@@ -33,7 +33,7 @@ where {install_path} is an installation directory (has to be absolute directory)
 4. Build and install BDT:
 
         $ make bdt_home={install_path}
-where {install_path} is an installation directory (has to be absolute directory). The directory will be created if it does not exist.
+where {install_path} is an installation directory (has to be an absolute directory). The directory will be created if it does not exist.
 
 ## Installation On Windows
 1. Ensure that the Python3.3.3 (64-bit) is installed. Use 'xxx' otherwise.
