@@ -41,6 +41,6 @@ where {install_path} is an installation directory (has to be an absolute path). 
 ## Installation on Windows
 1. Ensure that the Python3.3.3 (64-bit) is installed. Otherwise download [Windows X86-64 MSI Installer (3.3.3)](https://www.python.org/ftp/python/3.3.3/python-3.3.3.amd64.msi) and install it.
 2. Ensure that the [Visual C++ Redistributable Packages for Visual Studio 2013](https://www.microsoft.com/en-us/download/details.aspx?id=40784) is installed. Otherwise download [vcredist_x64.exe](https://www.microsoft.com/en-us/download/details.aspx?id=40784) and install it.
-3. Download BDT executable zip at:
-3. Extract.
+3. Download BDT executable zip [BDT-v0.1.0-win64.zip](https://github.com/fangdu64/BDT/releases/download/v0.1.0/BDT-v0.1.0-Win64.zip).
+4. Extract it and all the required executables/scripts will be in the extracted directory.
 
