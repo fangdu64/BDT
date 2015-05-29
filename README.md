@@ -21,19 +21,22 @@ BDT runs on the following platforms:
 3. Build and install BDT:
 
         $ make bdt_home={install_path}
-where {install_path} is an installation directory (has to be an absolute directory). The directory will be created if it does not exist.
+where {install_path} is an installation directory (has to be an absolute path). The directory will be created if it does not exist.
 
 ## Installation On Mac OS X
-1. Download the latest source code:  [v0.1.0.tar.gz](https://github.com/fangdu64/BDT/archive/v0.1.0.tar.gz)
-2. Extract and go to the extracted directory:
+1. Ensure that the Xcode Command Line Tools is installed. Ohterwise open the Terminal and type:
+
+        $ xcode-select --install
+A pop-up windows will appears asking you about install tools.
+2. Download the latest source code:  [v0.1.0.tar.gz](https://github.com/fangdu64/BDT/archive/v0.1.0.tar.gz)
+3. Extract and go to the extracted directory:
 
         $ tar xfz v0.1.0.tar.gz
         $ cd BDT-v0.1.0
-3. Ensure that the Xcode Command Line Tools is installed. Use 'xxx' otherwise.
 4. Build and install BDT:
 
         $ make bdt_home={install_path}
-where {install_path} is an installation directory (has to be an absolute directory). The directory will be created if it does not exist.
+where {install_path} is an installation directory (has to be an absolute path). The directory will be created if it does not exist.
 
 ## Installation On Windows
 1. Ensure that the Python3.3.3 (64-bit) is installed. Use 'xxx' otherwise.
