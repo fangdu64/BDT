@@ -54,3 +54,7 @@ where {install_path} is an installation directory (has to be an absolute path). 
 3. Download BDT executable zip [BDT-v0.1.0-win64.zip](https://github.com/fangdu64/BDT/releases/download/v0.1.0/BDT-v0.1.0-Win64.zip).
 4. Extract it and all the required executables/scripts will be in the extracted directory.
 
+# Authors
+[Fang Du](https://www.linkedin.com/pub/fang-du/73/424/786)
+[Hongkai Ji](http://www.biostat.jhsph.edu/~hji/)
+
