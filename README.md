@@ -7,7 +7,9 @@ understand data structure. High-throughput genomic data have heterogeneous sourc
 - Implemented with efficient C++ language
 - Fully exploits multi-core/multi-cpu computation power
 - Ability to handle very large scale data  (e.g., a 30,000,000 × 500 data matrix)
-- Ability to directly take a large number of BAM files as input
+- Ability to directly take a large number of BAM files as input with multi-core parallel processing
+- Provides command line tools
+- Provides R package to run BDVD and retrieve results
 
 In addition, BDVD naturally outputs normalized biological variations for downstream statistical inferences such as clustering large scale genomic loci with BigClust that is also provided in BDT.
 
