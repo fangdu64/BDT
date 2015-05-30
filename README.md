@@ -1,7 +1,15 @@
 # Introduction
 Big Data Tools (BDT) is a computational framework for analyzing very large scale genomic data. Currently, it offers several unique tools.
 
-## BDVD
+## BDVD：Big Data Variance Decomposition for High-throughput Genomic Data
+Variance decomposition (e.g., ANOVA, PCA) is a fundamental tool in statistics to
+understand data structure. High-throughput genomic data have heterogeneous sources of variation. Some are of biological interest, and others are unwanted (e.g., lab and batch effects). Knowing the relative contribution of each source to the total data variance is crucial for making data-driven discoveries. However, when one has massive amounts of high-dimensional data with heterogeneous origins, analyzing variances is non-trivial. The dimension, size and heterogeneity of the data all pose significant challenges. Big Data Variance Decomposition (BDVD) is a new tool developed to solve this problem. Built upon the recently developed RUV approach, BDVD decomposes data into biological signals, unwanted systematic variation, and independent random noise. The biological signals can then be further decomposed to study variations among genomic loci or sample types, or correlation between different data types. The algorithm is implemented by incorporating techniques to handle big data and offers several unique features:
+- Implemented with efficient C++ language
+- Fully exploits multi-core/multi-cpu computation power
+- Ability to handle very large scale data  (e.g., a 30,000,000 × 500 data matrix)
+- Ability to directly take a large number of BAM files as input
+
+In addition, BDVD naturally outputs normalized biological variations for downstream statistical inferences such as clustering large scale genomic loci with BigClust that is also provided in BDT.
 
 ## BigClust
 
