@@ -9,7 +9,7 @@ understand data structure. High-throughput genomic data have heterogeneous sourc
 - Ability to handle very large scale data  (e.g., a 30,000,000 × 500 data matrix)
 - Ability to directly take a large number of BAM files as input with multi-core parallel processing
 - Provides command line tools
-- Provides R package to run BDVD and retrieve results
+- Provides R package to run BDVD and for seamless integration
 - Transparency/open-source code
 - Easy installation - one liner command, no root user required
 
