@@ -10,6 +10,8 @@ understand data structure. High-throughput genomic data have heterogeneous sourc
 - Ability to directly take a large number of BAM files as input with multi-core parallel processing
 - Provides command line tools
 - Provides R package to run BDVD and retrieve results
+- Transparency/open-source code
+- Easy installation - one liner command, no root user required
 
 In addition, BDVD naturally outputs normalized biological variations for downstream statistical inferences such as clustering large scale genomic loci with BigClust that is also provided in BDT.
 
