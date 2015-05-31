@@ -15,7 +15,21 @@ understand data structure. High-throughput genomic data have heterogeneous sourc
 
 In addition, BDVD naturally outputs normalized biological variations for downstream statistical inferences such as clustering large scale genomic loci with BigClust that is also provided in BDT.
 
-## BigClust
+## BigClust: Big Data Clustering Methods
+Cluster analysis is the task of assigning a set of elements into groups (clusters) on the basis of their similarity. BigClust offers several tools to quickly perform clustering for very large scale dataset. 
+
+### BigKmeans
+BigKmeans enhences the widely used K-means with important improvments making it very suitable for big data.
+- Improved the seeding (choosing initial centroids) with kmeans++
+- Ability to evaluate optimal K with no extra computational cost
+- Implemented with efficient C++ language
+- Fully exploits multi-core/multi-cpu computation power
+- Ability to handle very large scale data  (e.g., a 30,000,000 × 500 data matrix)
+- Built-in ability to exploit multi-machine resources with distriubted computing for super large dataset
+- Provides command line tools
+- Provides R package to run BDVD and for seamless integration
+- Transparency/open-source code
+- Easy installation - one liner command, no root user required
 
 # Installation
 ## Platforms
