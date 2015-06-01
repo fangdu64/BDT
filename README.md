@@ -27,7 +27,7 @@ BigKmeans enhences the widely used K-means with important improvments making it 
 - Ability to handle very large scale data  (e.g., a 30,000,000 × 500 data matrix)
 - Built-in ability to exploit multi-machine resources with distriubted computing for super large dataset
 - Provides command line tools
-- Provides R package to run BDVD and for seamless integration
+- Provides R package to run BigKmeans and for seamless integration
 - Transparency/open-source code
 - Easy installation - one liner command, no root user required
 
