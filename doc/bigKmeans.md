@@ -1,4 +1,4 @@
-# BigKmeans Usage
+# BigKmeans Manual
 
 ## Using BigKmeans
 ```shell
