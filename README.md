@@ -70,6 +70,10 @@ where {install_path} is an installation directory (has to be an absolute path). 
 3. Download BDT executable zip [BDT-v0.1.0-win64.zip](https://github.com/fangdu64/BDT/releases/download/v0.1.0/BDT-v0.1.0-Win64.zip).
 4. Extract it and all the required executables/scripts will be in the extracted directory.
 
+# Usage
+- [BDVD Manual](https://github.com/fangdu64/BDT/blob/master/doc/bdvd.md)
+- [BigKmeans Manual](https://github.com/fangdu64/BDT/blob/master/doc/bigKmeans.md)
+
 # Authors
 [Fang Du](https://www.linkedin.com/pub/fang-du/73/424/786), [Bing He](http://www.biostat.jhsph.edu/~hji/index_files/people.htm), [Ben Sherwood](http://www.biostat.jhsph.edu/~hji/index_files/people.htm), [Hongkai Ji](http://www.biostat.jhsph.edu/~hji/)
 
