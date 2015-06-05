@@ -12,8 +12,8 @@ Options:
 - ```--out```: the output directory. The directory will be created if it does not exist.
 - ```--thread-num```: the number of threads to be used for running bigKmeans
 - ```--dist-type```: the distance measure for calculation the distance between rows
-- ```--max-iter```: the maximum number of iterations allowed
-- ```--min-expchg```: the minimum change of fraction of varaince explained by centroids in a 3 consecutive iteratino, once the change is smaller than the specified threshold, bigKmeans will terminate.
+- ```--max-iter```: the maximum number of iterations allowed. The default is 100.
+- ```--min-expchg```: the minimum change of fraction of varaince explained by centroids in a 3 consecutive iteratino, once the change is smaller than the specified threshold, bigKmeans will terminate. The default is 0.0001.
 - ```--start-from```: there can be 3 steps in running bigKmeans: ```1-data-mat```, ```2-seeds-mat``` (when --seed-input is used), ```3-run-kmeans```, by default the program will start from ```1-data-mat```, i.e., reading input data and representes it internally as a binary matrix. This option allows the bigKmeans to skip some of the steps. For example, when there is a need to run bigKmeans with different number of clusters (ks), the user can use ```--start-from 3-run-kmeans``` with a different ```--k```, so that skipping the process of loading the input data again.
 - ```--seed-input```: the initial k centroids can be optionally specified with the same syntax as ```--data-input```. This can be used for example to reproduce the clustering with the initial seeds previously used.
 
