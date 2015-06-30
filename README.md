@@ -75,5 +75,7 @@ where {install_path} is an installation directory (has to be an absolute path). 
 - [BigKmeans Manual](https://github.com/fangdu64/BDT/blob/master/doc/bigKmeans.md)
 
 # Authors
-[Fang Du](https://www.linkedin.com/pub/fang-du/73/424/786), [Bing He](http://www.biostat.jhsph.edu/~hji/index_files/people.htm), [Ben Sherwood](http://www.biostat.jhsph.edu/~hji/index_files/people.htm), [Hongkai Ji](http://www.biostat.jhsph.edu/~hji/)
+BDVD: [Fang Du](https://www.linkedin.com/pub/fang-du/73/424/786), [Bing He](http://www.biostat.jhsph.edu/~hji/index_files/people.htm), [Hongkai Ji](http://www.biostat.jhsph.edu/~hji/)
+
+BigClust: [Fang Du](https://www.linkedin.com/pub/fang-du/73/424/786), [Ben Sherwood](http://www.biostat.jhsph.edu/~hji/index_files/people.htm), [Hongkai Ji](http://www.biostat.jhsph.edu/~hji/)
 
