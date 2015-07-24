@@ -20,10 +20,8 @@ class CGlobalVars
 {
 public:
 	CGlobalVars(
-		Ice::CommunicatorPtr communicator,
-		iBS::ProxyCentralServicePrx& pcPrx)
-		:theCommunicator(communicator),
-		thePCPrx(pcPrx)
+		Ice::CommunicatorPtr communicator)
+		:theCommunicator(communicator)
 	{
 		iBSInternal::GlobalVars::_ptrGV = this;
 		theWorkerCnt=4;
@@ -35,7 +33,6 @@ public:
 	static CGlobalVars* get();
 public:
 	Ice::CommunicatorPtr theCommunicator;
-	iBS::ProxyCentralServicePrx& thePCPrx;
 	iBS::KMeanServerServicePrx theKMeanPrx;
 	CKMeanWorkerMgr* theKMeanWorkerMgr;
 	int theWorkerCnt;

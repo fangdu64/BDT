@@ -33,16 +33,5 @@ const Ice::Current& current)
 CKMeanContractorAdminServiceImpl::ResetRootProxy( const ::std::string& pcProxyStr,
                                                   const Ice::Current& current)
 {
-	IceUtil::Mutex::Lock lock(m_mutex);
-
-	ProxyCentralServicePrx pcPrx = ProxyCentralServicePrx::checkedCast(
-		m_gv.theCommunicator->stringToProxy(pcProxyStr));
-    if(!pcPrx)
-    {
-        return 0;
-    }
-
-	m_gv.thePCPrx=pcPrx;
-
 	return 1;
 }
