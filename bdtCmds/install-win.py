@@ -84,6 +84,10 @@ def main(argv=None):
     bdtRDestDir = bdtInstallDir+"\\bdt\\bdtR\\outputTemplates"
     install_copyDir(bdtRSrcDir, bdtRDestDir)
 
+    bdtRSrcDir = os.path.abspath(bdtCmdsDir+"\\..\\bdtR\\Bioconductor")
+    bdtRDestDir = bdtInstallDir+"\\bdt\\bdtR\\Bioconductor"
+    install_copyDir(bdtRSrcDir, bdtRDestDir)
+
 
     # install bdtPy
     bdtPySrcDir = os.path.abspath(bdtCmdsDir+"\\..\\bdtPy")
@@ -95,7 +99,8 @@ def main(argv=None):
     shortCutCmds = [
         'bigKmeans.py',
         'bdvd.py',
-        'bigMat.py']
+        'bigMat.py',
+        'bigKmeansC.py',]
     for cmdFile in cmdFiles:
         if cmdFile[-3:] != '.py':
             continue

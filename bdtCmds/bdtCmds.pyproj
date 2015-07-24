@@ -29,6 +29,7 @@
     <Compile Include="bdvd-ruv.py" />
     <Compile Include="bdvd-vd.py" />
     <Compile Include="bdvd.py" />
+    <Compile Include="bigKmeansC.py" />
     <Compile Include="bigclust-kmeans++.py" />
     <Compile Include="bigMat.py" />
     <Compile Include="bigKmeans.py" />

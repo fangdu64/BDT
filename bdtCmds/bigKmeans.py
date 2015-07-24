@@ -77,6 +77,7 @@ class BigKmeansParams:
         self.seeding_method = gSeedingMethod[0]
         self.seeds_params = None
         self.seeds_indir = None
+        self.slave_num = None
 
     def parse_options(self, argv):
         dataParams = bigMatUtil.BigMatParams()
@@ -98,7 +99,8 @@ class BigKmeansParams:
                 "k=",
                 "max-iter=",
                 "min-expchg=",
-                "seeding-method="])
+                "seeding-method=",
+                "slave-num="])
 
         except getopt.error as msg:
             raise Usage(msg)
@@ -112,6 +114,8 @@ class BigKmeansParams:
                 raise Usage(use_message)
             if option in ("-p", "--thread-num"):
                 self.kmeansc_workercnt = int(value)
+            if option =="--slave-num":
+                self.slave_num = int(value)
             if option in ("-o", "--out"):
                 self.output_dir = value
             if option =="--start-from":
@@ -234,6 +238,8 @@ def s03_kmeansPP(datamatPickle, seedsmatPickle):
                 "--output-dir",nodeDir])
     if seedsmatPickle is not None:
        node_cmd.extend(["--seeds-mat", seedsmatPickle])
+    if gParams.slave_num is not None:
+       node_cmd.extend(["--slave-num", str(gParams.slave_num)])
     node_cmd.append(design_fn)
     shell_cmd=""
     for strCmd in node_cmd:

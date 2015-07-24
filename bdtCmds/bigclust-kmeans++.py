@@ -82,6 +82,7 @@ class BDVDParams:
         self.kmeansc_tcp_port=16011
         self.kmeansc_workercnt =4
         self.kmeansc_ramsize =4000
+        self.slave_num = 0
 
     def parse_options(self, argv):
         try:
@@ -95,7 +96,8 @@ class BDVDParams:
                                          "bigmat-dir=",
                                          "datamat=",
                                          "seeds-mat=",
-                                         "tmp-dir="])
+                                         "tmp-dir=",
+                                         "slave-num="])
         except getopt.error as msg:
             raise Usage(msg)
 
@@ -109,6 +111,9 @@ class BDVDParams:
             if option in ("-p", "--num-threads"):
                 self.num_threads = int(value)
                 self.fcdc_fvworker_size = self.num_threads
+                self.kmeansc_workercnt = self.num_threads
+            if option =="--slave-num":
+                self.slave_num = int(value)
             if option in ("-m", "--max-mem"):
                 self.max_mem = int(value)
             if option in ("-o", "--output-dir"):
@@ -194,6 +199,7 @@ def prepareKMeansProject(facetAdminPrx, fcdcPrx, kmeansSAdminPrx, dataOIDs, data
     rqstProj.SeedsFeatureIdxFrom=0
     rqstProj.GIDForKClusters=0
     rqstProj.OIDForFeature2ClusterIdx=0
+    rqstProj.ExpectedContractorCnt = 1 + gParams.slave_num
     return rqstProj
 
 def saveKMeansResult(fcdcPrx, computePrx, kmeansServerPrx,proj, dataMat):
@@ -470,8 +476,7 @@ def main(argv=None):
         # launch KMeans Server
         # -----------------------------------------------------------
         gParams.kmeanss_tcp_port = bdtUtil.getUsableTcpPort()
-        gRunner.prepare_kmeansserver_config(gParams.fcdc_tcp_port, 
-                                  gParams.kmeanss_tcp_port)
+        gRunner.prepare_kmeansserver_config(gParams.kmeanss_tcp_port)
         gRunner.launchKMeansServer()
 
         kmeanssHost="KMeanServerAdminService:default -h localhost -p {0}".format(gParams.kmeanss_tcp_port)
@@ -486,9 +491,14 @@ def main(argv=None):
 
         if kmeansSAdminPrx is None:
             raise Usage("connection timeout")
-
+        #gRunner.log(kmeansSAdminPrx.ice_toString())
         kmeansServerPrx=kmeansSAdminPrx.GetKMeansSeverProxy()
-    
+        #gRunner.log(kmeansServerPrx.ice_toString())
+        if gParams.slave_num > 0:
+            hosts = ",".join([e.getInfo().host for e in kmeansServerPrx.ice_getEndpoints()])
+            ports = [e.getInfo().port for e in kmeansServerPrx.ice_getEndpoints()]
+            gRunner.log("bigKmeans Master: --master-host {0} --master-port {1}".format(hosts, ports[0]))
+
         gRunner.log("KMeans Server activated")
 
         rqstProj = prepareKMeansProject(facetAdminPrx, fcdcPrx, kmeansSAdminPrx, dataOIDs, dataMat, seedOIDs)
@@ -498,9 +508,8 @@ def main(argv=None):
         # launch KMeans Contractor
         # -----------------------------------------------------------
         gParams.kmeansc_tcp_port = bdtUtil.getUsableTcpPort()
-        gRunner.prepare_kmeansc_config(gParams.fcdc_tcp_port, 
-                                  gParams.kmeansc_tcp_port)
-        #print("kmeansc_tcp_port = ",gParams.kmeansc_tcp_port)
+        gRunner.prepare_kmeansc_config(gParams.kmeansc_tcp_port)
+
         gRunner.launchKMeansContractor()
 
         kmeanscHost="KMeanContractorAdminService:default -h localhost -p {0}".format(gParams.kmeansc_tcp_port)
@@ -521,13 +530,28 @@ def main(argv=None):
         # Run KMeans
         # -----------------------------------------------------------
         kmeansCAdminPrx.StartNewContract(retProj.ProjectID,kmeansServerPrx)
-        time.sleep(4)
+        preMsg = ""
+        amdTaskID = retProj.WaitForContractorsTaskId
+        amdTaskFinished = False
+        gRunner.log("")
+        gRunner.log("Expect {0} contractors".format(retProj.ExpectedContractorCnt))
+        while (not amdTaskFinished):
+            (rt,amdTaskInfo)=kmeansSAdminPrx.GetAMDTaskInfo(amdTaskID)
+            thisMsg="task: {0}, processed: {1}/{2}".format(amdTaskInfo.TaskName, amdTaskInfo.FinishedCnt, amdTaskInfo.TotalCnt)
+            if preMsg!=thisMsg:
+                preMsg = thisMsg
+                gRunner.log(thisMsg)
+            if amdTaskInfo.Status!=iBS.AMDTaskStatusEnum.AMDTaskStatusNormal:
+                amdTaskFinished = True;
+            else:
+                time.sleep(2)
+
         (rt, amdTaskID)=kmeansSAdminPrx.LaunchProjectWithCurrentContractors(retProj.ProjectID)
 
         preMsg=""
         amdTaskFinished=False
         gRunner.log("")
-        gRunner.log("Running KMeans++ seeds with {0} threads".format(gParams.kmeansc_workercnt))
+        gRunner.log("Running KMeans++ seeds with {0} threads".format(gRunner.kmeansc_workercnt))
         while (not amdTaskFinished):
             (rt,amdTaskInfo)=kmeansSAdminPrx.GetAMDTaskInfo(amdTaskID)
             thisMsg="task: {0}, batch processed: {1}/{2}".format(amdTaskInfo.TaskName, amdTaskInfo.FinishedCnt, amdTaskInfo.TotalCnt)
