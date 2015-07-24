@@ -2,6 +2,7 @@
 
 export(bdvd)
 export(bigKmeans)
+export(bigKmeansC)
 export(bigMat)
 export(readBdvdOutput)
 export(readBigKmeansOutput)

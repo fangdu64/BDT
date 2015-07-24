@@ -39,6 +39,7 @@ bigKmeans <- function(bdt_home,
                       seeds_nrow = NULL,
                       seeds_ncol = NULL,
                       start_from = NULL,
+                      slave_num = NULL,
                       out) {
     cmds = c(
         'py',
@@ -80,6 +81,10 @@ bigKmeans <- function(bdt_home,
 
     if (!is.null(start_from)) {
         cmds <- append(cmds, c('--start-from', start_from))
+    }
+
+    if (!is.null(slave_num)) {
+        cmds <- append(cmds, c('--slave-num', slave_num))
     }
 
     if (.Platform$OS.type == "windows") {
