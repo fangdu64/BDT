@@ -41,6 +41,9 @@ CKMeanServerAdminServiceImpl::GetBlankProject(::iBS::KMeanProjectInfoPtr& retPro
 	retProjectInfo->TotalRowCnt= 0;
 	retProjectInfo->ProjectStatus = iBS::KMeanProjectStatusUnknown;
 	retProjectInfo->ContractorCnt = 0;
+	retProjectInfo->ExpectedContractorCnt = 1;
+	retProjectInfo->WaitForContractorsTaskId = 0;
+	retProjectInfo->RunKmeansTaskId = 0;
     return 1;
 }
 
@@ -70,10 +73,9 @@ CKMeanServerAdminServiceImpl::LaunchProjectWithCurrentContractors(
 			taskName= " KMeans++ Seeds";
 		}
 
-		taskID = m_gv.theAMDTaskMgr.RegisterAMDTask(
-			taskName, 0);
+		taskID = kmeanPtr->GetProjectInfo()->RunKmeansTaskId;
 
-		return kmeanPtr->LaunchProjectWithCurrentContractors(projectID, taskID);
+		return kmeanPtr->LaunchProjectWithCurrentContractors(projectID);
 	}
 	else
 	{
@@ -107,6 +109,20 @@ CKMeanServerAdminServiceImpl::DestroyProject(::Ice::Int projectID,
 		ex.reason = " invalid projectID";
 		throw ex;
 	}
+}
+
+::Ice::Int
+CKMeanServerAdminServiceImpl::GetActiveProject(::iBS::KMeanProjectInfoPtr& retProjectInfo,
+const Ice::Current& current)
+{
+	CKMeanProjectL2Ptr kmeanPtr = m_gv.theKMeanMgr->GetActiveProject();
+	if (kmeanPtr)
+	{
+		retProjectInfo = kmeanPtr->GetProjectInfo();
+		return 1;
+	}
+	
+	return 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -144,6 +160,7 @@ CKMeanServerServiceImpl::RequestToBeContractor_async(
 			cb,projectID,contractorName,workerCnt,ramSize);
 
 		kmeanPtr->RequestToBeContractor(item);
+
 	}
 }
 

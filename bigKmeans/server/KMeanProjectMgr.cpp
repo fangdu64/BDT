@@ -71,8 +71,25 @@ void CKMeanProjectMgr::UnInitilize()
 		retProjectInfo->ProjectStatus = iBS::KMeanProjectStatusWaitingForInitialContractors;
 		retProjectInfo->ContractorCnt = 0;
 
+		retProjectInfo->ExpectedContractorCnt = rqstProjectInfo->ExpectedContractorCnt;
+
+		retProjectInfo->WaitForContractorsTaskId =
+			m_gv.theAMDTaskMgr.RegisterAMDTask("WaitForContractors",
+			retProjectInfo->ExpectedContractorCnt);
+
+		string taskName = "Run KMeans";
+		if (retProjectInfo->Task == iBS::KMeansTaskPPSeeds)
+		{
+			taskName = " KMeans++ Seeds";
+		}
+
+		retProjectInfo->RunKmeansTaskId =
+			m_gv.theAMDTaskMgr.RegisterAMDTask(
+			taskName, 0);
+
 		CKMeanProjectL2Ptr kmeanl2Ptr = new CKMeanProjectL2(retProjectInfo);
 		m_l2Projects.insert(std::pair<int,CKMeanProjectL2Ptr>(retProjectInfo->ProjectID,kmeanl2Ptr));
+
 	}
 
 	return 1;
@@ -90,6 +107,19 @@ CKMeanProjectL2Ptr CKMeanProjectMgr::GetKMeanProjectL2ByProjectID(int projectID)
 	}
 	return kmeanl2Ptr;
 }
+
+CKMeanProjectL2Ptr CKMeanProjectMgr::GetActiveProject()
+{
+	IceUtil::Mutex::Lock lock(m_mutex);
+	CKMeanProjectL2Ptr kmeanl2Ptr;
+	KMeanProjectL2PtrMap_T::iterator it = m_l2Projects.find(this->m_currProjectMaxID);
+	if (it != m_l2Projects.end())
+	{
+		kmeanl2Ptr = it->second;
+	}
+	return kmeanl2Ptr;
+}
+
 
 ::Ice::Int CKMeanProjectMgr::DestroyProject(int projectID)
 {

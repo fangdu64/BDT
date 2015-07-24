@@ -29,6 +29,8 @@ public:
 
 	::Ice::Int DestroyProject(int projectID);
 
+	CKMeanProjectL2Ptr GetActiveProject();
+
 private:
 
 	

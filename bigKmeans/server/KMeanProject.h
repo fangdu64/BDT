@@ -27,8 +27,7 @@ public:
 public:
 	void RequestToBeContractor(const RequestToBeContractorPtr& itemPtr);
 
-	::Ice::Int
-		LaunchProjectWithCurrentContractors(::Ice::Int projectID, Ice::Long amdTaskID);
+	::Ice::Int LaunchProjectWithCurrentContractors(::Ice::Int projectID);
 
 	void ReportKCntsAndSums(const ReportKCntsAndSumsPtr& itemPtr);
 

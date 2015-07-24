@@ -38,6 +38,9 @@ public:
 	virtual ::Ice::Int GetAMDTaskInfo(::Ice::Long,
 		::iBS::AMDTaskInfo&,
 		const Ice::Current&);
+
+	virtual ::Ice::Int GetActiveProject(::iBS::KMeanProjectInfoPtr&,
+		const Ice::Current&);
 private:
 	CGlobalVars&	m_gv;
 };

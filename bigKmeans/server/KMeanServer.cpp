@@ -32,7 +32,6 @@ int main(int argc, char* argv[])
 void
 CKMeanServer::interruptCallback(int)
 {
-	CGlobalVars::get()->thePCPrx->UnRegister(CGlobalVars::get()->theServerName+"_Admin");
     communicator()->shutdown();
 }
 
@@ -43,16 +42,7 @@ int CKMeanServer::run(int argc, char* argv[])
 
 	Ice::PropertiesPtr properties = communicator()->getProperties();
 
-	
-	ProxyCentralServicePrx pcPrx = ProxyCentralServicePrx::checkedCast(
-		communicator()->propertyToProxy("ProxyCentralService.Proxy"));
-    if(!pcPrx)
-    {
-        cerr << argv[0] << ": invalid ProxyCentralService.Proxy" << endl;
-        return EXIT_FAILURE;
-    }
-
-	CGlobalVars gVars(communicator(), pcPrx);
+	CGlobalVars gVars(communicator());
 	gVars.theServerName=properties->getPropertyWithDefault("KMeansServer.Name","KMeanServer_untitled");
 
 	CKMeanProjectMgr theKMeanMgr(gVars);
@@ -65,11 +55,6 @@ int CKMeanServer::run(int argc, char* argv[])
 	CKMeanServerAdminServiceImplPtr adminService = new CKMeanServerAdminServiceImpl(gVars);
 	id.name="KMeanServerAdminService";
 	adapter->add(adminService, id);
-
-	iBS::KMeanServerAdminServicePrx kmeansSAdminPrx =
-		iBS::KMeanServerAdminServicePrx::uncheckedCast(
-		adapter->createProxy(id));
-	pcPrx->RegisterByProxyStr(gVars.theServerName + "_Admin", kmeansSAdminPrx->ice_toString());
 
 	CKMeanServerServiceImplPtr contractorService = new CKMeanServerServiceImpl(gVars);
 	id.name="KMeanServerService";

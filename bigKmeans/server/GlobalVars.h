@@ -21,10 +21,8 @@ class CGlobalVars
 {
 public:
 	CGlobalVars(
-		Ice::CommunicatorPtr communicator,
-		iBS::ProxyCentralServicePrx& pcPrx)
-		:theCommunicator(communicator),
-		thePCPrx(pcPrx)
+		Ice::CommunicatorPtr communicator)
+		:theCommunicator(communicator)
 	{
 		iBSInternal::GlobalVars::_ptrGV = this;
 		theKMeanMgr=0;
@@ -34,7 +32,6 @@ public:
 
 public:
 	Ice::CommunicatorPtr theCommunicator;
-	iBS::ProxyCentralServicePrx& thePCPrx;
 	CKMeanProjectMgr* theKMeanMgr;
 	std::string theServerName;
 	CAMDTaskMgr theAMDTaskMgr;

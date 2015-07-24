@@ -72,6 +72,10 @@ module iBS
 		long    TotalRowCnt;    //FeatureIdxTo-FeatureIdxFrom
 		KMeanProjectStatusEnum ProjectStatus;
 		int		ContractorCnt;
+
+		int		ExpectedContractorCnt;
+		long	WaitForContractorsTaskId;
+		long	RunKmeansTaskId;
 	};
 
 	enum KMeanSvrMsgEnum
@@ -195,6 +199,9 @@ module iBS
 			throws ArgumentException;
 
 		int GetAMDTaskInfo(long taskID, out AMDTaskInfo task)
+			throws ArgumentException;
+
+		int GetActiveProject(out KMeanProjectInfo retProjectInfo)
 			throws ArgumentException;
 	};
 

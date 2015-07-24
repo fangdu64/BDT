@@ -15,7 +15,7 @@ CKMeanProjectL2::CKMeanProjectL2(const KMeanProjectInfoPtr& projectPtr)
 m_rand01(boost::random::mt19937(std::time(0)))
 {
 	m_seedsPoolSize = 0;
-	m_amdTaskID = 0;
+	m_amdTaskID = m_projectPtr->RunKmeansTaskId;
 	m_batchTaskIdx = 0;
 	m_KDistortion = 0;
 	m_KDistortion_k1 = 0;
@@ -34,13 +34,18 @@ void CKMeanProjectL2::RequestToBeContractor(const RequestToBeContractorPtr& item
 	cout<<IceUtil::Time::now().toDateTime()<< " RequestToBeContractor, ContractorName="<<itemPtr->m_contractorName<<endl; 
 
 	m_requestToBeContractorItems.push_back(itemPtr);
+
+	CGlobalVars::get()->theAMDTaskMgr.UpdateAMDTaskProgress(m_projectPtr->WaitForContractorsTaskId, 1);
+	if (m_requestToBeContractorItems.size() >= m_projectPtr->ExpectedContractorCnt)
+	{
+		CGlobalVars::get()->theAMDTaskMgr.SetAMDTaskDone(m_projectPtr->WaitForContractorsTaskId);
+	}
 }
 
 ::Ice::Int
-CKMeanProjectL2::LaunchProjectWithCurrentContractors(::Ice::Int projectID, Ice::Long amdTaskID)
+CKMeanProjectL2::LaunchProjectWithCurrentContractors(::Ice::Int projectID)
 {
 	IceUtil::Mutex::Lock lock(m_mutex);
-	m_amdTaskID = amdTaskID;
 	if(m_projectPtr->ProjectStatus
 		!=iBS::KMeanProjectStatusWaitingForInitialContractors)
 	{
