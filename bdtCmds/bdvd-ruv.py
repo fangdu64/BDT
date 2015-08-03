@@ -271,6 +271,7 @@ def saveResults(fcdcPrx, bdvdFacetAdminPrx):
     fn = os.path.abspath("{0}/{1}".format(gParams.output_dir,gParams.result_dumpfile))
     outObj = iBSDefines.BdvdRuvOutDefine()
     
+    outObj.BigMatDir = gParams.bigmat_dir
     outObj.RuvFaceInfo = rfi
 
     # eigen values
@@ -336,9 +337,6 @@ def main(argv=None):
     gRunner = bigMatUtil.bigMatRunner(iBSConfig.BDT_HomeDir, 'bdvd')
 
     run_argv = sys.argv[:]
-
-    global fcdc_popen
-    fcdc_popen = None
 
     try:
         if argv is None:
