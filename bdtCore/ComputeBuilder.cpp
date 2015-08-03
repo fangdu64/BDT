@@ -10,6 +10,8 @@
 #include <bdtUtil/RowAdjustHelper.h>
 #include <bdtUtil/SortHelper.h>
 #include <armadillo>
+#include <FeatureObserverDB.h>
+#include <CommonHelper.h>
 #include <FeatureValueStoreMgr.h>
 #include <StatisticsHelper.h>
 #include <FeatureValueWorkerMgr.h>
@@ -2152,13 +2154,50 @@ iBS::FeatureObserverSimpleInfoPtr CExportByRowIdxsBuilder::GetOutputFOI()
 	foiPtr->ObserverGroupSize = (int)m_task.SampleIDs.size();
 	foiPtr->IdxInObserverGroup = 0;
 
+	if (!m_task.OutFile.empty())
+	{
+		foiPtr->StoreLocation = iBS::FeatureValueStoreLocationSpecified;
+		foiPtr->SpecifiedPathPrefix = m_task.OutFile;
+	}
+
 	return foiPtr;
 }
 
 void CExportByRowIdxsBuilder::Export(::Ice::Long ramMb)
 {
+	if (m_task.FeatureIdxsOid > 0) 
+	{
+		iBS::FeatureObserverSimpleInfoVec fois;
+		CGlobalVars::get()->theObserversDB.GetFeatureObservers(
+			iBS::IntVec(1, m_task.FeatureIdxsOid), fois);
+		if (fois.empty())
+		{
+			std::cout << IceUtil::Time::now().toDateTime() << " FeatureIdxsOid not exist" << endl;
+			CGlobalVars::get()->theFeatureValueWorkerMgr->UpdateAMDTaskProgress(m_task.TaskID, 0, iBS::AMDTaskStatusFailure);
+			return;
+		}
+
+		iBS::FeatureObserverSimpleInfoPtr& foi = fois[0];
+
+		Ice::Long rowCnt = foi->DomainSize;
+
+		::IceUtil::ScopedArray<Ice::Double>  rowIdxs(new ::Ice::Double[rowCnt]);
+		if (!rowIdxs.get()){
+			CGlobalVars::get()->theFeatureValueWorkerMgr->UpdateAMDTaskProgress(m_task.TaskID, 0, iBS::AMDTaskStatusFailure);
+			return;
+		}
+
+		CFeatureValueHelper::GetDoubleVecInRAM(foi, rowIdxs.get());
+		m_task.FeatureIdxs.resize(rowCnt, 0);
+
+		for (Ice::Long i = 0; i < rowCnt; i++)
+		{
+			m_task.FeatureIdxs[i] = (Ice::Long)rowIdxs[i];
+		}
+	}
+	
 	::Ice::Long TotalRowCnt = m_task.FeatureIdxs.size();
-	if (TotalRowCnt < 2000000)
+	if (TotalRowCnt < 500000)
 	{
 		ExportBySampleRowMatrix(ramMb);
 	}
