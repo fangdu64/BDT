@@ -38,7 +38,11 @@ import Ice
 gParams=None
 gRunner=None
 gSteps = ['1-row-idxs','2-run-export']
-gRowSelectors = ["all", "range", "specified-rows"]
+gRowSelectors = ['all', 'range', 'specified-rows']
+gComponentLevels =['sample', 'group']
+gComponents = ['signal', 'artifact', 'random']
+gScales = ['mlog', 'original']
+gArtifactDetections = ['aggressive', 'conservative']
 
 class BDVDParams:
     def __init__(self):
@@ -57,6 +61,10 @@ class BDVDParams:
         self.rowidxs_indir = None
         self.column_ids = None
         self.bdvd_dir = None
+        self.export_component = None
+        self.component_level = gComponentLevels[0]
+        self.export_scale =gScales[0]
+        self.artifact_detection =gArtifactDetections[0]
 
     def parse_options(self, argv):
         rowIdxsParams = bigMatUtil.BigMatParams()
@@ -75,7 +83,11 @@ class BDVDParams:
                 "row-selector=",
                 "rowidx-from=",
                 "rowidx-to=",
-                "bdvd-dir="])
+                "bdvd-dir=",
+                "component=",
+                "level=",
+                "scale=",
+                "artifact-detection"])
 
         except getopt.error as msg:
             raise iBSDefines.BdtUsage(msg)
@@ -112,9 +124,29 @@ class BDVDParams:
                 self.start_from = value
             if option =="--bdvd-dir":
                 self.bdvd_dir = value
+            if option == "--component":
+                allowedValues = gComponents;
+                if value not in allowedValues:
+                    raise iBSDefines.BdtUsage('--component should be one of the {0}'.format(allowedValues))
+                self.export_component = value
+            if option == "--level":
+                allowedValues = gComponentLevels;
+                if value not in allowedValues:
+                    raise iBSDefines.BdtUsage('--level should be one of the {0}'.format(allowedValues))
+                self.component_level = value
+            if option == "--scale":
+                allowedValues = gScales;
+                if value not in allowedValues:
+                    raise iBSDefines.BdtUsage('--scale should be one of the {0}'.format(allowedValues))
+                self.export_scale = value
+            if option == "--artifact-detection":
+                allowedValues = gArtifactDetections;
+                if value not in allowedValues:
+                    raise iBSDefines.BdtUsage('--artifact-detection should be one of the {0}'.format(allowedValues))
+                self.artifact_detection = value
 
-        requiredNames = ['--out', '--bdvd-dir', '--column-ids']
-        providedValues = [self.output_dir, self.bdvd_dir, self.column_ids]
+        requiredNames = ['--out', '--bdvd-dir', '--column-ids', '--component']
+        providedValues = [self.output_dir, self.bdvd_dir, self.column_ids, self.export_component]
         noneIdx = bdtUtil.getFirstNone(providedValues)
         if noneIdx != -1:
             raise iBSDefines.BdtUsage("{0} is required".format(requiredNames[noneIdx]))
@@ -144,7 +176,7 @@ def s01_rowidxs():
         gParams.remove_before_run,
         gParams.rowidxs_params)
 
-def s02_run_export(datamatPickle, ctrlRowPickle):
+def s02_run_export(datamatPickle, rowIdxsPickle):
     nodeName = gSteps[2]
     featureIdxFrom = None
     featureIdxTo = None
@@ -156,24 +188,18 @@ def s02_run_export(datamatPickle, ctrlRowPickle):
         gParams.pipeline_rundir,
         gParams.dry_run,
         gParams.remove_before_run,
-        datamatPickle,
-        ctrlRowPickle,
-        gParams.sample_groups,
-        gParams.known_factors,
-        gParams.pre_normalization,
-        gParams.common_column_sum,
-        gParams.ruv_type,
-        gParams.ruv_rowwise_adjust,
-        gParams.control_rows_method,
-        gParams.weak_signal_lb,
-        gParams.weak_signal_ub,
-        gParams.lower_quantile_threshold,
-        gParams.all_in_quantile_fraction,
-        featureIdxFrom,
-        featureIdxTo,
+        rowIdxsPickle,
+        gParams.row_selector,
+        gParams.rowidx_from,
+        gParams.rowidx_to,
+        gParams.column_ids,
         gParams.workercnt,
         gParams.memory_size,
-        gParams.permutation_cnt)
+        gParams.bdvd_dir,
+        gParams.export_component,
+        gParams.component_level,
+        gParams.export_scale,
+        gParams.artifact_detection);
 
 def outputR():
     obj = iBSDefines.loadPickle(

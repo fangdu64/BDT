@@ -195,7 +195,12 @@ def run_bdvd_ruv_export(
     rowidx_to,
     column_ids,
     workercnt,
-    memory_size
+    memory_size,
+    bdvd_dir,
+    component,
+    component_level,
+    scale,
+    artifact_detection
     ):
 
     nodeDir = os.path.abspath("{0}/{1}".format(runDir, nodeName))

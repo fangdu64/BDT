@@ -456,8 +456,9 @@ module iBS
 
 	enum RUVOutputScaleEnum
 	{
-		RUVOutputScaleLog = 0,	//
+		RUVOutputScaleLog = 0,	// natural log
 		RUVOutputScaleRaw = 1,	//
+		RUVOutputScaleLog2 = 2,	//
 	};
 
 	enum RUVInputAdjustEnum
