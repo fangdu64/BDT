@@ -520,6 +520,7 @@ CComputeServiceImpl::GetBlankExportByRowIdxsTask(const Ice::Current& current)
 	task.PerRqstLimitInMBytes = 250;
 	task.RowAdjust = ::iBS::RowAdjustNone;
 	task.ValueAdjust = ::iBS::ValueAdjustNone;
+	task.FeatureIdxsOid = 0; // if >0, assuming using BigVec
 	return task;
 }
 

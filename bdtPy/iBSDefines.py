@@ -157,6 +157,7 @@ class NodeRunSummaryDefine:
 
 class BdvdRuvOutDefine:
     def __init__(self):
+        self.BigMatDir = None
         self.RuvFaceInfo = None
         self.EigenValues = None
         self.EigenVectors = None

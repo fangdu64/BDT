@@ -148,6 +148,7 @@ module iBS
 		long	PerRqstLimitInMBytes;
 		RowAdjustEnum RowAdjust;
 		ValueAdjustEnum ValueAdjust;
+		int		FeatureIdxsOid;
 	};
 	sequence<ExportByRowIdxsTask> ExportByRowIdxsTaskVec;
 
