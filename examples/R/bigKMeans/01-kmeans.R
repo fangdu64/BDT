@@ -1,9 +1,9 @@
 rm(list=ls())
 library("bdt")
 
-bdtDatasetsDir = 'D:/bdtDatasets'
-thisScriptDir = 'D:/BDT/examples/R/bigKMeans'
-bdt_home = 'D:/BDT/build/windows/install'
+bdtDatasetsDir = 'C:/work/bdtDatasets'
+thisScriptDir = 'C:/work/BDT/examples/R/bigKMeans'
+bdt_home = 'C:/work/BDT/build/windows/install'
 
 ret = bigKmeans(
     bdt_home = bdt_home,
