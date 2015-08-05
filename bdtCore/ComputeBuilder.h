@@ -180,7 +180,7 @@ class CExportRowMatrixBuilder
 {
 public:
 	CExportRowMatrixBuilder(
-		const ::iBS::ExportRowMatrixTask& task);
+		const ::iBS::ExportRowMatrixTask& task, Ice::Long taskID);
 
 	virtual ~CExportRowMatrixBuilder();
 
@@ -193,6 +193,7 @@ private:
 	iBS::FeatureObserverSimpleInfoPtr GetOutputFOI();
 private:
 	::iBS::ExportRowMatrixTask m_task;
+	Ice::Long m_taskID;
 };
 
 

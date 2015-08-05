@@ -110,10 +110,12 @@ module iBS
 		int     OutID;
 		string	OutFile;
 		string  OutPath;
+		long	PerRqstLimitInMBytes;
 		FeatureValueEnum ConvertToType;
 		RowAdjustEnum RowAdjust;
 		ValueAdjustEnum ValueAdjust;
 	};
+	sequence<ExportRowMatrixTask> ExportRowMatrixTaskVec;
 
 	struct ExportZeroOutBgRowMatrixTask
 	{
@@ -160,6 +162,16 @@ module iBS
 		IntVec	ks;
 		IntVec  extWs;
 		ExportByRowIdxsTaskVec Tasks;
+	};
+
+	struct RUVExportRowMatrixBatchTask
+	{
+		long	TaskID;
+		string	TaskName;
+		FcdcRUVService* ruv;
+		IntVec	ks;
+		IntVec  extWs;
+		ExportRowMatrixTaskVec Tasks;
 	};
 
 	struct VdAnovaResult
@@ -382,6 +394,12 @@ module iBS
 
 		["amd"]
 		int RUVExportByRowIdxsBatch(RUVExportByRowIdxsBatchTask task,out long taskID)
+			throws ArgumentException;
+
+		RUVExportRowMatrixBatchTask GetBlankRUVExportRowMatrixBatchTask();
+
+		["amd"]
+		int RUVExportRowMatrixBatch(RUVExportRowMatrixBatchTask task,out long taskID)
 			throws ArgumentException;
 
 		HighVariabilityFeaturesTask GetBlankHighVariabilityFeaturesTask();

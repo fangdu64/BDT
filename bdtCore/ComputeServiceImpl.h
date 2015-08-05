@@ -93,6 +93,12 @@ public:
 		const ::iBS::ExportByRowIdxsTask&,
 		const Ice::Current&);
 
+	virtual ::iBS::RUVExportRowMatrixBatchTask GetBlankRUVExportRowMatrixBatchTask(const Ice::Current&);
+
+	virtual void RUVExportRowMatrixBatch_async(const ::iBS::AMD_ComputeService_RUVExportRowMatrixBatchPtr&,
+		const ::iBS::RUVExportRowMatrixBatchTask&,
+		const Ice::Current&);
+
 	virtual ::iBS::HighVariabilityFeaturesTask GetBlankHighVariabilityFeaturesTask(const Ice::Current&);
 
 	virtual void HighVariabilityFeatures_async(const ::iBS::AMD_ComputeService_HighVariabilityFeaturesPtr&,

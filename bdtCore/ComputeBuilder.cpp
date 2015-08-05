@@ -1456,8 +1456,8 @@ void CFeatureRowAdjustBuilder::AdjustSingleSample(int sampleIdx, ::Ice::Long ram
 
 //////////////////////////////////////////////////////////////////
 CExportRowMatrixBuilder::CExportRowMatrixBuilder(
-	const ::iBS::ExportRowMatrixTask& task)
-	: m_task(task)
+	const ::iBS::ExportRowMatrixTask& task, Ice::Long taskID)
+	: m_task(task), m_taskID(taskID)
 {
 
 }
@@ -1522,7 +1522,7 @@ void CExportRowMatrixBuilder::Export(::Ice::Long ramMb)
 	
 	::Ice::Long batchCnt = TotalRowCnt / batchRowCnt + 1;
 
-	CGlobalVars::get()->theFeatureValueWorkerMgr->UpdateAMDTaskProgress(m_task.TaskID, 0, batchCnt);
+	CGlobalVars::get()->theFeatureValueWorkerMgr->InitAMDSubTask(m_taskID, m_task.TaskName, batchCnt);
 
 	int batchIdx = 0;
 	::Ice::Long remainCnt = TotalRowCnt;
@@ -1579,11 +1579,10 @@ void CExportRowMatrixBuilder::Export(::Ice::Long ramMb)
 		remainCnt -= thisBatchRowCnt;
 		exportedFeatureIdxFrom += thisBatchExportedRowCnt;
 
-		CGlobalVars::get()->theFeatureValueWorkerMgr->UpdateAMDTaskProgress(m_task.TaskID, 1);
+		CGlobalVars::get()->theFeatureValueWorkerMgr->UpdateAMDTaskProgress(m_taskID, 1);
 	}
 
 	cout << IceUtil::Time::now().toDateTime() << " Export done. ExportedRowCnt = " << TotalRowCnt << endl;
-	CGlobalVars::get()->theFeatureValueWorkerMgr->SetAMDTaskDone(m_task.TaskID);
 }
 
 void
@@ -2173,7 +2172,7 @@ void CExportByRowIdxsBuilder::Export(::Ice::Long ramMb)
 		if (fois.empty())
 		{
 			std::cout << IceUtil::Time::now().toDateTime() << " FeatureIdxsOid not exist" << endl;
-			CGlobalVars::get()->theFeatureValueWorkerMgr->UpdateAMDTaskProgress(m_task.TaskID, 0, iBS::AMDTaskStatusFailure);
+			CGlobalVars::get()->theFeatureValueWorkerMgr->UpdateAMDTaskProgress(m_taskID, 0, iBS::AMDTaskStatusFailure);
 			return;
 		}
 
@@ -2183,7 +2182,7 @@ void CExportByRowIdxsBuilder::Export(::Ice::Long ramMb)
 
 		::IceUtil::ScopedArray<Ice::Double>  rowIdxs(new ::Ice::Double[rowCnt]);
 		if (!rowIdxs.get()){
-			CGlobalVars::get()->theFeatureValueWorkerMgr->UpdateAMDTaskProgress(m_task.TaskID, 0, iBS::AMDTaskStatusFailure);
+			CGlobalVars::get()->theFeatureValueWorkerMgr->UpdateAMDTaskProgress(m_taskID, 0, iBS::AMDTaskStatusFailure);
 			return;
 		}
 

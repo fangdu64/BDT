@@ -319,6 +319,7 @@ CComputeServiceImpl::GetBlankExportRowMatrixTask(const Ice::Current& current)
 	task.FileSizeLimitInMBytes = 1024;
 	task.OutPath = ".";
 	task.OutID = 10000;
+	task.PerRqstLimitInMBytes = 250;
 	task.ConvertToType = iBS::FeatureValueDouble;
 	task.RowAdjust = ::iBS::RowAdjustNone;
 	task.ValueAdjust = ::iBS::ValueAdjustNone;
@@ -346,12 +347,14 @@ const Ice::Current& current)
 		task.TaskName, 0);
 	cb->ice_response(1,taskID);
 
-	::iBS::ExportRowMatrixTask task_d(task);
-	task_d.TaskID = taskID;
-	CExportRowMatrixBuilder builder(task_d);
-	builder.Export();
+	cout << " ExportRowMatrix [begin]" << endl;
+	const iBS::ExportRowMatrixTask& subTask = task;
+	Ice::Long ramMb = subTask.PerRqstLimitInMBytes;
+	CExportRowMatrixBuilder builder(subTask, taskID);
+	builder.Export(ramMb);
+	cout << " outID=" << subTask.OutID << " [end]" << endl;
+	CGlobalVars::get()->theFeatureValueWorkerMgr->SetAMDTaskDone(taskID);
 
-	
 }
 
 ::iBS::Vectors2MatrixTask
@@ -502,7 +505,7 @@ const Ice::Current& current)
 	//therefore, can be in-place editing without effecting original value
 	::IceUtil::ScopedArray<Ice::Double>  values;
 
-	CExportRowMatrixBuilder builder(task);
+	CExportRowMatrixBuilder builder(task, 0);
 	builder.ReadRowMatrix(featureIdxFrom, featureIdxTo, ret, values);
 
 	cb->ice_response(1, ret);
@@ -591,6 +594,60 @@ const Ice::Current& current)
 		}
 
 		CExportByRowIdxsBuilder builder(subTask, taskID);
+		builder.Export(ramMb);
+
+		cout << outFile << " outID=" << subTask.OutID << " [end]" << endl;
+	}
+	CGlobalVars::get()->theFeatureValueWorkerMgr->SetAMDTaskDone(taskID);
+}
+
+::iBS::RUVExportRowMatrixBatchTask
+CComputeServiceImpl::GetBlankRUVExportRowMatrixBatchTask(const Ice::Current& current)
+{
+	return ::iBS::RUVExportRowMatrixBatchTask();
+}
+
+void
+CComputeServiceImpl::RUVExportRowMatrixBatch_async(const ::iBS::AMD_ComputeService_RUVExportRowMatrixBatchPtr& cb,
+const ::iBS::RUVExportRowMatrixBatchTask& task,
+const Ice::Current& current)
+{
+	if (task.ks.size() != task.extWs.size() || task.ks.size() != task.Tasks.size())
+	{
+		cb->ice_exception();
+		return;
+	}
+
+	Ice::Long taskID = CGlobalVars::get()->theFeatureValueWorkerMgr->RegisterAMDTask(
+		"RUVExportRowMatrixBatch", 0);
+
+	::Ice::Int rt = 1;
+	cb->ice_response(rt, taskID);
+	int taskCnt = (int)task.ks.size();
+	for (int i = 0; i < taskCnt; i++)
+	{
+		int k = task.ks[i];
+		int extW = task.extWs[i];
+		ostringstream os;
+		os << "data_K" << k << "_extW" << extW;
+		std::string outFile = os.str();
+		task.ruv->SetActiveK(k, extW);
+
+		cout << outFile << " [begin]" << endl;
+		const iBS::ExportRowMatrixTask& subTask = task.Tasks[i];
+		Ice::Long ramMb = subTask.PerRqstLimitInMBytes;
+		iBS::FeatureObserverInfoVec fois;
+		iBS::IntVec oids;
+		task.ruv->GetFeatureObservers(oids, fois);
+		Ice::Double rqstColCnt = (Ice::Double)subTask.SampleIDs.size();
+		Ice::Double fullColCnt = (Ice::Double)fois.size();
+		Ice::Long  rqstLimitInCentral = (Ice::Long)(2000 * rqstColCnt / fullColCnt); //2G limit in FCDCentral
+		if (ramMb > rqstLimitInCentral)
+		{
+			ramMb = rqstLimitInCentral;
+		}
+
+		CExportRowMatrixBuilder builder(subTask, taskID);
 		builder.Export(ramMb);
 
 		cout << outFile << " outID=" << subTask.OutID << " [end]" << endl;
