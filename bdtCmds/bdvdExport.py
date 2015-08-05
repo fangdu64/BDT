@@ -261,14 +261,17 @@ def main(argv=None):
         gRunner.log("Beginning bdvd export run v({0})".format(bdtUtil.get_version()))
         gRunner.logp("-----------------------------------------------")
 
+        if gParams.dry_run and gParams.start_from == gSteps[0]:
+            gParams.dry_run = False
+
         rowIdxsPickle = None
         if gParams.rowidxs_params is not None:
             if gParams.dry_run and gParams.start_from == gSteps[0]:
                 gParams.dry_run = False
             rowIdxsPickle = s01_rowidxs()
-            if gParams.dry_run and not os.path.exists(ctrlRowsPickle):
-                gRunner.log("retrieve existing result for: {0}".format(gSteps[1]))
-                gRunner.log("from: {0}".format(ctrlRowsPickle))
+            if gParams.dry_run and not os.path.exists(rowIdxsPickle):
+                gRunner.log("retrieve existing result for: {0}".format(gSteps[0]))
+                gRunner.log("from: {0}".format(rowIdxsPickle))
                 gRunner.die('file not exist')
                 gRunner.log("")
 

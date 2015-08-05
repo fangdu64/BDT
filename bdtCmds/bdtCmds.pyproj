@@ -26,7 +26,7 @@
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="bdvd-export.py" />
+    <Compile Include="bdvdExport.py" />
     <Compile Include="bdvd-ruv-export.py" />
     <Compile Include="bdvd-ruv.py" />
     <Compile Include="bdvd-vd.py" />

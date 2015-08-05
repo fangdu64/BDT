@@ -103,6 +103,22 @@ def dumpOutput(obj):
     fn = "{0}/{1}".format(gParams.output_dir,gParams.result_dumpfile)
     iBSDefines.dumpPickle(obj,fn)
 
+def attachInputBigMatrix(bigmat,fcdcPrx, requireStats):
+    gRunner.log("attach mat: {0} x {1} from {2}".format(bigmat.RowCnt,bigmat.ColCnt,bigmat.StorePathPrefix))
+    (rt, outOIDs)=fcdcPrx.AttachBigMatrix(bigmat.ColCnt,bigmat.RowCnt,bigmat.ColNames,bigmat.StorePathPrefix)
+    #bdvd_log("assigned colIDs: {0}".format(str(outOIDs)))
+    if requireStats:
+        minSampleID = min(outOIDs)
+        if bigmat.ColStats is None:
+            raise iBSDefines.BdtUsage("calc-statistics required")
+        osis=bigmat.ColStats
+        for i in range(len(osis)):
+            osi=osis[i]
+            osis[i].ObserverID=outOIDs[i]
+            gRunner.logp("Sample {0}: Max = {1}, Min = {2}, Sum = {3}".format(osi.ObserverID - minSampleID +1, int(osi.Max), int(osi.Min), int(osi.Sum)))
+        rt=fcdcPrx.SetObserverStats(osis)
+    return outOIDs
+
 def launchExportTask(fcdcPrx, bdvdFacetAdminPrx, computePrx, exportRowsOid, rowCnt):
     # configuration by user
     designPath=os.path.abspath(gRunner.script_dir)
@@ -144,6 +160,7 @@ def launchExportTask(fcdcPrx, bdvdFacetAdminPrx, computePrx, exportRowsOid, rowC
         task.SampleIDs= sampleIDs
         task.OutID=10001+i
         task.OutPath=outpath
+        bfvFile = os.path.abspath("{0}/{1}".format(gParams.output_dir, design.OutMatNames[i]))
         task.OutFile = os.path.abspath("{0}/{1}".format(gParams.output_dir, design.OutMatNames[i]))
         bfvFiles.append(task.OutFile)
         tasks.append(task)
@@ -251,10 +268,10 @@ def main(argv=None):
             ctrObj = iBSDefines.loadPickle(gParams.export_rows_pickle)
             ctrlMat = ctrObj.BigMat
             gRunner.log("export row cnt = {0}".format(ctrlMat.RowCnt))
-            exportRowsOid = attachInputBigMatrix(ctrlMat, fcdcPrx, False)
+            exportRowsOid = attachInputBigMatrix(ctrlMat, fcdcPrx, False)[0]
             rowCnt = ctrlMat.RowCnt
 
-        (rt, amdTaskID,outobj)=launchExportTask(fcdcPrx, bdvdFacetAdminPrx, exportRowsOid, rowCnt)
+        (rt, amdTaskID, outObj) = launchExportTask(fcdcPrx, bdvdFacetAdminPrx, computePrx, exportRowsOid, rowCnt)
         
         # -----------------------------------------------------------
         # Output Results

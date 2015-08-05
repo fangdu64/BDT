@@ -27,8 +27,9 @@ def main(argv=None):
 	pythonBinPath = iBSConfig.BDT_HomeDir + "/ThirdParty/python/bin/python3.3"
 	
 	shortCutCmds = [
-		'bigKmeans.py',
-		'bdvd.py',
+        'bigKmeans.py',
+        'bdvd.py',
+        'bdvdExport.py',
         'bigMat.py',
         'bigKmeansC.py']
 

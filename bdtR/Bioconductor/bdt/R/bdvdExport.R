@@ -1,21 +1,9 @@
 #'
-#' run big k-means++ implemented in Big Data Tools (BDT)
-#'
-#' @param bdt_home installation director for bdt
-#' @param input An input dataset of the format: input-type@@location,
-#' supported types are:
-#'    text-mat@@path to a text file
-#'    binary-mat@@path to a binary file
-#'    bams@@path to a file listing bam files
-#'
-#' @param out output dir
-#'
-#' @return fstats A vector of f-statistics
-#'
+#' run bdvd-export
 #' @export
 #'
 bdvdExport <- function(bdt_home,
-                 thread_num = 4,
+                 thread_num = 1,
                  mem_size = 1000,
                  column_ids,
                  bdvd_dir,
@@ -26,14 +14,14 @@ bdvdExport <- function(bdt_home,
                  export_scale = NULL,
                  artifact_detection = NULL,
                  known_factors = NULL,
-                 export_names = NULL
+                 export_names = NULL,
                  rowidxs_input = NULL,
                  rowidxs_index_base = NULL,
                  start_from = NULL,
                  out) {
     cmds = c(
         'py',
-        paste0(bdt_home,"/bdvd-export"),
+        paste0(bdt_home,"/bdvdExport"),
         '--out', out,
         '--thread-num', as.character(thread_num),
         '--memory-size', as.character(mem_size),
@@ -42,11 +30,11 @@ bdvdExport <- function(bdt_home,
         '--component', component,
         '--unwanted-factors', paste0(unwanted_factors, collapse=","))
 
-   
+
     if (!is.null(rowidx_from)) {
         cmds <- append(cmds, c('--rowidx-from', as.character(rowidx_from)))
     }
-    
+
     if (!is.null(rowidx_to)) {
         cmds <- append(cmds, c('--rowidx-to', as.character(rowidx_to)))
     }
@@ -58,20 +46,19 @@ bdvdExport <- function(bdt_home,
     if (!is.null(artifact_detection)) {
         cmds <- append(cmds, c('--artifact-detection', artifact_detection))
     }
-    
+
     if (!is.null(known_factors)) {
-        cmds <- append(cmds, c('--known-factors', known_factors))
+        cmds <- append(cmds, c('--known-factors', paste0(known_factors, collapse=",")))
     }
-    
+
     if (!is.null(export_names)) {
         cmds <- append(cmds, c('--export-names', paste0(export_names, collapse=",")))
     }
 
- 
     if (!is.null(rowidxs_input)) {
         cmds <- append(cmds, c('--rowidxs-input', rowidxs_input))
     }
-    
+
     if (!is.null(rowidxs_index_base)) {
       cmds <- append(cmds, c('--rowidxs-index-base', as.character(rowidxs_index_base)))
     }

@@ -189,6 +189,9 @@ def getResultPickleFromNodeDir(nodeDir):
     elif resultSummary.NodeType == "bdvd":
         outPickle = "{0}/logs/results.pickle".format(os.path.abspath(nodeDir))
         return os.path.abspath(outPickle)
+    elif resultSummary.NodeType == "bdvd-export":
+        outPickle = "{0}/logs/results.pickle".format(os.path.abspath(nodeDir))
+        return os.path.abspath(outPickle)
     else:
         return None
 

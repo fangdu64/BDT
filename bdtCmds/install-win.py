@@ -7,10 +7,10 @@ from datetime import datetime, date
 
 #import iBSConfig
 
-def install_copyDir(srcDir, destDir):
+def install_copyDir(srcDir, destDir, ignore=None):
     if os.path.exists(destDir):
         shutil.rmtree(destDir)
-    shutil.copytree(srcDir, destDir)
+    shutil.copytree(srcDir, destDir, False, ignore)
 
 def install_bdtBin(iceBinSrcDir, lapackLibDir, bdtBinSrcDir, bdtBinDestDir):
     if not os.path.exists(bdtBinDestDir):
@@ -86,7 +86,7 @@ def main(argv=None):
 
     bdtRSrcDir = os.path.abspath(bdtCmdsDir+"\\..\\bdtR\\Bioconductor")
     bdtRDestDir = bdtInstallDir+"\\bdt\\bdtR\\Bioconductor"
-    install_copyDir(bdtRSrcDir, bdtRDestDir)
+    install_copyDir(bdtRSrcDir, bdtRDestDir,shutil.ignore_patterns('.*'))
 
 
     # install bdtPy
@@ -99,6 +99,7 @@ def main(argv=None):
     shortCutCmds = [
         'bigKmeans.py',
         'bdvd.py',
+        'bdvdExport.py',
         'bigMat.py',
         'bigKmeansC.py',]
     for cmdFile in cmdFiles:

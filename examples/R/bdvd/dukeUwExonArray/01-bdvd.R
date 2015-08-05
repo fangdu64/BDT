@@ -1,9 +1,9 @@
 rm(list=ls())
 library("bdt")
 
-bdtDatasetsDir = 'D:/bdtDatasets'
-thisScriptDir = 'D:/BDT/examples/R/bdvd/dukeUwExonArray'
-bdt_home = 'D:/BDT/build/windows/install'
+bdtDatasetsDir = 'C:/work/bdtDatasets'
+thisScriptDir = 'C:/work/BDT/examples/R/bdvd/dukeUwExonArray'
+bdt_home = 'C:/work/BDT/build/windows/install'
 
 data_col_names = c(
   'K562_wg530_s1','K562_wg530_s2','K562_wg530_s3','K562_wg530_s4',
@@ -302,10 +302,23 @@ ret = bdvd(
     sample_groups = sample_groups,
     ruv_type = 'ruvs',
     control_rows_method = 'all',
-    permutation_num = 10,
+    permutation_num = 4,
     out = paste0(thisScriptDir,"/01-out"))
 
 eigenValues = readVec(ret$eigenValues)
 eigenVectors = readMat(ret$eigenVectors)
 permutatedEigenValues = readMat(ret$permutatedEigenValues)
 Wt = readMat(ret$Wt)
+
+## group level
+export_columns = sapply(sample_groups, function(g) g[1])
+ret = bdvdExport(
+    bdt_home = bdt_home,
+    column_ids = export_columns,
+    bdvd_dir = paste0(thisScriptDir,"/01-out"),
+    component = 'signal',
+    data_col_names = data_col_names,
+    unwanted_factors = 2,
+    rowidx_from = 1,
+    rowidx_to = 1000,
+    out = paste0(thisScriptDir,"/01-export"))

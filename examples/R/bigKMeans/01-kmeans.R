@@ -17,6 +17,6 @@ ret = bigKmeans(
     min_expchange = 0.0001,
     out = paste0(thisScriptDir,"/01-out"))
 
-clusterAssignments = readIntVec(ret$clusterAssignmentVec) 
+clusterAssignments = readIntVec(ret$clusterAssignmentVec)
 
-centroids = readMat(ret$centroidsMat) 
+centroids = readMat(ret$centroidsMat)
