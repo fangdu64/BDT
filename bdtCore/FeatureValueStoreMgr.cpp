@@ -76,16 +76,7 @@ string CFeatureValueStoreMgr::GetStoreFilePath(const iBS::FeatureObserverSimpleI
 {
 	if (foi->StoreLocation == iBS::FeatureValueStoreLocationSpecified)
 	{
-		string filename = foi->SpecifiedPathPrefix + ".bfv";
-		if (IceUtilInternal::fileExists(filename))
-		{
-			return filename;
-		}
-		else
-		{
-			// in case the attached matrix is with abitary file extention
-			return foi->SpecifiedPathPrefix;
-		}
+		return foi->SpecifiedPathPrefix + ".bfv";
 	}
 
 	if(foi->StorePolicy==iBS::FeatureValueStorePolicyBinaryFilesSingleObserver)
