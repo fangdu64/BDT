@@ -198,9 +198,11 @@ def run_bdvd_ruv_export(
     memory_size,
     bdvd_dir,
     component,
-    component_level,
     scale,
-    artifact_detection
+    artifact_detection,
+    unwanted_factors,
+    known_factors,
+    export_names
     ):
 
     nodeDir = os.path.abspath("{0}/{1}".format(runDir, nodeName))
@@ -220,66 +222,57 @@ def run_bdvd_ruv_export(
     #
     # prepare design file
     #
-    if pre_normalization is None:
-        CommonLibrarySize = 0
-    elif pre_normalization == "column-sum" and common_column_sum is None:
-        CommonLibrarySize = -1 # use median column-sum
-    else:
-        CommonLibrarySize = common_column_sum
 
-    if ruv_type == "ruvs" and ruv_rowwise_adjust is None:
-        RUVMode = iBS.RUVModeEnum.RUVModeRUVs
-    elif ruv_type == "ruvs" and ruv_rowwise_adjust == "unitary-length":
-        RUVMode = iBS.RUVModeEnum.RUVModeRUVsForVariation
-    elif ruv_type == "ruvg" and ruv_rowwise_adjust is None:
-        RUVMode = iBS.RUVModeEnum.RUVModeRUVg
-    elif ruv_type == "ruvg" and ruv_rowwise_adjust == "unitary-length":
-        RUVMode = iBS.RUVModeEnum.RUVModeRUVgForVariation
+    bdvd_obj = iBSDefines.loadPickle(
+        iBSDefines.derivePickleFile(bdvd_dir))
+    bigmat_dir = None
+    if bdvd_obj.RuvOut is not None:
+        bigmat_dir = bdvd_obj.RuvOut.BigMatDir
 
-    ControlFeaturePolicy = iBS.RUVControlFeaturePolicyEnum.RUVControlFeaturePolicyNone
-    ControlFeatureMaxCntLowBound = None
-    ControlFeatureMaxCntUpBound = None
-    CtrlQuantile = None
-    AllInQuantileFraction = None
-    if control_rows_method == "all":
-        ControlFeaturePolicy = iBS.RUVControlFeaturePolicyEnum.RUVControlFeaturePolicyNone
-    elif control_rows_method == "weak-signal":
-        ControlFeaturePolicy = iBS.RUVControlFeaturePolicyEnum.RUVControlFeaturePolicyMaxCntLow
-        ControlFeatureMaxCntLowBound = weak_signal_lb
-        ControlFeatureMaxCntUpBound = weak_signal_ub
-    elif control_rows_method == "lower-quantile":
-        ControlFeaturePolicy = iBS.RUVControlFeaturePolicyEnum.RUVControlFeaturePolicyAllInLowerQuantile
-        CtrlQuantile = lower_quantile_threshold
-        AllInQuantileFraction = all_in_quantile_fraction
-    elif control_rows_method == "specified-rows":
-        ControlFeaturePolicy = iBS.RUVControlFeaturePolicyEnum.RUVControlFeaturePolicyFeatureIdxList
+    RUVOutputMode = None
+    if component == 'signal' and artifact_detection == 'aggressive':
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeZYthenGroupMean
+    elif component == 'signal' and artifact_detection == 'conservative':
+        RUVOutputMode = iBS.RUVModeEnum.RUVOutputModeXb
+    elif component == 'artifact' and artifact_detection == 'aggressive':
+        RUVOutputMode = iBS.RUVModeEnum.RUVOutputModeZY
+    elif component == 'artifact' and artifact_detection == 'conservative':
+        RUVOutputMode = iBS.RUVModeEnum.RUVOutputModeWa
+    elif component == 'random' and artifact_detection == 'aggressive':
+        RUVOutputMode = iBS.RUVModeEnum.RUVOutputModeZYGetE
+    elif component == 'random' and artifact_detection == 'conservative':
+        RUVOutputMode = iBS.RUVModeEnum.RUVOutputModeYminusWaXb
+    elif component == 'signal+random' and artifact_detection == 'aggressive':
+        RUVOutputMode = iBS.RUVModeEnum.RUVOutputModeYminusZY
+    elif component == 'signal+random' and artifact_detection == 'conservative':
+        RUVOutputMode = iBS.RUVModeEnum.RUVOutputModeYminusWa
 
-    MaxK = len(sampleGroups)
+    RUVOutputScale = None
+    if scale == 'mlog':
+        RUVOutputScale = iBS.RUVOutputScaleEnum.RUVOutputScaleLog
+    elif scale == 'original':
+        RUVOutputScale = iBS.RUVOutputScaleEnum.RUVOutputScaleRaw
 
-    design_params=(sampleGroups,
-                   KnownFactors,
-                   CommonLibrarySize,
-                   RUVMode,
-                   ControlFeaturePolicy,
-                   ControlFeatureMaxCntLowBound,
-                   ControlFeatureMaxCntUpBound,
-                   CtrlQuantile,
-                   AllInQuantileFraction,
-                   MaxK,
-                   featureIdxFrom,
-                   featureIdxTo,
-                   permutation_cnt)
+    design_params=(export_names,
+                   unwanted_factors,
+                   known_factors,
+                   RUVOutputMode,
+                   RUVOutputScale,
+                   workercnt,
+                   column_ids,
+                   rowidx_from,
+                   rowidx_to)
     params_pickle_fn=os.path.abspath("{0}/design_params.pickle".format(nodeScriptDir))
     iBSDefines.dumpPickle(design_params, params_pickle_fn)
 
-    design_file=os.path.abspath(bdtHomeDir+"/bdt/bdtPy/PipelineDesigns/bdvdRUVDesign.py")
+    design_file=os.path.abspath(bdtHomeDir+"/bdt/bdtPy/PipelineDesigns/bdvdRUVExportDesign.py")
     shutil.copy(design_file,nodeScriptDir)
 
     #
     # Run node
     #
-    design_fn=os.path.abspath(nodeScriptDir)+"/bdvdRUVDesign.py"
-    cmdpath=os.path.abspath("{0}/bdt/bdtCmds/bdvd-ruv".format(bdtHomeDir))
+    design_fn=os.path.abspath(nodeScriptDir)+"/bdvdRUVExportDesign.py"
+    cmdpath=os.path.abspath("{0}/bdt/bdtCmds/bdvd-ruv-export".format(bdtHomeDir))
     if platform == "Windows":
         node_cmd = ["py", cmdpath]
     else:
@@ -288,10 +281,10 @@ def run_bdvd_ruv_export(
                 "--num-threads", str(workercnt),
                 "--max-mem", str(memory_size),
                 "--out", nodeDir,
-                "--data-mat", datamatPickle])
+                "--bigmat-dir", bigmat_dir])
     
-    if ctrlRowPickle is not None:
-        node_cmd.extend(["--ctrl-rows", ctrlRowPickle])
+    if rowIdxsPickle is not None:
+        node_cmd.extend(["--export-rows", rowIdxsPickle])
     
     node_cmd.append(design_fn)
 

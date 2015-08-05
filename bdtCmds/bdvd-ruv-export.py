@@ -103,7 +103,7 @@ def dumpOutput(obj):
     fn = "{0}/{1}".format(gParams.output_dir,gParams.result_dumpfile)
     iBSDefines.dumpPickle(obj,fn)
 
-def launchExportTask(fcdcPrx, bdvdFacetAdminPrx, computePrx, exportRowsOid):
+def launchExportTask(fcdcPrx, bdvdFacetAdminPrx, computePrx, exportRowsOid, rowCnt):
     # configuration by user
     designPath=os.path.abspath(gRunner.script_dir)
     if designPath not in sys.path:
@@ -115,6 +115,7 @@ def launchExportTask(fcdcPrx, bdvdFacetAdminPrx, computePrx, exportRowsOid):
     (rt, rfi)=bdvdFacetAdminPrx.GetRUVFacetInfo(facetID)
     ruvPrx.SetOutputWorkerNum(design.OutputWorkerNum)
     ruvPrx.SetOutputMode(design.RUVOutputMode)
+    ruvPrx.SetOutputScale(design.RUVOutputScale)
     ks=   design.Ks
     extWs=design.Ns
     sampleIDs = rfi.SampleIDs
@@ -129,11 +130,18 @@ def launchExportTask(fcdcPrx, bdvdFacetAdminPrx, computePrx, exportRowsOid):
     tasks=[]
     bfvFiles=[]
     for i in range(len(ks)):
-        task=computePrx.GetBlankExportByRowIdxsTask()
+        if exportRowsOid is not None:
+            task=computePrx.GetBlankExportByRowIdxsTask()
+            task.FeatureIdxsOid=exportRowsOid
+        else:
+            task=computePrx.GetBlankExportRowMatrixTask()
+            task.FeatureIdxFrom = design.FeatureIdxFrom
+            task.FeatureIdxTo = design.FeatureIdxTo
+            rowCnt = task.FeatureIdxTo - task.FeatureIdxFrom
+
         task.TaskName=design.OutMatNames[i]
         task.reader=ruvPrx
         task.SampleIDs= sampleIDs
-        task.FeatureIdxsOid=exportRowsOid
         task.OutID=10001+i
         task.OutPath=outpath
         task.OutFile = os.path.abspath("{0}/{1}".format(gParams.output_dir, design.OutMatNames[i]))
@@ -141,21 +149,31 @@ def launchExportTask(fcdcPrx, bdvdFacetAdminPrx, computePrx, exportRowsOid):
         tasks.append(task)
 
     nd_outobj = iBSDefines.RUVMatrixExportOutputDefine()
+    nd_outobj.OutMatNames = design.OutMatNames
     nd_outobj.BfvFiles = bfvFiles
     nd_outobj.ColCnt = len(sampleIDs)
     nd_outobj.ColIDs = sampleIDs
     nd_outobj.ColNames = [si.ObserverName for si in ofis]
     nd_outobj.Ks = ks
     nd_outobj.Ns = extWs
-    nd_outobj.RowCnt = len(featureIdxs)
+    nd_outobj.RowCnt = rowCnt
     nd_outobj.RUVOutputMode = design.RUVOutputMode
+    nd_outobj.RUVOutputScale = design.RUVOutputScale
 
-    batchTask=computePrx.GetBlankRUVExportByRowIdxsBatchTask()
+    if exportRowsOid is not None:
+        batchTask=computePrx.GetBlankRUVExportByRowIdxsBatchTask()
+    else:
+        batchTask=computePrx.GetBlankRUVExportRowMatrixBatchTask()
     batchTask.ruv=ruvPrx
     batchTask.ks=ks
     batchTask.extWs=extWs
     batchTask.Tasks=tasks
-    (rt,amdTaskID)=computePrx.RUVExportByRowIdxsBatch(batchTask)
+
+    if exportRowsOid is not None:
+        (rt,amdTaskID)=computePrx.RUVExportByRowIdxsBatch(batchTask)
+    else:
+        (rt,amdTaskID)=computePrx.RUVExportRowMatrixBatch(batchTask)
+    
 
     preMsg=""
     amdTaskFinished=False
@@ -172,7 +190,6 @@ def launchExportTask(fcdcPrx, bdvdFacetAdminPrx, computePrx, exportRowsOid):
             time.sleep(4)
     
     return (rt,amdTaskID,nd_outobj)
-
 
 def saveResults(outObj):
     fn = os.path.abspath("{0}/{1}".format(gParams.output_dir,gParams.result_dumpfile))
@@ -206,10 +223,6 @@ def main(argv=None):
                                   gParams.fcdc_fvworker_size, 
                                   gParams.fcdc_threadpool_size)
 
-        inObj = iBSDefines.loadPickle(gParams.input_pickle)
-        bigmat = inObj.BigMat
-        print("col cnt = ", bigmat.ColCnt)
-
         gRunner.launch_bigMat()
         fcdc.Init()
 
@@ -233,13 +246,15 @@ def main(argv=None):
         gRunner.log("bdtCore activated")
         
         exportRowsOid = None
+        rowCnt = None
         if gParams.export_rows_pickle is not None:
             ctrObj = iBSDefines.loadPickle(gParams.export_rows_pickle)
             ctrlMat = ctrObj.BigMat
             gRunner.log("export row cnt = {0}".format(ctrlMat.RowCnt))
             exportRowsOid = attachInputBigMatrix(ctrlMat, fcdcPrx, False)
+            rowCnt = ctrlMat.RowCnt
 
-        (rt, amdTaskID,outobj)=launchExportTask(fcdcPrx, bdvdFacetAdminPrx, exportRowsOid)
+        (rt, amdTaskID,outobj)=launchExportTask(fcdcPrx, bdvdFacetAdminPrx, exportRowsOid, rowCnt)
         
         # -----------------------------------------------------------
         # Output Results

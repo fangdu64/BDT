@@ -81,6 +81,7 @@ class HighVariabilityFeaturesOutputDefine:
 
 class RUVMatrixExportOutputDefine:
     def __init__(self):
+        self.OutMatNames = None
         self.BfvFiles = None
         self.ColCnt = None
         self.RowCnt = None
@@ -89,6 +90,7 @@ class RUVMatrixExportOutputDefine:
         self.Ks = None
         self.Ns = None
         self.RUVOutputMode = None
+        self.RUVOutputScale = None
 
 class QuantileOutputDefine:
     def __init__(self, quantiles=None, qfeatuerIdxs=None, qvalues=None, task=None):
@@ -167,6 +169,10 @@ class BdvdRuvOutDefine:
 class BdvdResultsDefine:
     def __init__(self):
         self.RuvOut = None
+
+class BdvdExportResultsDefine:
+    def __init__(self):
+        self.Export = None
 
 def getResultPickleFromNodeDir(nodeDir):
     # runSummary.pickle should be in nodeDir/log

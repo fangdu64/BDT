@@ -47,3 +47,16 @@ readBdvdOutput <- function(outDir) {
 
     return (ret)
 }
+
+#'
+#' read output from bdvd-export
+#' @export
+#'
+readBdvdExportOutput <- function(outDir) {
+    env <- new.env()
+    fileName = paste0(outDir,"/logs/output.R")
+    sys.source(fileName, env)
+    ret = list(mats = env$Mats)
+
+    return (ret)
+}
