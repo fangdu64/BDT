@@ -1,7 +1,7 @@
 thisScriptPath=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 . ${thisScriptPath}/../../../config/bdt_path_linux.sh
 
-${bdtInstallDir}/bdvd \
+${bdtHome}/bdvd \
 		--data-input binary-mat@${bdtDatasetsDir}/zebrafish/data.bfv \
 		--data-nrow 20865 \
 		--data-ncol 6 \

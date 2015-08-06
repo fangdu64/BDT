@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FAF210AF-39FF-413F-B5F2-874E849F2093}</ProjectGuid>
+    <ProjectGuid>{D92593C9-C5BA-42D7-86EE-44D821027F13}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>examples</RootNamespace>
-    <AssemblyName>examples</AssemblyName>
+    <RootNamespace>bdtR</RootNamespace>
+    <AssemblyName>bdtR</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -42,43 +42,38 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="analysis\DukeUwDnase\s01-bam2mat\bam2mat.sh" />
-    <None Include="config\bdt_path.R" />
-    <None Include="config\bdt_path_linux.sh" />
-    <None Include="config\bdt_path_win.bat" />
-    <None Include="linux\bdvd\zebrafish\bdvd-zebrafish.sh" />
-    <None Include="linux\bigKMeans\01-kmeans.sh" />
-    <None Include="linux\bigKMeans\02-kmeans-skipinput.sh" />
-    <None Include="linux\bigKMeans\03-kmeans-provided-seeds.sh" />
-    <None Include="linux\bigMat\01-text-mat.sh" />
-    <None Include="linux\bigMat\02-binary-mat.sh" />
-    <None Include="linux\bigMat\03-bams2mat.sh" />
-    <None Include="R\bdvd\dukeUwExonArray\01-bdvd.R" />
-    <None Include="R\bdvd\dukeUwExonArray\02-export-by-range.R" />
-    <None Include="R\bdvd\dukeUwExonArray\03-export-by-rowidxs.R" />
-    <None Include="R\bdvd\zebrafish\01-bdvd.R" />
-    <None Include="R\bdvd\zebrafish\analysis.R" />
-    <None Include="R\bdvd\zebrafish\install_zebrafish_libs.R" />
-    <None Include="R\bigKMeans\01-kmeans.R" />
-    <None Include="R\bigKMeans\02-kmeans-master.R" />
-    <None Include="R\bigKMeans\02-kmeans-slave.R" />
-    <None Include="windows\bdvd\dukeUwExonArray\bdvd-exonarray.bat" />
-    <None Include="windows\bdvd\zebrafish\bdvd-zebrafish.bat" />
-    <None Include="windows\bigKMeans\01-kmeans.bat" />
-    <None Include="windows\bigKMeans\02-kmeans-skipinput.bat" />
-    <None Include="windows\bigKMeans\03-kmeans-provided-seeds.bat" />
-    <None Include="windows\bigMat\01-text-mat.bat" />
-    <None Include="windows\bigMat\02-binary-mat.bat" />
-    <None Include="windows\bigMat\03-bams2mat.bat" />
-    <None Include="windows\bigMat\04-text-mat-from-csv.bat" />
+    <None Include="bdvd\RUV-Fstats-test.R" />
+    <None Include="bdvd\RUV_Annotation.R" />
+    <None Include="bdvd\RUV_Correlation.R" />
+    <None Include="bdvd\RUV_Fstats.R" />
+    <None Include="bdvd\RUV_Hclust.R" />
+    <None Include="bdvd\RUV_PlotEigenVals.R" />
+    <None Include="bdvd\RUV_PlotModel.R" />
+    <None Include="bdvd\RUV_PlotVD.R" />
+    <None Include="bdvd\RUV_PlotW.R" />
+    <None Include="bdvd\RUV_Prediction.R" />
+    <None Include="bdvd\RUV_Tstats.R" />
+    <None Include="bdvd\RUV_Tstats_sequencial.R" />
+    <None Include="bigclust\BigClust_KMeans_Fk.R" />
+    <None Include="bigclust\BigClust_Plot_KMeansResult.R" />
+    <None Include="bigclust\BigClust_Plot_KMeansResult_Config.R" />
+    <None Include="Bioconductor\bdt\DESCRIPTION" />
+    <None Include="Bioconductor\bdt\NAMESPACE" />
+    <None Include="Bioconductor\bdt\R\bdtUtil.R" />
+    <None Include="Bioconductor\bdt\R\bdvd.R" />
+    <None Include="Bioconductor\bdt\R\bdvdExport.R" />
+    <None Include="Bioconductor\bdt\R\bigKmeans.R" />
+    <None Include="Bioconductor\bdt\R\bigKmeansC.R" />
+    <None Include="Bioconductor\bdt\R\bigMat.R" />
+    <None Include="Bioconductor\bdt\R\outputReader.R" />
+    <None Include="Bioconductor\createPackage.R" />
+    <None Include="Bioconductor\installPackage.R" />
+    <None Include="outputTemplates\bam2MatOutputTemplate.R" />
+    <None Include="outputTemplates\bdvdExportOutputTemplate.R" />
+    <None Include="outputTemplates\bdvdOutputTemplate.R" />
+    <None Include="outputTemplates\bigKmeansOutputTemplate.R" />
+    <None Include="outputTemplates\bigMatOutputTemplate.R" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="analysis\DukeUwDnase\s01-bam2mat\bam_files.txt" />
-    <Content Include="linux\bigMat\03_bam_files.txt" />
-    <Content Include="R\bdvd\dukeUwExonArray\03-rowidxs.txt" />
-    <Content Include="windows\bigMat\03_bam_files.txt" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,6 +1,6 @@
 thisScriptPath=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 . ${thisScriptPath}/../../config/bdt_path_linux.sh
-${bdtInstallDir}/bigKmeans \
+${bdtHome}/bigKmeans \
 	--data-input text-mat@${bdtDatasetsDir}/txtMat/dnase_test.txt \
 	--data-nrow 92554 \
 	--data-ncol 45 \
