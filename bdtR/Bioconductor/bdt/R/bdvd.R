@@ -80,6 +80,10 @@ bdvd <- function(bdt_home,
         cmds <- append(cmds, c('--data-col-names', paste0(data_col_names, collapse=",")))
     }
 
+    if (!is.null(known_factors)) {
+        cmds <- append(cmds, c('--known-factors', vecListToString(known_factors)))
+    }
+
     if (!is.null(weak_signal_lb)) {
         cmds <- append(cmds, c('--weak-signal-lb', as.character(weak_signal_lb)))
     }
@@ -106,7 +110,7 @@ bdvd <- function(bdt_home,
     }
 
     if (!is.null(pre_normalization)) {
-        cmds <- append(cmds, c('--pre-normalization', as.character(pre_normalization)))
+        cmds <- append(cmds, c('--pre-normalization', pre_normalization))
     }
 
     if (!is.null(common_column_sum)) {

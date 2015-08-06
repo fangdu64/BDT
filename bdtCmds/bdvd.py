@@ -41,7 +41,7 @@ gSteps = ['1-data-mat', '2-ctrl-rows','3-run-ruv','4-run-vd']
 gCtrlRowsMethods = ["all","weak-signal","lower-quantile", "specified-rows"]
 gPreNormalizationMethods = ["column-sum"]
 gRuvTypes = ["ruvs","ruvg"]
-gRuvScaleMethods = ["mlog"]
+gRuvScaleMethods = ["mlog"] #current version always applies mlog transforamtion to the input data
 gRowwiseAdjustMethods = ['unitary-length']
 class BDVDParams:
     def __init__(self):

@@ -36,6 +36,18 @@ readIntVec <- function(vecInfo) {
     return (mat)
 }
 
+#'
+#' get script dir
+#' @export
+#'
+getScriptDir <- function() {
+    args = commandArgs()
+    m <- regexpr("(?<=^--file=).+", args, perl=TRUE)
+    scriptDir <- dirname(regmatches(cmd.args, m))
+    if(length(scriptDir) == 0) stop("can't determine script dir: please call the script with Rscript")
+    if(length(scriptDir) > 1) stop("can't determine script dir: more than one --file argument detected")
+    return (scriptDir)
+}
 
 readBigMatrix<-function(colCnt,rowCnt,bfvFile)
 {
@@ -129,5 +141,4 @@ vecListToString<-function(vecList)
     }
     return (paste0(outStr, collapse=","))
 }
-
 
