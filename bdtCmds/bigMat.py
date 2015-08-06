@@ -148,6 +148,18 @@ def s01_fromKmeansResult():
 
     return out_picke_file
 
+# -----------------------------------------------------------
+# import data matrix from bigmat output
+# -----------------------------------------------------------
+def  s01_bigmat2mat():
+    nodeName = gSteps[0]
+    inputPickle = iBSDefines.derivePickleFile(gParams.input_location)
+    kmeansOutObj = iBSDefines.loadPickle(inputPickle)
+    nodeDir = os.path.abspath("{0}/{1}".format(gParams.pipeline_rundir, nodeName))
+    out_picke_file = os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
+    shutil.copy(inputPickle, out_picke_file)
+    return out_picke_file
+
 def main(argv=None):
     global gParams
     global gRunner
@@ -160,6 +172,7 @@ def main(argv=None):
         'binary-mat': s01_bfv2mat,
         'text-rowids': s01_txtRowIds2mat,
         'bams': s01_bam2mat,
+        'bigmat': s01_bigmat2mat,
         'kmeans-seeds-mat': s01_fromKmeansResult,
         'kmeans-centroids-mat': s01_fromKmeansResult,
         'kmeans-data-mat': s01_fromKmeansResult}

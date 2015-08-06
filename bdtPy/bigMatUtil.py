@@ -158,6 +158,7 @@ bigmat_input_types = [
     'binary-mat',
     'text-rowids',
     'bams',
+    'bigmat',
     'kmeans-seeds-mat',
     'kmeans-centroids-mat',
     'kmeans-data-mat']
@@ -313,7 +314,7 @@ class BigMatParams:
                 '--{0}nrow'.format(prefix)]
             providedValues = [self.input_type, self.output_dir, self.col_cnt, self.row_cnt]
             providedFiles = [self.input_location]
-        elif self.input_type in ['kmeans-seeds-mat', 'kmeans-centroids-mat', 'kmeans-data-mat', 'text-rowids']:
+        elif self.input_type in ['kmeans-seeds-mat', 'kmeans-centroids-mat', 'kmeans-data-mat', 'text-rowids', 'bigmat']:
             requiredNames = [
                 '--{0}input',
                 '--{0}out']

@@ -125,3 +125,8 @@ __pycache__/
 /examples/windows/bdvd/dukeUwExonArray/*out/
 /examples/Properties/
 /bdtR/Properties/
+
+# ================================
+# analysis out dir
+# ================================
+/examples/analysis/**/*out
