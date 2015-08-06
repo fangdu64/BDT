@@ -43,7 +43,7 @@ readIntVec <- function(vecInfo) {
 getScriptDir <- function() {
     args = commandArgs()
     m <- regexpr("(?<=^--file=).+", args, perl=TRUE)
-    scriptDir <- dirname(regmatches(cmd.args, m))
+    scriptDir <- dirname(regmatches(args, m))
     if(length(scriptDir) == 0) stop("can't determine script dir: please call the script with Rscript")
     if(length(scriptDir) > 1) stop("can't determine script dir: more than one --file argument detected")
     return (scriptDir)
