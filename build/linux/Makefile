@@ -49,7 +49,8 @@ clean::
 			fi; \
 		done
 
-install::
+install:: scripts
+scripts::
 	rm -rf $(iBS_SliceDestDir)
 	$(call mkdir,$(iBS_SliceDestDir), -p)
 	cp -rf $(iBS_SliceSrcDir)/* $(iBS_SliceDestDir)

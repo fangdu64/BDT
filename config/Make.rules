@@ -2,4 +2,5 @@
 # Select an installation base directory. The directory will be created
 # if it does not exist.
 #
-BDT_Install	=/Users/fangdu/bdtInstall
+#BDT_Install	=/Users/fangdu/bdtInstall
+BDT_Install	=/dcs01/gcode/fdu1/install/gcc-4.4.7/bdt-0.1.1

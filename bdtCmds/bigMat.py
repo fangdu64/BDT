@@ -154,7 +154,6 @@ def s01_fromKmeansResult():
 def  s01_bigmat2mat():
     nodeName = gSteps[0]
     inputPickle = iBSDefines.derivePickleFile(gParams.input_location)
-    kmeansOutObj = iBSDefines.loadPickle(inputPickle)
     nodeDir = os.path.abspath("{0}/{1}".format(gParams.pipeline_rundir, nodeName))
     out_picke_file = os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
     shutil.copy(inputPickle, out_picke_file)
