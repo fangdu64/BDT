@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="analysis\DukeUwDnase\s01-bam2mat\bam2mat.sh" />
+    <None Include="analysis\DukeUwDnase\s02-bdvd\bdvd.sh" />
+    <None Include="analysis\DukeUwDnase\s02-bdvd\bdvd.R" />
     <None Include="config\bdt_path.R" />
     <None Include="config\bdt_path_linux.sh" />
     <None Include="config\bdt_path_win.bat" />
