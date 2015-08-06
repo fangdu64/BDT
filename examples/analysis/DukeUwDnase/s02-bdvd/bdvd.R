@@ -201,7 +201,7 @@ sampleGroups=list(
 
 dukeSampleCnt = 218
 uwSampleCnt = 207
-knownFactors = list(c(rep.int(1, dukeSampleCnt), rep.int(0, uwSampleCnt))
+knownFactors = list(c(rep.int(1, dukeSampleCnt), rep.int(0, uwSampleCnt)))
 
 ret = bdvd(
     bdt_home = bdtHome,
