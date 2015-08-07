@@ -70,6 +70,24 @@ where {install_path} is an installation directory (has to be an absolute path). 
 3. Download BDT executable zip [BDT-v0.1.2-win64.zip](https://github.com/fangdu64/BDT/releases/download/v0.1.2/BDT-v0.1.2-Win64.zip).
 4. Extract it and all the required executables/scripts will be in the extracted directory.
 
+## R package
+The bdt R package is to run BDT within R for seamless integration. Under the hood, it simply calls BDT commond line tools and provides a convinient way to retrieve the output results from BDT into R for follow-up analysis.
+
+1. Have BDT installed (see above sections)
+2. Have R installed
+2. Ensure that the devtools package is installed. Otherwise,
+
+        install.packages('devtools')
+3. Install bdt library:
+
+        library(devtools)
+        install_local('{bdt_home}/bdt/bdtR/Bioconductor/bdt')
+where {bdt_home} is the installation directory for BDT.
+4. Use bdt:
+
+        library(bdt)
+Example usages can be found in [R examples](https://github.com/fangdu64/BDT/tree/master/examples/R) and [ analysis](https://github.com/fangdu64/BDT/tree/master/examples/analysis)
+
 # Usage
 - [BDVD Manual](https://github.com/fangdu64/BDT/blob/master/doc/bdvd.md)
 - [BigKmeans Manual](https://github.com/fangdu64/BDT/blob/master/doc/bigKmeans.md)
