@@ -1,9 +1,10 @@
 rm(list=ls())
 library("bdt")
 
-bdtDatasetsDir = 'C:/work/bdtDatasets'
+
 thisScriptDir = 'C:/work/BDT/examples/R/bdvd/dukeUwExonArray'
-bdt_home = 'C:/work/BDT/build/windows/install'
+## thisScriptDir = getScriptDir()
+source(paste0(thisScriptDir, '/../../../config/bdt_path.R'))
 
 data_col_names = c(
   'K562_wg530_s1','K562_wg530_s2','K562_wg530_s3','K562_wg530_s4',
@@ -291,7 +292,7 @@ sample_groups = list(
   c(332,333,334))
 
 ret = bdvd(
-    bdt_home = bdt_home,
+    bdt_home = bdtHome,
     data_input = paste0("text-mat@",bdtDatasetsDir,"/DukeUWExon/GeneBASE_DukeUWExon_qn.csv"),
     data_nrow = 18524,
     data_ncol = 334,
@@ -313,7 +314,7 @@ Wt = readMat(ret$Wt)
 ## group level
 export_columns = sapply(sample_groups, function(g) g[1])
 ret = bdvdExport(
-    bdt_home = bdt_home,
+    bdt_home = bdtHome,
     column_ids = export_columns,
     bdvd_dir = paste0(thisScriptDir,"/01-out"),
     component = 'signal',

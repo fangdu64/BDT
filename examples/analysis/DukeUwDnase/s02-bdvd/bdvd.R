@@ -218,4 +218,3 @@ ret = bdvd(
     weak_signal_ub = 1000,
     ruv_rowwise_adjust = 'unitary-length',
     out = paste0(thisScriptDir,"/out"))
-

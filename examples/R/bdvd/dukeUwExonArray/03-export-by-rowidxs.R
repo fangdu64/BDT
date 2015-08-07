@@ -1,9 +1,9 @@
 rm(list=ls())
 library("bdt")
 
-bdtDatasetsDir = 'C:/work/bdtDatasets'
 thisScriptDir = 'C:/work/BDT/examples/R/bdvd/dukeUwExonArray'
-bdt_home = 'C:/work/BDT/build/windows/install'
+## thisScriptDir = getScriptDir()
+source(paste0(thisScriptDir, '/../../../config/bdt_path.R'))
 
 sample_groups = list(
   c(1,2,3,4,158,159,160),
@@ -153,7 +153,7 @@ sample_groups = list(
 ## group level
 export_columns = sapply(sample_groups, function(g) g[1])
 ret = bdvdExport(
-    bdt_home = bdt_home,
+    bdt_home = bdtHome,
     column_ids = export_columns,
     bdvd_dir = paste0(thisScriptDir,"/01-out"),
     component = 'signal',

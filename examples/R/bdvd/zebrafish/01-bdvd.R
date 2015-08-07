@@ -1,12 +1,12 @@
 rm(list=ls())
 library("bdt")
 
-bdtDatasetsDir = 'D:/bdtDatasets'
-thisScriptDir = 'D:/BDT/examples/R/bdvd/zebrafish'
-bdt_home = 'D:/BDT/build/windows/install'
+thisScriptDir = 'C:/work/BDT/examples/R/bdvd/zebrafish'
+## thisScriptDir = getScriptDir()
+source(paste0(thisScriptDir, '/../../../config/bdt_path.R'))
 
 ret = bdvd(
-    bdt_home = bdt_home,
+    bdt_home = bdtHome,
     data_input = paste0("binary-mat@",bdtDatasetsDir,"/zebrafish/data.bfv"),
     data_nrow = 20865,
     data_ncol = 6,

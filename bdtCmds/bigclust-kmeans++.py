@@ -387,7 +387,7 @@ def exportKMembers(fcdcPrx, computePrx, kmembersOID, kmembersVec):
     task.FeatureIdxTo=kmembersVec.RowCnt
     task.OutID = 10001 # not used
     task.OutPath=os.path.abspath(gParams.output_dir)
-    task.OutFile = os.path.abspath("{0}/cluster_assignments.bfv".format(gParams.output_dir))
+    task.OutFile = os.path.abspath("{0}/cluster_assignments".format(gParams.output_dir))
     task.ConvertToType = iBS.FeatureValueEnum.FeatureValueInt32
     gRunner.log("Export cluster assignments ...")
     bigMatUtil.exportMatByRange(gRunner.log,fcdcPrx,computePrx,task)
