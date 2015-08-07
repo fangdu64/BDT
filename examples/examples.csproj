@@ -49,6 +49,10 @@
     <None Include="analysis\DukeUwDnase\s04-export-noRuv\bdvd-export.sh" />
     <None Include="analysis\DukeUwDnase\s05-export-ruvK2\bdvd-export.R" />
     <None Include="analysis\DukeUwDnase\s05-export-ruvK2\bdvd-export.sh" />
+    <None Include="analysis\DukeUwDnase\s07-bigKmeans-ruvK2\bigKmeans.R" />
+    <None Include="analysis\DukeUwDnase\s07-bigKmeans-ruvK2\bigKmeans.sh" />
+    <None Include="analysis\DukeUwDnase\s06-bigKmeans-noRuv\bigKmeans.sh" />
+    <None Include="analysis\DukeUwDnase\s06-bigKmeans-noRuv\bigKmeans.R" />
     <None Include="config\bdt_path.R" />
     <None Include="config\bdt_path_linux.sh" />
     <None Include="config\bdt_path_win.bat" />
