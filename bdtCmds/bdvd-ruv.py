@@ -390,20 +390,20 @@ def main(argv=None):
   
         gRunner.log("bdtCore activated")
         
-        #sampleIDs = attachInputBigMatrix(bigmat, fcdcPrx, True)
+        sampleIDs = attachInputBigMatrix(bigmat, fcdcPrx, True)
 
-        #ctrlOIDs = None
-        #if gParams.ctrl_rows_pickle is not None:
-        #    ctrObj = iBSDefines.loadPickle(gParams.ctrl_rows_pickle)
-        #    ctrlMat = ctrObj.BigMat
-        #    gRunner.log("ctrl row cnt = {0}".format(ctrlMat.RowCnt))
-        #    ctrlOIDs = attachInputBigMatrix(ctrlMat, fcdcPrx, False)
+        ctrlOIDs = None
+        if gParams.ctrl_rows_pickle is not None:
+            ctrObj = iBSDefines.loadPickle(gParams.ctrl_rows_pickle)
+            ctrlMat = ctrObj.BigMat
+            gRunner.log("ctrl row cnt = {0}".format(ctrlMat.RowCnt))
+            ctrlOIDs = attachInputBigMatrix(ctrlMat, fcdcPrx, False)
 
-        #rfi=setupRUVFacet(fcdcPrx, bdvdFacetAdminPrx, sampleIDs, ctrlOIDs)
+        rfi=setupRUVFacet(fcdcPrx, bdvdFacetAdminPrx, sampleIDs, ctrlOIDs)
 
-        ## if MaxK==0, no need to run RUV
-        #if rfi.MaxK>0:
-        #    rebuildRUV(fcdcPrx,bdvdFacetAdminPrx,rfi)
+        # if MaxK==0, no need to run RUV
+        if rfi.MaxK>0:
+            rebuildRUV(fcdcPrx,bdvdFacetAdminPrx,rfi)
 
         # -----------------------------------------------------------
         # Output Results
