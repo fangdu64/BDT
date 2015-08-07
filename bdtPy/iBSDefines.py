@@ -224,6 +224,19 @@ def derivePickleFile(filenameOrDir):
         pickleFile = appendPickleExtention(filenameOrDir)
     return pickleFile
 
+def getDefaultMatNameFromeNodeDir(nodeDir):
+    # runSummary.pickle should be in nodeDir/log
+    runSummaryPickleFile = "{0}/logs/runSummary.pickle".format(os.path.abspath(nodeDir))
+    if not os.path.exists(runSummaryPickleFile):
+        return None
+    resultSummary = loadPickle(runSummaryPickleFile)
+    if resultSummary.NodeType == "bigMat":
+        return 'bigmat'
+    elif resultSummary.NodeType == "bdvd-export":
+        return 'bdvd-export-mat'
+    else:
+        return None
+
 def appendPickleExtention(filename):
     fn = filename.strip()
     if cmdFile[-7:] != '.pickle':

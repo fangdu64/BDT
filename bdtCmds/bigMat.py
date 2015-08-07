@@ -169,7 +169,7 @@ def  s01_bigmat2mat():
 # -----------------------------------------------------------
 # import data matrix from bdvd-export output
 # -----------------------------------------------------------
-def  s01_fromBdvdExport():
+def s01_fromBdvdExport():
     nodeName = gSteps[0]
     inputPickle = iBSDefines.derivePickleFile(gParams.input_location)
     ruvOut = iBSDefines.loadPickle(inputPickle).Export
@@ -184,6 +184,12 @@ def  s01_fromBdvdExport():
 
     iBSDefines.dumpPickle(ruvOut.get_default_mat(), out_picke_file)
     return out_picke_file
+
+def s01_fromNodeOutput():
+    defaultOutput = iBSDefines.getDefaultMatNameFromeNodeDir(gParams.input_location)
+    if defaultOutput is None:
+        raise iBSDefines.BdtUsage('no valid mat input found in {0}'.format(gParams.input_location))
+    return gInputHandlers[defaultOutput]()
 
 def main(argv=None):
     global gParams
@@ -201,7 +207,8 @@ def main(argv=None):
         'kmeans-seeds-mat': s01_fromKmeansResult,
         'kmeans-centroids-mat': s01_fromKmeansResult,
         'kmeans-data-mat': s01_fromKmeansResult,
-        'bdvd-export-mat': s01_fromBdvdExport}
+        'bdvd-export-mat': s01_fromBdvdExport,
+        'output': s01_fromNodeOutput}
 
     run_argv = sys.argv[:]
 
