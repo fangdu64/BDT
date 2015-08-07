@@ -199,14 +199,14 @@ sampleGroups=list(
     c(422, 423),
     c(424, 425))
 
-## group by cell types
+## the first sample in each cell type
 exportColumns = sapply(sampleGroups, function(g) g[1])
 
 ret = bdvdExport(
     bdt_home = bdtHome,
     column_ids = exportColumns,
     bdvd_dir = paste0(thisScriptDir, '/../s02-bdvd/out'),
-    component = 'signal',
+    component = 'signal', ## cell type signal
     unwanted_factors = 0, ## no RUV
     rowidxs_input = paste0("text-rowids@", bdtDatasetsDir, "/DukeUwDnase/100bp/RowIdxs/highSignalBins.txt"),
     rowidxs_index_base = 0,
