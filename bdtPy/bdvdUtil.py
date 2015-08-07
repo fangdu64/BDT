@@ -265,13 +265,13 @@ def run_bdvd_ruv_export(
     params_pickle_fn=os.path.abspath("{0}/design_params.pickle".format(nodeScriptDir))
     iBSDefines.dumpPickle(design_params, params_pickle_fn)
 
-    design_file=os.path.abspath(bdtHomeDir+"/bdt/bdtPy/PipelineDesigns/bdvdRUVExportDesign.py")
+    design_file=os.path.abspath(bdtHomeDir+"/bdt/bdtPy/PipelineDesigns/bdvdRuvExportDesign.py")
     shutil.copy(design_file,nodeScriptDir)
 
     #
     # Run node
     #
-    design_fn=os.path.abspath(nodeScriptDir)+"/bdvdRUVExportDesign.py"
+    design_fn=os.path.abspath(nodeScriptDir)+"/bdvdRuvExportDesign.py"
     cmdpath=os.path.abspath("{0}/bdt/bdtCmds/bdvd-ruv-export".format(bdtHomeDir))
     if platform == "Windows":
         node_cmd = ["py", cmdpath]
