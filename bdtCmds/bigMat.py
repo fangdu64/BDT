@@ -166,6 +166,25 @@ def  s01_bigmat2mat():
     shutil.copy(inputPickle, out_picke_file)
     return out_picke_file
 
+# -----------------------------------------------------------
+# import data matrix from bdvd-export output
+# -----------------------------------------------------------
+def  s01_fromBdvdExport():
+    nodeName = gSteps[0]
+    inputPickle = iBSDefines.derivePickleFile(gParams.input_location)
+    ruvOut = iBSDefines.loadPickle(inputPickle).Export
+    nodeDir = os.path.abspath("{0}/{1}".format(gParams.pipeline_rundir, nodeName))
+    out_picke_file = os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
+    if gParams.dry_run:
+        return out_picke_file
+    if gParams.remove_before_run and os.path.exists(nodeDir):
+        shutil.rmtree(nodeDir)
+    if not os.path.exists(nodeDir):
+        os.mkdir(nodeDir)
+
+    iBSDefines.dumpPickle(ruvOut.get_default_mat(), out_picke_file)
+    return out_picke_file
+
 def main(argv=None):
     global gParams
     global gRunner
@@ -181,7 +200,8 @@ def main(argv=None):
         'bigmat': s01_bigmat2mat,
         'kmeans-seeds-mat': s01_fromKmeansResult,
         'kmeans-centroids-mat': s01_fromKmeansResult,
-        'kmeans-data-mat': s01_fromKmeansResult}
+        'kmeans-data-mat': s01_fromKmeansResult,
+        'bdvd-export-mat': s01_fromBdvdExport}
 
     run_argv = sys.argv[:]
 

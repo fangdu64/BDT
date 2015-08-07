@@ -161,7 +161,8 @@ bigmat_input_types = [
     'bigmat',
     'kmeans-seeds-mat',
     'kmeans-centroids-mat',
-    'kmeans-data-mat']
+    'kmeans-data-mat',
+    'bdvd-export-mat']
 
 bigmat_use_message = '''
 bigMat
@@ -314,7 +315,7 @@ class BigMatParams:
                 '--{0}nrow'.format(prefix)]
             providedValues = [self.input_type, self.output_dir, self.col_cnt, self.row_cnt]
             providedFiles = [self.input_location]
-        elif self.input_type in ['kmeans-seeds-mat', 'kmeans-centroids-mat', 'kmeans-data-mat', 'text-rowids', 'bigmat']:
+        elif self.input_type in ['kmeans-seeds-mat', 'kmeans-centroids-mat', 'kmeans-data-mat', 'text-rowids', 'bigmat', 'bdvd-export-mat']:
             requiredNames = [
                 '--{0}input',
                 '--{0}out']

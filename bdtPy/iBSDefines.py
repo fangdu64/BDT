@@ -99,6 +99,18 @@ class RUVMatrixExportOutputDefine:
         self.RUVOutputMode = None
         self.RUVOutputScale = None
 
+    def get_default_mat(self):
+        if len(self.BfvFiles) == 0:
+            return None
+        bigmat = BigMatrixMetaInfo()
+        bigmat.Name = self.OutMatNames[0]
+        bigmat.StorePathPrefix = self.BfvFiles[0]
+        bigmat.ColIDs = self.ColIDs
+        bigmat.ColNames = self.ColNames
+        bigmat.RowCnt = self.RowCnt
+        bigmat.ColCnt= self.ColCnt
+        return bigmat
+
 class QuantileOutputDefine:
     def __init__(self, quantiles=None, qfeatuerIdxs=None, qvalues=None, task=None):
         self.Quantiles = quantiles
