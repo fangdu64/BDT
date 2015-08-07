@@ -301,18 +301,24 @@ def saveResults(fcdcPrx, bdvdFacetAdminPrx):
     outObj.EigenVectors = bigmat
 
     # permutated eigen values
-    foi = fcdc.GetFeatureObserver(fcdcPrx,rfi.OIDforPermutatedEigenValues)
-    (rt, fois) = fcdcPrx.GetFeatureObservers(list(range(foi.ObserverID, foi.ObserverID + foi.ObserverGroupSize)))
-    (rt,bigmat_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(foi.ObserverID)
-    bigmat_store_pathprefix = os.path.abspath(bigmat_store_pathprefix)
-    bigmat = iBSDefines.BigMatrixMetaInfo()
-    bigmat.Name = "Permutated eigen values"
-    bigmat.StorePathPrefix = bigmat_store_pathprefix
-    bigmat.ColIDs = [v.ObserverID for v in fois]
-    bigmat.ColNames= [v.ObserverName for v in fois]
-    bigmat.RowCnt = foi.DomainSize
-    bigmat.ColCnt=len(fois)
-    outObj.PermutatedEigenValues = bigmat
+    
+    if rfi.OIDforPermutatedEigenValues > 0:
+        foi = fcdc.GetFeatureObserver(fcdcPrx,rfi.OIDforPermutatedEigenValues)
+        (rt, fois) = fcdcPrx.GetFeatureObservers(list(range(foi.ObserverID, foi.ObserverID + foi.ObserverGroupSize)))
+        (rt,bigmat_store_pathprefix)=fcdcPrx.GetFeatureValuePathPrefix(foi.ObserverID)
+        bigmat_store_pathprefix = os.path.abspath(bigmat_store_pathprefix)
+        bigmat = iBSDefines.BigMatrixMetaInfo()
+        bigmat.Name = "Permutated eigen values"
+        bigmat.StorePathPrefix = bigmat_store_pathprefix
+        bigmat.ColIDs = [v.ObserverID for v in fois]
+        bigmat.ColNames= [v.ObserverName for v in fois]
+        bigmat.RowCnt = foi.DomainSize
+        bigmat.ColCnt=len(fois)
+        outObj.PermutatedEigenValues = bigmat
+    else:
+        bigmat = iBSDefines.BigMatrixMetaInfo()
+        bigmat.as_emtpy();
+        outObj.PermutatedEigenValues = bigmat
 
     # WT
     foi = fcdc.GetFeatureObserver(fcdcPrx,rfi.ObserverIDforWts)

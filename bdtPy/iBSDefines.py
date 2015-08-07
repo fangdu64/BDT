@@ -25,6 +25,13 @@ class BigMatrixMetaInfo:
         self.ColNames= None
         self.ColIDs = None
         self.ColStats=None
+    def as_emtpy(self):
+        self.Name = "None"
+        self.StorePathPrefix = ''
+        self.ColIDs = []
+        self.ColNames= []
+        self.RowCnt = 0
+        self.ColCnt = 0
 
 class BigVecMetaInfo:
     def __init__(self):
