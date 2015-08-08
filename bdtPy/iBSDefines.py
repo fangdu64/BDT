@@ -49,6 +49,12 @@ class RefNoneoverlapBinMap:
         self.RefBinFroms = None
         self.RefBinTos = None
 
+    def as_emtpy(self):
+        self.RefNames = []
+        self.BinWidth = 0
+        self.RefBinFroms = []
+        self.RefBinTos= []
+
     def get_genomepos(binIdx):
         ref="chr1"
         posFrom=0
