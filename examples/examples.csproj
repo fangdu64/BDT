@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="analysis\DukeUwDnase\s01-bam2mat\bam2mat.sh" />
+    <None Include="analysis\DukeUwDnase\s01-bam2mat\binInfo.R" />
     <None Include="analysis\DukeUwDnase\s02-bdvd\bdvd.sh" />
     <None Include="analysis\DukeUwDnase\s02-bdvd\bdvd.R" />
     <None Include="analysis\DukeUwDnase\s04-export-noRuv\bdvd-export.R" />

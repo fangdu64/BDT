@@ -51,6 +51,7 @@ getScriptDir <- function() {
 
 #'
 #' get Genome position by bin idx
+#' @param binIdx 0-based
 #' @export
 #'
 getGenomePosByBinIdx <- function(binMap, binIdx) {
@@ -68,6 +69,8 @@ getGenomePosByBinIdx <- function(binMap, binIdx) {
 
 #'
 #' get bin idx by Genome position
+#' @param refName chromosome e.g., chr1
+#' @param bpIdx base-pair position within the chromosome, 0-based
 #' @export
 #'
 getBinIdxByGenomePos <- function(binMap, refName, bpIdx) {
