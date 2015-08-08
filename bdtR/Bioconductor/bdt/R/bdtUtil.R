@@ -49,6 +49,36 @@ getScriptDir <- function() {
     return (scriptDir)
 }
 
+#'
+#' get Genome position by bin idx
+#' @export
+#'
+getGenomePosByBinIdx <- function(binMap, binIdx) {
+    refIdx = Position(function(i) {
+        return((binMap$refBinFroms[i] <= binIdx) && (binMap$refBinTos[i] > binIdx))
+    }, 1:length(binMap$refBinFroms))
+
+    localBpFrom = (binIdx - binMap$refBinFroms[refIdx]) * binMap$binWidth
+    localBpTo = localBpFrom + binMap$binWidth
+    ret = list(ref = binMap$refNames[refIdx],
+               bpFrom = localBpFrom,
+               bpTo = localBpTo)
+    return (ret)
+}
+
+#'
+#' get bin idx by Genome position
+#' @export
+#'
+getBinIdxByGenomePos <- function(binMap, refName, bpIdx) {
+    refIdx = Position(function(i) {
+        return(binMap$refNames[i] == refName)
+    }, 1:length(binMap$refNames))
+
+    binIdx = as.integer(bpIdx / binMap$binWidth) + binMap$refBinFroms[refIdx]
+    return (binIdx)
+}
+
 readBigMatrix<-function(colCnt,rowCnt,bfvFile)
 {
 	totalValueCnt = rowCnt*colCnt
