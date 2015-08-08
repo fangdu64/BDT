@@ -11,7 +11,7 @@ source(paste0(thisScriptDir, '/../../../config/bdt_path.R'))
 output = readBigMatOutput(paste0(thisScriptDir,"/out"))
 
 ## bin map info
-binMap = output.binMap
+binMap = output$binMap
 print(binMap)
 
 ## get Genome position by bin index
