@@ -81,8 +81,7 @@ The bdt R package is to run BDT within R for seamless integration. Under the hoo
 3. Install bdt library:
 
         library(devtools)
-        install_local('{bdt_home}/bdt/bdtR/Bioconductor/bdt')
-where {bdt_home} is the installation directory for BDT.
+        install_git('https://github.com/fangdu64/rpackages', subdir = 'bdt')
 4. Use bdt:
 
         library(bdt)
