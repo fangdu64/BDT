@@ -17,6 +17,7 @@ ret = bdvd(
     ruv_type = 'ruvg',
     control_rows_method = 'specified-rows',
     ctrl_rows_input = paste0("text-rowids@",bdtDatasetsDir,"/zebrafish/control-rows.txt"),
+    ctrl_rows_index_base = 1, 
     permutation_num = 100,
     out = paste0(thisScriptDir,"/01-out"))
 

@@ -310,16 +310,3 @@ eigenValues = readVec(ret$eigenValues)
 eigenVectors = readMat(ret$eigenVectors)
 permutatedEigenValues = readMat(ret$permutatedEigenValues)
 Wt = readMat(ret$Wt)
-
-## group level
-export_columns = sapply(sample_groups, function(g) g[1])
-ret = bdvdExport(
-    bdt_home = bdtHome,
-    column_ids = export_columns,
-    bdvd_dir = paste0(thisScriptDir,"/01-out"),
-    component = 'signal',
-    data_col_names = data_col_names,
-    unwanted_factors = 2,
-    rowidx_from = 1,
-    rowidx_to = 1000,
-    out = paste0(thisScriptDir,"/01-export"))

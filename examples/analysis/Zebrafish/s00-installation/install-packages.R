@@ -1,0 +1,13 @@
+## tested on R version 3.2.2 (2015-08-14)
+source("http://bioconductor.org/biocLite.R")
+biocLite("zebrafishRNASeq")
+devtools::install_github('RSkittleBrewer', 'alyssafrazee')
+biocLite("genefilter")
+biocLite("RUVSeq")
+biocLite("edgeR")
+biocLite("sva")
+biocLite("ffpe")
+biocLite("RColorBrewer")
+biocLite("corrplot")
+biocLite("limma")
+

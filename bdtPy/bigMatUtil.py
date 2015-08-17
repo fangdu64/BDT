@@ -593,6 +593,8 @@ def run_bfv2Mat(
     ColCnt = col_cnt
     RowCnt = row_cnt
     StorePathPrefix = data_file
+    if StorePathPrefix[-4:] == '.bfv':
+        StorePathPrefix = StorePathPrefix[:-4]
 
     ColNames=["V{0}".format(v) for v in range(1,ColCnt+1)]
     if col_names is not None:
