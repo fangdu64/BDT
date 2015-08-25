@@ -303,10 +303,41 @@ ret = bdvd(
     sample_groups = sample_groups,
     ruv_type = 'ruvs',
     control_rows_method = 'all',
-    permutation_num = 4,
+    permutation_num = 50,
     out = paste0(thisScriptDir,"/01-out"))
 
 eigenValues = readVec(ret$eigenValues)
 eigenVectors = readMat(ret$eigenVectors)
 permutatedEigenValues = readMat(ret$permutatedEigenValues)
 Wt = readMat(ret$Wt)
+e = 0.000001
+eigenValues[which(eigenValues<=e)]=0
+
+L = nrow(eigenValues)
+
+T = rep(0, L)
+for(k in 1:L){
+	T[k] = eigenValues[k] / sum(eigenValues)
+}
+
+plot(T)
+B = ncol(permutatedEigenValues)
+T_0 = matrix(0, L, B)
+for(b in 1:B){
+	pev = permutatedEigenValues[,b];
+	pev[which(eigenValues<=e)]=0
+	for(k in 1:L){
+		T_0[k,b] = pev[k] / sum(pev)
+	}
+	
+	lines(1:L, T_0[,b])
+}
+
+p = rep(0, L)
+for(k in 1:L){
+	p[k] = sum(T_0[1,] >= T[k])/B
+	if (k > 1) {
+		p[k] = max(p[k-1], p[k])
+	}
+}
+
