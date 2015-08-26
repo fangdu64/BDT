@@ -185,7 +185,7 @@ class BDVDParams:
         self.logging_dir = os.path.abspath(self.output_dir + "/logs")
         self.pipeline_rundir=os.path.abspath(self.output_dir + "/run")
 
-         # parse options for data
+        # parse options for data
         self.data_indir =os.path.abspath("{0}/{1}".format(self.pipeline_rundir, gSteps[0]))
         dataArgv.extend(['--data-out',self.data_indir])
         self.data_params = bigMatUtil.BigMatParams()

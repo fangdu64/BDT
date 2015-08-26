@@ -199,6 +199,10 @@ class BdvdExportResultsDefine:
     def __init__(self):
         self.Export = None
 
+class BigmatExportResultsDefine:
+    def __init__(self):
+        self.Export = None
+
 def getResultPickleFromNodeDir(nodeDir):
     # runSummary.pickle should be in nodeDir/log
     runSummaryPickleFile = "{0}/logs/runSummary.pickle".format(os.path.abspath(nodeDir))
@@ -215,6 +219,9 @@ def getResultPickleFromNodeDir(nodeDir):
         outPickle = "{0}/logs/results.pickle".format(os.path.abspath(nodeDir))
         return os.path.abspath(outPickle)
     elif resultSummary.NodeType == "bdvd-export":
+        outPickle = "{0}/logs/results.pickle".format(os.path.abspath(nodeDir))
+        return os.path.abspath(outPickle)
+    elif resultSummary.NodeType == "bigmat-export":
         outPickle = "{0}/logs/results.pickle".format(os.path.abspath(nodeDir))
         return os.path.abspath(outPickle)
     else:
@@ -240,6 +247,8 @@ def getDefaultMatNameFromeNodeDir(nodeDir):
         return 'bigmat'
     elif resultSummary.NodeType == "bdvd-export":
         return 'bdvd-export-mat'
+    elif resultSummary.NodeType == "bigmat-export":
+        return 'bigmat-export-mat'
     else:
         return None
 

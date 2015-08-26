@@ -26,6 +26,7 @@
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="bigmat-export.py" />
     <Compile Include="bigMatExport.py" />
     <Compile Include="bdvdExport.py" />
     <Compile Include="bdvd-ruv-export.py" />

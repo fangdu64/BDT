@@ -163,6 +163,7 @@ bigmat_input_types = [
     'kmeans-centroids-mat',
     'kmeans-data-mat',
     'bdvd-export-mat',
+    'bigmat-export-mat',
     'output']
 
 bigmat_use_message = '''
@@ -316,7 +317,7 @@ class BigMatParams:
                 '--{0}nrow'.format(prefix)]
             providedValues = [self.input_type, self.output_dir, self.col_cnt, self.row_cnt]
             providedFiles = [self.input_location]
-        elif self.input_type in ['kmeans-seeds-mat', 'kmeans-centroids-mat', 'kmeans-data-mat', 'text-rowids', 'bigmat', 'bdvd-export-mat', 'output']:
+        elif self.input_type in ['kmeans-seeds-mat', 'kmeans-centroids-mat', 'kmeans-data-mat', 'text-rowids', 'bigmat', 'bdvd-export-mat', 'bigmat-export-mat', 'output']:
             requiredNames = [
                 '--{0}input',
                 '--{0}out']
@@ -734,3 +735,71 @@ def run_bigMat(
     proc = subprocess.call(node_cmd)
     gRunner.logp("end subtask: {0}\n".format(nodeName))
     return out_picke_file
+
+def run_bigmat_export(
+    gRunner,
+    platform,
+    bdtHomeDir,
+    nodeName,
+    runDir,
+    dryRun,
+    removeBeforeRun,
+    datamatPickle,
+    rowIdxsPickle,
+    row_selector,
+    rowidx_from,
+    rowidx_to,
+    column_ids,
+    export_name
+    ):
+
+    nodeDir = os.path.abspath("{0}/{1}".format(runDir, nodeName))
+
+    out_picke_file = os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
+    if dryRun:
+        return out_picke_file
+
+    if removeBeforeRun and os.path.exists(nodeDir):
+        gRunner.logp("remove existing dir: {0}".format(nodeDir))
+        shutil.rmtree(nodeDir)
+    
+    nodeScriptDir = nodeDir + "-script"
+    if not os.path.exists(nodeScriptDir):
+        os.mkdir(nodeScriptDir)
+
+    #
+    # prepare design file
+    #
+
+    design_params=(export_name,
+                   column_ids,
+                   rowidx_from,
+                   rowidx_to)
+    params_pickle_fn=os.path.abspath("{0}/design_params.pickle".format(nodeScriptDir))
+    iBSDefines.dumpPickle(design_params, params_pickle_fn)
+
+    design_file=os.path.abspath(bdtHomeDir+"/bdt/bdtPy/PipelineDesigns/bigmatExportDesign.py")
+    shutil.copy(design_file,nodeScriptDir)
+
+    #
+    # Run node
+    #
+    design_fn=os.path.abspath(nodeScriptDir)+"/bigmatExportDesign.py"
+    cmdpath=os.path.abspath("{0}/bdt/bdtCmds/bigmat-export".format(bdtHomeDir))
+    if platform == "Windows":
+        node_cmd = ["py", cmdpath]
+    else:
+        node_cmd = [cmdpath]
+    node_cmd.extend(["--node", nodeName,
+                "--out", nodeDir,
+                "--data-mat", datamatPickle])
+    
+    if rowIdxsPickle is not None:
+        node_cmd.extend(["--export-rows", rowIdxsPickle])
+    
+    node_cmd.append(design_fn)
+
+    gRunner.logp("run subtask at: {0}".format(nodeDir))
+    proc = subprocess.call(node_cmd)
+    gRunner.logp("end subtask \n")
+    return (nodeDir,out_picke_file)

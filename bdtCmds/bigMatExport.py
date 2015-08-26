@@ -37,7 +37,7 @@ import Ice
 
 gParams=None
 gRunner=None
-gSteps = ['1-row-idxs','2-run-export']
+gSteps = ['1-data-mat', '2-row-idxs','3-run-export']
 gRowSelectors = ['all', 'range', 'specified-rows']
 
 class BDVDParams:
@@ -48,24 +48,23 @@ class BDVDParams:
         self.dry_run = True
         self.remove_before_run = True
         self.pipeline_rundir = None
-        self.workercnt = 4
-        self.memory_size = 2000
+        self.data_params = None
+        self.data_indir = None
         self.row_selector = gRowSelectors[0]
         self.rowidx_from = None
         self.rowidx_to = None
         self.rowidxs_params = None
         self.rowidxs_indir = None
         self.column_ids = None
-        self.bdvd_dir = None
-        self.artifact_detection =gArtifactDetections[0]
-        self.unwanted_factors = None
-        self.known_factors = None
-        self.export_names = None
+        self.export_name = None
 
     def parse_options(self, argv):
+        dataParams = bigMatUtil.BigMatParams()
         rowIdxsParams = bigMatUtil.BigMatParams()
         args = argv[1:]
+        args = dataParams.strip_argv('data-', args)
         args = rowIdxsParams.strip_argv('rowidxs-', args)
+        dataArgv = dataParams.argv
         rowIdxsArgv = rowIdxsParams.argv
         bdvdArgv = args
         try:
@@ -79,13 +78,7 @@ class BDVDParams:
                 "row-selector=",
                 "rowidx-from=",
                 "rowidx-to=",
-                "bdvd-dir=",
-                "component=",
-                "scale=",
-                "artifact-detection=",
-                "unwanted-factors=",
-                "known-factors=",
-                "export-names="])
+                "export-name="])
 
         except getopt.error as msg:
             raise iBSDefines.BdtUsage(msg)
@@ -96,10 +89,6 @@ class BDVDParams:
                 sys.exit(0)
             if option == "--help":
                 raise iBSDefines.BdtUsage(use_message)
-            if option == "--thread-num":
-                self.workercnt = int(value)
-            if option == "--memory-size":
-                self.memory_size = int(value)
             if option in ("-o", "--out"):
                 self.output_dir = value
             if option == "--row-selector":
@@ -120,52 +109,48 @@ class BDVDParams:
                 if value not in allowedValues:
                     raise iBSDefines.BdtUsage('--start-from should be one of the {0}'.format(allowedValues))
                 self.start_from = value
-            if option =="--bdvd-dir":
-                self.bdvd_dir = value
-            if option == "--artifact-detection":
-                allowedValues = gArtifactDetections;
-                if value not in allowedValues:
-                    raise iBSDefines.BdtUsage('--artifact-detection should be one of the {0}'.format(allowedValues))
-                self.artifact_detection = value
-            if option =="--unwanted-factors":
-                self.unwanted_factors = bdtUtil.parseIntSeq(value)
-                if len(self.unwanted_factors)<1:
-                    raise iBSDefines.BdtUsage('invalid unwanted_factors: {0}'.format(value))
-            if option =="--known-factors":
-                self.known_factors = bdtUtil.parseIntSeq(value)
-                if len(self.known_factors)<1:
-                    raise iBSDefines.BdtUsage('invalid known-factors: {0}'.format(value))
-            if option =="--export-names":
-                self.export_names=value.split(',')
-                if len(self.export_names)<1:
-                    raise iBSDefines.BdtUsage('invalid export-names: {0}'.format(value))
-
-        requiredNames = ['--out', '--bdvd-dir', '--column-ids']
-        providedValues = [self.output_dir, self.bdvd_dir, self.column_ids]
+            if option =="--export-name":
+                self.export_name=value
+        requiredNames = ['--out']
+        providedValues = [self.output_dir]
         noneIdx = bdtUtil.getFirstNone(providedValues)
         if noneIdx != -1:
             raise iBSDefines.BdtUsage("{0} is required".format(requiredNames[noneIdx]))
 
-        self.bdvd_dir = os.path.abspath(self.bdvd_dir)
         self.output_dir = os.path.abspath(self.output_dir)
         self.logging_dir = os.path.abspath(self.output_dir + "/logs")
         self.pipeline_rundir=os.path.abspath(self.output_dir + "/run")
+
+        # parse options for data
+        self.data_indir =os.path.abspath("{0}/{1}".format(self.pipeline_rundir, gSteps[0]))
+        dataArgv.extend(['--data-out',self.data_indir])
+        self.data_params = bigMatUtil.BigMatParams()
+        self.data_params.parse_options("data-", dataArgv)
 
         if self.row_selector == "specified-rows" or len(rowIdxsArgv) > 0:
             self.rowidxs_indir=os.path.abspath("{0}/{1}".format(self.pipeline_rundir, gSteps[0]))
             rowIdxsArgv.extend(['--rowidxs-out',self.rowidxs_indir])
             self.rowidxs_params = bigMatUtil.BigMatParams()
             self.rowidxs_params.parse_options("rowidxs-", rowIdxsArgv)
-        if self.known_factors is None:
-            self.known_factors =[0]*len(self.unwanted_factors)
-        if len(self.known_factors) != len(self.unwanted_factors):
-            raise iBSDefines.BdtUsage("unwanted-factors and known-factors must have equal lenght")
-        if self.export_names is None:
-            self.export_names = ['export_{0}'.format(v+1) for v in range(len(self.unwanted_factors))]
+        
+        if self.export_name is None:
+            self.export_name = 'export'
         return args
 
-def s01_rowidxs():
+def s01_data_mat():
     nodeName = gSteps[0]
+    return bigMatUtil.run_bigMat(
+        gRunner,
+        Platform,
+        BDT_HomeDir,
+        nodeName,
+        gParams.pipeline_rundir,
+        gParams.dry_run,
+        gParams.remove_before_run,
+        gParams.data_params)
+
+def s02_rowidxs():
+    nodeName = gSteps[1]
     return bigMatUtil.run_bigMat(
         gRunner,
         Platform,
@@ -176,9 +161,9 @@ def s01_rowidxs():
         gParams.remove_before_run,
         gParams.rowidxs_params)
 
-def s02_run_export(rowIdxsPickle):
-    nodeName = gSteps[1]
-    return bdvdUtil.run_bdvd_ruv_export(
+def s03_run_export(datamatPickle, rowIdxsPickle):
+    nodeName = gSteps[2]
+    return bdvdUtil.run_bigmat_export(
         gRunner,
         Platform,
         BDT_HomeDir,
@@ -186,34 +171,29 @@ def s02_run_export(rowIdxsPickle):
         gParams.pipeline_rundir,
         gParams.dry_run,
         gParams.remove_before_run,
+        datamatPickle,
         rowIdxsPickle,
         gParams.row_selector,
         gParams.rowidx_from,
         gParams.rowidx_to,
         gParams.column_ids,
-        gParams.workercnt,
-        gParams.memory_size,
-        gParams.bdvd_dir,
-        gParams.artifact_detection,
-        gParams.unwanted_factors,
-        gParams.known_factors,
-        gParams.export_names);
+        gParams.export_name);
 
 def outputR():
     obj = iBSDefines.loadPickle(
         iBSDefines.derivePickleFile(gParams.output_dir))
 
-    infile = open("{0}/bdt/bdtR/outputTemplates/bdvdExportOutputTemplate.R".format(BDT_HomeDir))
+    infile = open("{0}/bdt/bdtR/outputTemplates/bigMatOutputTemplate.R".format(BDT_HomeDir))
     outfile = open("{0}/logs/output.R".format(gParams.output_dir), "w")
 
-    ruvOut = obj.Export
-    replacements = {
-                    "__BFV_FILES__": str(ruvOut.BfvFiles).replace('[','').replace(']',''),
-                    "__OUT_MAT_NAMES__": str(ruvOut.OutMatNames).replace('[','').replace(']',''),
-                    "__MAT_ROW_CNT__":str(ruvOut.RowCnt),
-                    "__MAT_COL_CNT__":str(ruvOut.ColCnt),
-                    "__MAT_COL_NAMES__":str(ruvOut.ColNames).replace('[','').replace(']',''),
-                    "__MAT_COL_IDS__":str(ruvOut.ColIDs).replace('[','').replace(']','')
+    bigmat = obj.Export
+
+    replacements = {"__NAME__": bigmat.Name,
+                    "__STORE_PATH_PREFIX__": bigmat.StorePathPrefix.replace('\\','/'),
+                    "__ROW_CNT__":str(bigmat.RowCnt),
+                    "__COL_CNT__":str(bigmat.ColCnt),
+                    "__COL_NAMES__":str(bigmat.ColNames).replace('[','').replace(']',''),
+                    "__COL_IDS__":str(bigmat.ColIDs).replace('[','').replace(']','')
                     }
 
     for line in infile:
@@ -238,42 +218,52 @@ def main(argv=None):
         start_time = datetime.now()
 
         gRunner.prepare_dirs(gParams.output_dir, gParams.logging_dir, gParams.pipeline_rundir)
-        gRunner.init_logger(os.path.abspath(gParams.logging_dir + "/bdvd-export.log"))
+        gRunner.init_logger(os.path.abspath(gParams.logging_dir + "/bigmat-export.log"))
 
         gRunner.logp()
-        gRunner.log("Beginning bdvd export run v({0})".format(bdtUtil.get_version()))
+        gRunner.log("Beginning bigmat export run v({0})".format(bdtUtil.get_version()))
         gRunner.logp("-----------------------------------------------")
 
+        # -----------------------------------------------------------
+        # prepare bigmat
+        # -----------------------------------------------------------
         if gParams.dry_run and gParams.start_from == gSteps[0]:
             gParams.dry_run = False
 
+        datamatPickle = s01_data_mat()
+        if gParams.dry_run and not os.path.exists(datamatPickle):
+            gRunner.log("retrieve existing result for: {0}".format(gSteps[0]))
+            gRunner.log("from: {0}".format(datamatPickle))
+            gRunner.die('file not exist')
+            gRunner.log("")
+
         rowIdxsPickle = None
         if gParams.rowidxs_params is not None:
-            if gParams.dry_run and gParams.start_from == gSteps[0]:
+            if gParams.dry_run and gParams.start_from == gSteps[1]:
                 gParams.dry_run = False
-            rowIdxsPickle = s01_rowidxs()
+            rowIdxsPickle = s02_rowidxs()
             if gParams.dry_run and not os.path.exists(rowIdxsPickle):
-                gRunner.log("retrieve existing result for: {0}".format(gSteps[0]))
+                gRunner.log("retrieve existing result for: {0}".format(gSteps[1]))
                 gRunner.log("from: {0}".format(rowIdxsPickle))
                 gRunner.die('file not exist')
                 gRunner.log("")
 
-        if gParams.dry_run and gParams.start_from == gSteps[1]:
+        if gParams.dry_run and gParams.start_from == gSteps[2]:
             gParams.dry_run = False
 
-        s02_run_export(rowIdxsPickle)
+        s03_run_export(datamatPickle, rowIdxsPickle)
 
         runSummary = iBSDefines.NodeRunSummaryDefine()
         runSummary.NodeDir = gParams.output_dir
-        runSummary.NodeType = "bdvd-export"
+        runSummary.NodeType = "bigmat-export"
         runSummaryPicke = "{0}/logs/runSummary.pickle".format(gParams.output_dir)
         iBSDefines.dumpPickle(runSummary, runSummaryPicke)
 
         # dump pickles generated from each step into one pickle
-        allResults = iBSDefines.BdvdExportResultsDefine()
-        bdvdExportPickle = os.path.abspath("{0}/run/{1}/{1}.pickle".format(gParams.output_dir, gSteps[1]))
+        allResults = iBSDefines.BigmatExportResultsDefine()
+        bigmatExportPickle = os.path.abspath("{0}/run/{1}/{1}.pickle".format(gParams.output_dir, gSteps[2]))
         allResultsPicke = os.path.abspath("{0}/logs/results.pickle".format(gParams.output_dir))
-        allResults.Export = iBSDefines.loadPickle(bdvdExportPickle)
+        allResults.Export = iBSDefines.loadPickle(bigmatExportPickle)
         iBSDefines.dumpPickle(allResults, allResultsPicke)
 
         outputR()

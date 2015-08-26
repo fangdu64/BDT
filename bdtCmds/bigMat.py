@@ -185,6 +185,22 @@ def s01_fromBdvdExport():
     iBSDefines.dumpPickle(ruvOut.get_default_mat(), out_picke_file)
     return out_picke_file
 
+def s01_fromBigmatExport():
+    nodeName = gSteps[0]
+    inputPickle = iBSDefines.derivePickleFile(gParams.input_location)
+    bigmat = iBSDefines.loadPickle(inputPickle).Export
+    nodeDir = os.path.abspath("{0}/{1}".format(gParams.pipeline_rundir, nodeName))
+    out_picke_file = os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
+    if gParams.dry_run:
+        return out_picke_file
+    if gParams.remove_before_run and os.path.exists(nodeDir):
+        shutil.rmtree(nodeDir)
+    if not os.path.exists(nodeDir):
+        os.mkdir(nodeDir)
+
+    iBSDefines.dumpPickle(bigmat, out_picke_file)
+    return out_picke_file
+
 def s01_fromNodeOutput():
     defaultOutput = iBSDefines.getDefaultMatNameFromeNodeDir(gParams.input_location)
     if defaultOutput is None:
@@ -240,6 +256,7 @@ def main(argv=None):
         'kmeans-centroids-mat': s01_fromKmeansResult,
         'kmeans-data-mat': s01_fromKmeansResult,
         'bdvd-export-mat': s01_fromBdvdExport,
+        'bigmat-export-mat': s01_fromBigmatExport,
         'output': s01_fromNodeOutput}
 
     run_argv = sys.argv[:]

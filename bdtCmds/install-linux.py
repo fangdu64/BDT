@@ -31,7 +31,8 @@ def main(argv=None):
         'bdvd.py',
         'bdvdExport.py',
         'bigMat.py',
-        'bigKmeansC.py']
+        'bigKmeansC.py',
+        'bigMatExport.py']
 
 	print(bdtCmdsDir)
 	print(cmdFiles)
