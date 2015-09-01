@@ -214,22 +214,26 @@ def outputR():
     infile = open("{0}/bdt/bdtR/outputTemplates/bigMatOutputTemplate.R".format(BDT_HomeDir))
     outfile = open("{0}/logs/output.R".format(gParams.output_dir), "w")
 
+    bigMat = obj
+    if (hasattr(obj, 'BigMat')):
+        bigMat = obj.BigMat
+
     if (not hasattr(obj, 'BinMap')):
-        obj.BinMap = iBSDefines.RefNoneoverlapBinMap()
-        obj.BinMap.as_emtpy()
+        binMap = iBSDefines.RefNoneoverlapBinMap()
+        binMap.as_emtpy()
 
     replacements = {"__INPUT_TYPE__": gParams.input_type,
-                    "__NAME__": obj.BigMat.Name,
-                    "__STORE_PATH_PREFIX__": obj.BigMat.StorePathPrefix.replace('\\','/'),
-                    "__ROW_CNT__":str(obj.BigMat.RowCnt),
-                    "__COL_CNT__":str(obj.BigMat.ColCnt),
-                    "__COL_NAMES__":str(obj.BigMat.ColNames).replace('[','').replace(']',''),
-                    "__COL_IDS__":str(obj.BigMat.ColIDs).replace('[','').replace(']',''),
+                    "__NAME__": bigMat.Name,
+                    "__STORE_PATH_PREFIX__": bigMat.StorePathPrefix.replace('\\','/'),
+                    "__ROW_CNT__":str(bigMat.RowCnt),
+                    "__COL_CNT__":str(bigMat.ColCnt),
+                    "__COL_NAMES__":str(bigMat.ColNames).replace('[','').replace(']',''),
+                    "__COL_IDS__":str(bigMat.ColIDs).replace('[','').replace(']',''),
 
-                    "__BIN_WIDTH__":str(obj.BinMap.BinWidth),
-                    "__REF_NAMES__":str(obj.BinMap.RefNames).replace('[','').replace(']',''),
-                    "__BIN_FROMS__":str(obj.BinMap.RefBinFroms).replace('[','').replace(']',''),
-                    "__BIN_TOS__":str(obj.BinMap.RefBinTos).replace('[','').replace(']','')
+                    "__BIN_WIDTH__":str(binMap.BinWidth),
+                    "__REF_NAMES__":str(binMap.RefNames).replace('[','').replace(']',''),
+                    "__BIN_FROMS__":str(binMap.RefBinFroms).replace('[','').replace(']',''),
+                    "__BIN_TOS__":str(binMap.RefBinTos).replace('[','').replace(']','')
                     }
 
     for line in infile:
