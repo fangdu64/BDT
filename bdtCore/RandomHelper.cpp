@@ -20,13 +20,13 @@ const iBS::IntVec& CIndexPermutation::Permutate() {
 CGroupedIndexPermutation::CGroupedIndexPermutation(boost::random::mt19937& state, const iBS::IntVecVec& groupedIdxs)
     :m_shuffleFunc(state)
 {
-    int groupCnt = groupedIdxs.size();
+    Ice::Long groupCnt = groupedIdxs.size();
     m_groupSizes.resize(groupCnt);
 
     for (int i = 0; i < groupCnt; ++i)
     {
         const iBS::IntVec& idxs = groupedIdxs[i];
-        m_groupSizes[i] = idxs.size();
+        m_groupSizes[i] = (int) idxs.size();
         for (int j = 0; j < m_groupSizes[i]; j++)
         {
             m_idxs.push_back(idxs[j]);
@@ -35,13 +35,10 @@ CGroupedIndexPermutation::CGroupedIndexPermutation(boost::random::mt19937& state
 }
 
 const iBS::IntVec& CGroupedIndexPermutation::Permutate() {
-    std::random_shuffle(m_idxs.begin(), m_idxs.end(), m_shuffleFunc);
-
-    int groupCnt = m_groupSizes.size();
+    Ice::Long groupCnt = m_groupSizes.size();
     Ice::Long offset = 0;
     for (int i = 0; i < groupCnt; ++i)
     {
-
         std::random_shuffle(m_idxs.begin() + offset, m_idxs.begin() + offset + m_groupSizes[i], m_shuffleFunc);
         offset += m_groupSizes[i];
     }
