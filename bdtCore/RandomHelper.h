@@ -41,4 +41,19 @@ private:
 	iBS::IntVec m_idxs;
 };
 
+class CGroupedIndexPermutation
+{
+public:
+    CGroupedIndexPermutation(boost::random::mt19937& state, const iBS::IntVecVec& groupedIdxs);
+
+    const iBS::IntVec& Permutate();
+
+    const iBS::IntVec& GetIdxs() { return m_idxs; }
+
+private:
+    RandomShuffleFunc m_shuffleFunc;
+    iBS::IntVec m_groupSizes;
+    iBS::IntVec m_idxs;
+};
+
 #endif
