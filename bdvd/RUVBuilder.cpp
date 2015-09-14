@@ -495,10 +495,7 @@ bool CRUVBuilder::UpdateYcscfYcscfT(::Ice::Double* Y, Ice::Long featureIdxFrom, 
         if (noneCtrlFeature)
             continue;
 
-        for (int i = 0; i < conditionCnt; i++)
-        {
-            conditionSums[i] = 0.0;
-        }
+        std::fill(conditionSums.begin(), conditionSums.end(), 0.0);
 
         for (int i = 0; i < n; i++)
         {
@@ -561,6 +558,7 @@ bool CRUVBuilder::UpdateYcscfYcscfT(::Ice::Double* Y, Ice::Long featureIdxFrom, 
             {
                 ::arma::mat& A = As[p];
                 const iBS::IntVec& colIdxs = colIdxPermuttion.Permutate();
+
                 for (int i = 0; i < m; i++)
                 {
                     int sampleIdx_i = m_ctrlSampleIdx2SampleIdx[colIdxs[i]];
