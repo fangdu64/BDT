@@ -32,7 +32,7 @@ public:
 			::Ice::Double *Y, const iBS::ByteVec& controlFeatureFlags,
 			::arma::mat& A, ::arma::mat& B, ::arma::mat& C, bool AequalB,
 			std::vector< ::arma::mat>& As,
-			CIndexPermutation& colIdxPermutation)
+            CGroupedIndexPermutation& colIdxPermutation)
 			:m_ruvBuilder(ruvBuilder), m_workerIdx(workerIdx),
 			m_featureIdxFrom(featureIdxFrom),m_featureIdxTo(featureIdxTo),
 			m_Y(Y), m_controlFeatureFlags(controlFeatureFlags), 
@@ -63,7 +63,7 @@ public:
 	bool m_AequalB;
 
 	std::vector< ::arma::mat>& m_As;
-	CIndexPermutation& m_colIdxPermutation;
+    CGroupedIndexPermutation& m_colIdxPermutation;
 };
 
 class CRUVComputeRowANOVA :  public  RUVsWorkItemBase

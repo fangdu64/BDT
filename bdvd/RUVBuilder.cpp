@@ -176,14 +176,16 @@ bool CRUVBuilder::Initialize_AfterFilter()
     m_sampleIdx2ConditionIdx.resize(sampleCnt);
     m_sampleIdx2CtrlSampleIdx.resize(sampleCnt);
     m_conditionSampleIdxs.resize(conditionCnt);
+
     for (int i = 0; i < conditionCnt; i++)
     {
         int conditionIdx = i;
         const iBS::IntVec& observerIDs = m_RUVInfo.ConditionObserverIDs[i];
         m_conditionSampleIdxs[conditionIdx].resize(observerIDs.size());
+
+        iBS::IntVec ctrlSampleIdxs;
         for (int j = 0; j < observerIDs.size(); j++)
         {
-
             int sampleIdx = m_observerID2sampleIdx[observerIDs[j]];
             m_conditionSampleIdxs[conditionIdx][j] = sampleIdx;
             m_sampleIdx2ConditionIdx[sampleIdx] = conditionIdx;
@@ -191,9 +193,15 @@ bool CRUVBuilder::Initialize_AfterFilter()
             if (observerIDs.size() > 1)
             {
                 m_sampleIdx2CtrlSampleIdx[sampleIdx] = m_RUVInfo.CtrlSampleCnt;
+                ctrlSampleIdxs.push_back(m_RUVInfo.CtrlSampleCnt);
                 m_RUVInfo.CtrlSampleCnt++;
                 m_ctrlSampleIdx2SampleIdx.push_back(sampleIdx);
             }
+        }
+
+        if (observerIDs.size() > 1)
+        {
+            m_groupedCtrlSampleIdxs.push_back(ctrlSampleIdxs);
         }
     }
 
@@ -463,7 +471,7 @@ bool CRUVBuilder::SampleYandRowMeans(iBS::LongVec featureIdxs,
 
 //thread safe
 bool CRUVBuilder::UpdateYcsYcsT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, arma::mat& A,
-    CIndexPermutation& colIdxPermuttion, std::vector< ::arma::mat>& As)
+    CGroupedIndexPermutation& colIdxPermuttion, std::vector< ::arma::mat>& As)
 {
     iBS::ByteVec controlFeatureFlags;
     bool computePermutation = !As.empty();
@@ -474,7 +482,7 @@ bool CRUVBuilder::UpdateYcsYcsT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice:
 //thread safe
 bool CRUVBuilder::UpdateYcscfYcscfT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo,
     const iBS::ByteVec& controlFeatureFlags, arma::mat& B, bool computePermutation,
-    CIndexPermutation& colIdxPermuttion, std::vector< ::arma::mat>& As)
+    CGroupedIndexPermutation& colIdxPermuttion, std::vector< ::arma::mat>& As)
 {
     int n = (int)m_RUVInfo.n;
     int m = m_RUVInfo.CtrlSampleCnt;
@@ -1721,7 +1729,7 @@ bool CRUVBuilder::MultithreadGetABC(
 
     CRUVsWorkerMgr workerMgr(threadCnt);
     //each worker will allocate Y with size of batchValueCnt 
-    if (workerMgr.Initilize(batchValueCnt, m, n, m_RUVInfo.PermutationCnt) == false)
+    if (workerMgr.Initilize(batchValueCnt, m, n, m_RUVInfo.PermutationCnt, m_groupedCtrlSampleIdxs) == false)
     {
         workerMgr.RequestShutdownAllWorkers();
         workerMgr.UnInitilize();
