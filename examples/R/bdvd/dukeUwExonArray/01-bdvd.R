@@ -335,9 +335,18 @@ for(b in 1:B){
 
 p = rep(0, L)
 for(k in 1:L){
-	p[k] = sum(T_0[1,] >= T[k])/B
+	p[k] = sum(T_0[k,] >= T[k])/B
 	if (k > 1) {
 		p[k] = max(p[k-1], p[k])
 	}
 }
+
+p = rep(0, L)
+for(k in 1:L){
+	p[k] = sum(T_0[0,] >= T[k])/B
+	if (k > 1) {
+		p[k] = max(p[k-1], p[k])
+	}
+}
+
 

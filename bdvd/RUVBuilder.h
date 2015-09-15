@@ -99,11 +99,11 @@ private:
 
 	//update YcsYcs' for Y in a given region
 	bool UpdateYcsYcsT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, arma::mat& A,
-		CIndexPermutation& colIdxPermuttion, std::vector< ::arma::mat>& As);
+        CGroupedIndexPermutation& colIdxPermuttion, std::vector< ::arma::mat>& As);
 
 	bool UpdateYcscfYcscfT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, 
 		const iBS::ByteVec& controlFeatureFlags, arma::mat& B, bool computePermutation,
-		CIndexPermutation& colIdxPermuttion, std::vector< ::arma::mat>& As);
+        CGroupedIndexPermutation& colIdxPermuttion, std::vector< ::arma::mat>& As);
 
 	bool UpdateYcfYcscfT(::Ice::Double* Y, Ice::Long featureIdxFrom, Ice::Long featureIdxTo, 
 		const iBS::ByteVec& controlFeatureFlags, arma::mat& C);
@@ -197,6 +197,7 @@ private:
 	iBS::IntVec		m_ctrlSampleIdx2SampleIdx;
 	iBS::IntVec		m_sampleIdx2CtrlSampleIdx; //-1 if a sample is not control sample
 	iBS::IntVecVec  m_conditionSampleIdxs;
+    iBS::IntVecVec  m_groupedCtrlSampleIdxs; //groups with more replicates
 
 	int m_activeK;
 	int m_extentW;

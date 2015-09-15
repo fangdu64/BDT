@@ -13,48 +13,48 @@ typedef IceUtil::Handle<CRUVsWorker> RUVsWorkerPtr;
 class CRUVsWorker : public IceUtil::Thread
 {
 public:
-	CRUVsWorker(int workerIdx, ::Ice::Long batchValueCnt, int m, int n, int permutationCnt);
-	~CRUVsWorker();
+    CRUVsWorker(int workerIdx, ::Ice::Long batchValueCnt, int m, int n, int permutationCnt, const iBS::IntVecVec& groupedCtrlSampleIdxs);
+    ~CRUVsWorker();
 
 public:
-	 virtual void run();
+    virtual void run();
 
-	 void AddWorkItem(const RUVsWorkItemPtr& item);
-	 void RequestShutdown();
+    void AddWorkItem(const RUVsWorkItemPtr& item);
+    void RequestShutdown();
 
-	 bool AllocateBatchY();
-	 Ice::Double* GetBatchY();
-	 CIndexPermutation& GetColIdxPermutation() { return m_colIdxPermutation; }
+    bool AllocateBatchY();
+    Ice::Double* GetBatchY();
+    CGroupedIndexPermutation& GetColIdxPermutation() { return m_colIdxPermutation; }
 public:
-	//YcsYcsT
-	::arma::mat A;
+    //YcsYcsT
+    ::arma::mat A;
 
-	//permutated As
-	std::vector< ::arma::mat> As;
+    //permutated As
+    std::vector< ::arma::mat> As;
 
-	//YcscfYcscfT
-	::arma::mat B;
-	//YcfYcscfT
-	::arma::mat C;
+    //YcscfYcscfT
+    ::arma::mat B;
+    //YcfYcscfT
+    ::arma::mat C;
 
 private:
-	 int m_workerIdx;
-     bool m_needNotify;
-	 bool m_shutdownRequested;
+    int m_workerIdx;
+    bool m_needNotify;
+    bool m_shutdownRequested;
 
-	 IceUtil::Monitor<IceUtil::Mutex>	m_monitor;
+    IceUtil::Monitor<IceUtil::Mutex>	m_monitor;
 
-	 typedef std::list<RUVsWorkItemPtr> RUVsWorkItemPtrLsit_T;
-     RUVsWorkItemPtrLsit_T m_pendingItems;
-	 RUVsWorkItemPtrLsit_T m_processingItems;
+    typedef std::list<RUVsWorkItemPtr> RUVsWorkItemPtrLsit_T;
+    RUVsWorkItemPtrLsit_T m_pendingItems;
+    RUVsWorkItemPtrLsit_T m_processingItems;
 
-	 //working RAM
-	 ::IceUtil::ScopedArray<Ice::Double>  m_Y;
-	 const Ice::Long m_batchValueCnt;
+    //working RAM
+    ::IceUtil::ScopedArray<Ice::Double>  m_Y;
+    const Ice::Long m_batchValueCnt;
 
-	 boost::random::mt19937 m_mt19937;
+    boost::random::mt19937 m_mt19937;
 
-	 CIndexPermutation m_colIdxPermutation;
+    CGroupedIndexPermutation m_colIdxPermutation;
 };
 
 
