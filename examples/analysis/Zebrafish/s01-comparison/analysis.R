@@ -95,8 +95,7 @@ ret = bdvd(
     ruv_type = 'ruvg',
     control_rows_method = 'specified-rows',
     ctrl_rows_input = paste0("text-rowids@", bdtDatasetsDir, "/zebrafish/control-rows.txt"),
-    ctrl_rows_index_base = 1, 
-    permutation_num = 100,
+    ctrl_rows_index_base = 1,
     out = paste0(thisScriptDir, "/out"))
 
 Wt = readMat(ret$Wt)
@@ -123,3 +122,31 @@ cols = colorRampPalette(c(trop[2],"white",trop[1]))
 par(mar=c(5,5,5,5))
 corrplot(corr,method="ellipse",type="lower",col=cols(100), tl.pos="d")
 
+## Compare results with different methods to supervised svaseq
+dge <- DGEList(counts=dat0)
+dge <- calcNormFactors(dge)
+catplots = tstats = vector("list",8)
+adj = c( "+ batch_sup_sva","+ batch_unsup_sva",
+         "+ batch_ruv_cp", "+ batch_ruv_res",
+         "+ batch_ruv_emp","+ batch_pca", "+ batch_bdvd_ruvg", "")
+
+
+for(i in 1:8){
+  design = model.matrix(as.formula(paste0("~ group",adj[i])))
+  v <- voom(dge,design,plot=FALSE)
+  fit <- lmFit(v,design)
+  fit <- eBayes(fit)
+  tstats[[i]] = abs(fit$t[,2])
+  names(tstats[[i]]) = as.character(1:dim(dat0)[1])
+  catplots[[i]] = CATplot(-rank(tstats[[i]]),-rank(tstats[[1]]),maxrank=400,make.plot=F)
+}
+
+plot(catplots[[2]],ylim=c(0,1),col=trop[1],lwd=3,type="l",ylab="Concordance Between Supervised svaseq and other methods",xlab="Rank")
+lines(catplots[[3]],col=trop[2],lwd=3)
+lines(catplots[[4]],col=trop[2],lwd=3,lty=2)
+lines(catplots[[5]],col=trop[2],lwd=3,lty=3)
+lines(catplots[[6]],col=trop[3],lwd=3)
+lines(catplots[[7]],col=trop[4],lwd=3)
+
+
+legend(200,0.5,legend=c("Unsup. svaseq","RUV CP","RUV Res.", "RUV Emp.","PCA", "Bdvd RUVg", "No adjustment"),col=trop[c(1,2,2,2,3,2,4)],lty=c(1,1,2,3,1,1,1),lwd=3)
