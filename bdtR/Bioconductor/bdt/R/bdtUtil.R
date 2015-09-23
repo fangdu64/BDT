@@ -112,7 +112,7 @@ readBigMatrixAuto<-function(colCnt,rowCnt,bfvFilePrefix, batchFileSizeMB=1024)
 	}
 	else
 	{
-		return (readBigMatrixBatches(colCnt,rowCnt,bfvFile,batchFileSizeMB))
+		return (readBigMatrixBatches(colCnt,rowCnt,bfvFilePrefix,batchFileSizeMB))
 	}
 
 }

@@ -65,6 +65,7 @@
     <None Include="Bioconductor\bdt\R\bigKmeans.R" />
     <None Include="Bioconductor\bdt\R\bigKmeansC.R" />
     <None Include="Bioconductor\bdt\R\bigMat.R" />
+    <None Include="Bioconductor\bdt\R\bdvdPlot.R" />
     <None Include="Bioconductor\bdt\R\outputReader.R" />
     <None Include="Bioconductor\createPackage.R" />
     <None Include="Bioconductor\installPackage.R" />
