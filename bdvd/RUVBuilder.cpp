@@ -3088,8 +3088,15 @@ bool CRUVBuilder::CreateGbyWt(int k)
 
     for (int i = 0; i < n; i++)
     {
+        //first group, used as the intercept column
+        A(i, 0) = 1;
+
         int conditionIdx = m_sampleIdx2ConditionIdx[i];
-        A(i, conditionIdx) = 1;
+        if (conditionIdx != 0)
+        {
+            A(i, conditionIdx) = 1;
+        }
+
         for (int j = 0; j < k; j++)
         {
             Ice::Long idx = j*n + i;
@@ -3222,11 +3229,16 @@ bool CRUVBuilder::SetActiveK_AG(int k)
     ::arma::mat A_X0(n, p + k, arma::fill::zeros);
     ::arma::mat G(p + k, n, arma::fill::zeros);
 
-    //A=[0 W]
     for (int i = 0; i < n; i++)
     {
+        //first group, used as the intercept column
+        A_X0(i, 0) = 1;
         int conditionIdx = m_sampleIdx2ConditionIdx[i];
-        A_X0(i, conditionIdx) = 1;
+        if (conditionIdx != 0)
+        {
+            A_X0(i, conditionIdx) = 1;
+        }
+
         for (int j = 0; j < k; j++)
         {
             //A(i,j+p)=W(i,j);
@@ -3276,6 +3288,8 @@ bool CRUVBuilder::SetActiveK_AG(int k)
 
 bool CRUVBuilder::SetTemp_AG_byZ()
 {
+    //see RUV_full.pptx p 5
+
     int n = (int)m_RUVInfo.n;
     int p = (int)m_RUVInfo.P;
     ::arma::mat Z(n, n, arma::fill::zeros);
@@ -3292,8 +3306,13 @@ bool CRUVBuilder::SetTemp_AG_byZ()
     ::arma::mat X(n, p, arma::fill::zeros);
     for (int i = 0; i < n; i++)
     {
+        //first group, used as the intercept column
+        X(i, 0) = 1;
         int conditionIdx = m_sampleIdx2ConditionIdx[i];
-        X(i, conditionIdx) = 1;
+        if (conditionIdx != 0)
+        {
+            X(i, conditionIdx) = 1;
+        }
     }
 
     ::arma::mat AG_0W = Z;
@@ -3332,8 +3351,13 @@ bool CRUVBuilder::SetTemp_AG_byK0extW0()
 
     for (int i = 0; i < n; i++)
     {
+        //first group, used as the intercept column
+        A(i, 0) = 1;
         int conditionIdx = m_sampleIdx2ConditionIdx[i];
-        A(i, conditionIdx) = 1;
+        if (conditionIdx != 0)
+        {
+            A(i, conditionIdx) = 1;
+        }
     }
 
     ::arma::mat G;
@@ -3351,11 +3375,15 @@ bool CRUVBuilder::SetTemp_AG_byK0extW0()
     ::arma::mat A_X0(n, p, arma::fill::zeros);
 
 
-    //A=[0 W]
     for (int i = 0; i < n; i++)
     {
+        //first group, used as the intercept column
+        A_X0(i, 0) = 1;
         int conditionIdx = m_sampleIdx2ConditionIdx[i];
-        A_X0(i, conditionIdx) = 1;
+        if (conditionIdx != 0)
+        {
+            A_X0(i, conditionIdx) = 1;
+        }
     }
 
     ::arma::mat AG_0W(n, n, arma::fill::zeros);
@@ -3438,6 +3466,7 @@ const iBS::IntVec& sampleIDs, iBS::RowAdjustEnum rowAdjust, ::Ice::Long& resultC
     }
 
 }
+
 ::Ice::Double*
 CRUVBuilder::GetNormalizedCnts(::Ice::Long featureIdxFrom, ::Ice::Long featureIdxTo, ::Ice::Long& resultColCnt)
 {
@@ -4091,8 +4120,13 @@ void CRUVBuilder::GetNormalizedCnts_ModeBeta(Ice::Long rowCnt, Ice::Double *Y, I
         {
             int cidx = m_sampleIdx2ConditionIdx[i];
             originalY[i] = beta[cidx] + rowMeans[f];
-        }
 
+            //non-first group, add intercept term
+            if (cidx != 0)
+            {
+                originalY[i] += beta[0];
+            }
+        }
     }
 }
 
