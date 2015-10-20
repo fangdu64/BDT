@@ -141,9 +141,6 @@ private:
 	bool createObserverGroupForWts(int maxK);
 	bool saveWt(int k, const ::arma::mat& W);
 
-	bool SetActiveK_T(int k);
-	bool SetActiveK_Z(int k);
-	bool SetActiveK_G(int k);
 	bool SetActiveK_Wt_noReorder(int k);
 	bool SetActiveK_Wt(int k);
 	bool SetActiveK_AG(int k);

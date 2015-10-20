@@ -2957,12 +2957,7 @@ bool CRUVBuilder::SetActiveK(int k, int extW)
     if (m_extentW == 0)
     {
         m_activeK = k;
-        //SetActiveK_T(k);
         SetActiveK_Wt(k);
-        //SetActiveK_Z(k);
-        //SetActiveK_G(k);
-        //SetActiveK_AG(k);
-
         CreateZbyWt(k + m_extentW);
         CreateGbyWt(k + m_extentW);
         SetActiveK_AG(k + m_extentW);
@@ -2978,120 +2973,6 @@ bool CRUVBuilder::SetActiveK(int k, int extW)
     }
     return true;
 }
-
-bool CRUVBuilder::SetActiveK_T(int k)
-{
-    k = k - 1;
-    if (k < 0)
-    {
-        m_activeT.reset();
-        return true;
-    }
-
-    iBS::FeatureObserverSimpleInfoPtr ts_foi
-        = CGlobalVars::get()->theObserversDB.GetFeatureObserver(m_RUVInfo.ObserverIDforTs);
-    if (!ts_foi)
-        return false;
-
-    int n = (int)m_RUVInfo.n;
-    int maxK = (int)(ts_foi->DomainSize / n);
-    if (k >= maxK)
-        return false;
-
-    Ice::Int foiObserverID = ts_foi->ObserverID;
-    Ice::Int foiStoreObserverID = ts_foi->ObserverID;
-
-    Ice::Long foiStoreDomainSize = ts_foi->ObserverGroupSize*ts_foi->DomainSize;
-    Ice::Long foiDomainSize = ts_foi->DomainSize;
-    Ice::Long s_featureIdxFrom = (k*n) * ts_foi->ObserverGroupSize; //index in store
-    Ice::Long s_featureIdxTo = (k + 1)*n* ts_foi->ObserverGroupSize;     //index in store
-
-    ts_foi->DomainSize = foiStoreDomainSize; //convert to store size
-    ts_foi->ObserverID = foiStoreObserverID;
-    m_activeT.reset(CGlobalVars::get()->theFeatureValueStoreMgr->LoadFeatureValuesFromStore(
-        ts_foi, s_featureIdxFrom, s_featureIdxTo));
-    ts_foi->ObserverID = foiObserverID;
-    ts_foi->DomainSize = foiDomainSize; //convert back
-
-    return true;
-}
-
-bool CRUVBuilder::SetActiveK_Z(int k)
-{
-    k = k - 1;
-    if (k < 0)
-    {
-        m_activeZ.reset();
-        return true;
-    }
-
-    iBS::FeatureObserverSimpleInfoPtr zs_foi
-        = CGlobalVars::get()->theObserversDB.GetFeatureObserver(m_RUVInfo.ObserverIDforZs);
-    if (!zs_foi)
-        return false;
-
-    int n = (int)m_RUVInfo.n;
-    int maxK = (int)(zs_foi->DomainSize / n);
-    if (k >= maxK)
-        return false;
-
-    Ice::Int foiObserverID = zs_foi->ObserverID;
-    Ice::Int foiStoreObserverID = zs_foi->ObserverID;
-
-    Ice::Long foiStoreDomainSize = zs_foi->ObserverGroupSize*zs_foi->DomainSize;
-    Ice::Long foiDomainSize = zs_foi->DomainSize;
-    Ice::Long rowIdxFrom = k*n;
-    Ice::Long rowIdxTo = (k + 1)*n;
-    Ice::Long s_featureIdxFrom = rowIdxFrom * zs_foi->ObserverGroupSize; //index in store
-    Ice::Long s_featureIdxTo = rowIdxTo*zs_foi->ObserverGroupSize;  //index in store
-
-    zs_foi->DomainSize = foiStoreDomainSize; //convert to store size
-    zs_foi->ObserverID = foiStoreObserverID;
-    m_activeZ.reset(CGlobalVars::get()->theFeatureValueStoreMgr->LoadFeatureValuesFromStore(
-        zs_foi, s_featureIdxFrom, s_featureIdxTo));
-    zs_foi->ObserverID = foiObserverID;
-    zs_foi->DomainSize = foiDomainSize; //convert back
-
-    return true;
-}
-
-bool CRUVBuilder::SetActiveK_G(int k)
-{
-    k = k - 1;
-    if (k < 0)
-    {
-        m_activeG.reset();
-        return true;
-    }
-
-    k = k + 1; //convert to 1 based
-    int p = (int)m_RUVInfo.P;
-
-    iBS::FeatureObserverSimpleInfoPtr foi
-        = CGlobalVars::get()->theObserversDB.GetFeatureObserver(m_RUVInfo.ObserverIDforGs);
-    if (!foi)
-        return false;
-
-    Ice::Int foiObserverID = foi->ObserverID;
-    Ice::Int foiStoreObserverID = foi->ObserverID;
-
-    Ice::Long foiStoreDomainSize = foi->ObserverGroupSize*foi->DomainSize;
-    Ice::Long foiDomainSize = foi->DomainSize;
-    Ice::Long rowIdxFrom = p*(k - 1) + ((k - 1)*k) / 2;
-    Ice::Long rowIdxTo = rowIdxFrom + (p + k);
-    Ice::Long s_featureIdxFrom = rowIdxFrom * foi->ObserverGroupSize; //index in store
-    Ice::Long s_featureIdxTo = rowIdxTo*foi->ObserverGroupSize;  //index in store
-
-    foi->DomainSize = foiStoreDomainSize; //convert to store size
-    foi->ObserverID = foiStoreObserverID;
-    m_activeG.reset(CGlobalVars::get()->theFeatureValueStoreMgr->LoadFeatureValuesFromStore(
-        foi, s_featureIdxFrom, s_featureIdxTo));
-    foi->ObserverID = foiObserverID;
-    foi->DomainSize = foiDomainSize; //convert back
-
-    return true;
-}
-
 
 bool CRUVBuilder::ExtentWt(int k, int extW)
 {
@@ -3207,8 +3088,15 @@ bool CRUVBuilder::CreateGbyWt(int k)
 
     for (int i = 0; i < n; i++)
     {
+        //first group, used as the intercept column
+        A(i, 0) = 1;
+
         int conditionIdx = m_sampleIdx2ConditionIdx[i];
-        A(i, conditionIdx) = 1;
+        if (conditionIdx != 0)
+        {
+            A(i, conditionIdx) = 1;
+        }
+
         for (int j = 0; j < k; j++)
         {
             Ice::Long idx = j*n + i;
@@ -3341,11 +3229,16 @@ bool CRUVBuilder::SetActiveK_AG(int k)
     ::arma::mat A_X0(n, p + k, arma::fill::zeros);
     ::arma::mat G(p + k, n, arma::fill::zeros);
 
-    //A=[0 W]
     for (int i = 0; i < n; i++)
     {
+        //first group, used as the intercept column
+        A_X0(i, 0) = 1;
         int conditionIdx = m_sampleIdx2ConditionIdx[i];
-        A_X0(i, conditionIdx) = 1;
+        if (conditionIdx != 0)
+        {
+            A_X0(i, conditionIdx) = 1;
+        }
+
         for (int j = 0; j < k; j++)
         {
             //A(i,j+p)=W(i,j);
@@ -3395,6 +3288,8 @@ bool CRUVBuilder::SetActiveK_AG(int k)
 
 bool CRUVBuilder::SetTemp_AG_byZ()
 {
+    //see RUV_full.pptx p 5
+
     int n = (int)m_RUVInfo.n;
     int p = (int)m_RUVInfo.P;
     ::arma::mat Z(n, n, arma::fill::zeros);
@@ -3411,8 +3306,13 @@ bool CRUVBuilder::SetTemp_AG_byZ()
     ::arma::mat X(n, p, arma::fill::zeros);
     for (int i = 0; i < n; i++)
     {
+        //first group, used as the intercept column
+        X(i, 0) = 1;
         int conditionIdx = m_sampleIdx2ConditionIdx[i];
-        X(i, conditionIdx) = 1;
+        if (conditionIdx != 0)
+        {
+            X(i, conditionIdx) = 1;
+        }
     }
 
     ::arma::mat AG_0W = Z;
@@ -3451,8 +3351,13 @@ bool CRUVBuilder::SetTemp_AG_byK0extW0()
 
     for (int i = 0; i < n; i++)
     {
+        //first group, used as the intercept column
+        A(i, 0) = 1;
         int conditionIdx = m_sampleIdx2ConditionIdx[i];
-        A(i, conditionIdx) = 1;
+        if (conditionIdx != 0)
+        {
+            A(i, conditionIdx) = 1;
+        }
     }
 
     ::arma::mat G;
@@ -3470,11 +3375,15 @@ bool CRUVBuilder::SetTemp_AG_byK0extW0()
     ::arma::mat A_X0(n, p, arma::fill::zeros);
 
 
-    //A=[0 W]
     for (int i = 0; i < n; i++)
     {
+        //first group, used as the intercept column
+        A_X0(i, 0) = 1;
         int conditionIdx = m_sampleIdx2ConditionIdx[i];
-        A_X0(i, conditionIdx) = 1;
+        if (conditionIdx != 0)
+        {
+            A_X0(i, conditionIdx) = 1;
+        }
     }
 
     ::arma::mat AG_0W(n, n, arma::fill::zeros);
@@ -3557,6 +3466,7 @@ const iBS::IntVec& sampleIDs, iBS::RowAdjustEnum rowAdjust, ::Ice::Long& resultC
     }
 
 }
+
 ::Ice::Double*
 CRUVBuilder::GetNormalizedCnts(::Ice::Long featureIdxFrom, ::Ice::Long featureIdxTo, ::Ice::Long& resultColCnt)
 {
@@ -4210,8 +4120,13 @@ void CRUVBuilder::GetNormalizedCnts_ModeBeta(Ice::Long rowCnt, Ice::Double *Y, I
         {
             int cidx = m_sampleIdx2ConditionIdx[i];
             originalY[i] = beta[cidx] + rowMeans[f];
-        }
 
+            //non-first group, add intercept term
+            if (cidx != 0)
+            {
+                originalY[i] += beta[0];
+            }
+        }
     }
 }
 
