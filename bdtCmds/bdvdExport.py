@@ -62,7 +62,7 @@ class BDVDParams:
         self.bdvd_dir = None
         self.export_component = None
         self.export_scale =gScales[0]
-        self.artifact_detection =gArtifactDetections[0]
+        self.artifact_detection =gArtifactDetections[1]
         self.unwanted_factors = None
         self.known_factors = None
         self.export_names = None
