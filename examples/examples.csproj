@@ -56,6 +56,8 @@
     <None Include="analysis\DukeUwDnase\s07-bigKmeans-ruvK2\bigKmeans.sh" />
     <None Include="analysis\DukeUwDnase\s06-bigKmeans-noRuv\bigKmeans.sh" />
     <None Include="analysis\DukeUwDnase\s06-bigKmeans-noRuv\bigKmeans.R" />
+    <None Include="analysis\DukeUwDnase\s08-Fstats\bdvd-export.R" />
+    <None Include="analysis\DukeUwDnase\s08-Fstats\bdvd-export.sh" />
     <None Include="analysis\Zebrafish\s01-comparison\analysis.R" />
     <None Include="config\bdt_path.R" />
     <None Include="config\bdt_path_linux.sh" />
