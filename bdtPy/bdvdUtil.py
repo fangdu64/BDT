@@ -233,19 +233,19 @@ def run_bdvd_ruv_export(
     if component == 'signal' and artifact_detection == 'aggressive':
         RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeZYthenGroupMean
     elif component == 'signal' and artifact_detection == 'conservative':
-        RUVOutputMode = iBS.RUVModeEnum.RUVOutputModeXb
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeXb
     elif component == 'artifact' and artifact_detection == 'aggressive':
-        RUVOutputMode = iBS.RUVModeEnum.RUVOutputModeZY
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeZY
     elif component == 'artifact' and artifact_detection == 'conservative':
-        RUVOutputMode = iBS.RUVModeEnum.RUVOutputModeWa
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeWa
     elif component == 'random' and artifact_detection == 'aggressive':
-        RUVOutputMode = iBS.RUVModeEnum.RUVOutputModeZYGetE
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeZYGetE
     elif component == 'random' and artifact_detection == 'conservative':
-        RUVOutputMode = iBS.RUVModeEnum.RUVOutputModeYminusWaXb
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeYminusWaXb
     elif component == 'signal+random' and artifact_detection == 'aggressive':
-        RUVOutputMode = iBS.RUVModeEnum.RUVOutputModeYminusZY
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeYminusZY
     elif component == 'signal+random' and artifact_detection == 'conservative':
-        RUVOutputMode = iBS.RUVModeEnum.RUVOutputModeYminusWa
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeYminusWa
 
     RUVOutputScale = None
     if scale == 'mlog':
