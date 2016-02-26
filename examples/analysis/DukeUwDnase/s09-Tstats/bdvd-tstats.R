@@ -1,5 +1,6 @@
 rm(list=ls())
 library("bdt")
+library(parallel)
 
 thisScriptDir = getScriptDir()
 source(paste0(thisScriptDir, '/../../../config/bdt_path.R'))
@@ -104,7 +105,7 @@ for (i in 1:KsCnt) {
     k = unwanted_factors[i]
     extW = known_factors[i]
 
-    print0(paste("k=", k, ",extW=", extW)
+    print(paste0("k=", k, ",extW=", extW))
 
     # read in data matrix for current config
     mat = as.list(data.frame(t(readMat(mat))))
