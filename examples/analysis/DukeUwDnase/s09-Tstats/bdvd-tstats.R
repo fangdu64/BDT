@@ -51,10 +51,7 @@ sampleGroupPairList = list(
 
 exportSampleIds = unlist(sampleGroupPairList)
 
-# export bins with signal. We further narrow down to 254,371 bins that are assoicate with
-# RefSeq transcripts with unique transcript clsuter in Exon-Array data.
-# See Impact of RUV on Exon-DNase correlation section for detail
-# The resultant 254,371 bins are in DNase_UniqueFeatureIdxs.txt file
+# export 250K bins with signal
 need_export = TRUE
 num_threads = 24
 unwanted_factors = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 0)
@@ -75,7 +72,7 @@ if (need_export) {
         artifact_detection = 'conservative',
         unwanted_factors = unwanted_factors,
         known_factors = known_factors,
-        rowidxs_input = paste0("text-rowids@", bdtDatasetsDir, "/DNaseExonCorrelation/100bp/s01-TSS-PairIdxs/DNase_UniqueFeatureIdxs.txt"),
+        rowidxs_input = paste0("text-rowids@", bdtDatasetsDir, "/DukeUwDnase/100bp/RowIdxs/signalRandom.txt"),
         rowidxs_index_base = 0,
         out = paste0(thisScriptDir,"/out"))
 } else {
@@ -119,6 +116,9 @@ groupNames = sapply(groupPairList, function(g, exportedColumnNames) {
     return (exportedColumnNames[g[[1]][1]])
 }, exportedColumnNames = exportRet$mats[[1]]$colNames)
 
+# save T.MAE for each cell line, each run
+TMAE.gk = vector(mode="list", length = length(groupPairList))
+
 for (g in 1:length(groupPairList)) {
     # get t-statistic vector for g-th cell line
     T = lapply(Tstats, function(Tk, g) {
@@ -134,7 +134,7 @@ for (g in 1:length(groupPairList)) {
     dev.off()
 
     ##
-    ## Mean Square Error  plot
+    ## Mean Square Error line plot as a function of k
     ##
 
     T.MSE = lapply(T, function(x) {
@@ -144,25 +144,69 @@ for (g in 1:length(groupPairList)) {
     pdf(file = paste0(plotOutDir,"/t_mse_plot_g", g, ".pdf"))
     #plot bars first
     colIdxs = c(1:KsCnt)
-    plot(colIdxs, T.MSE[colIdxs], type = "h", xlab = "", col = "gray", lty=2,
+    plot(colIdxs, T.MSE[colIdxs], type = "h", xlab = "", col = "gray", lty = 2,
         ylab = "T-stats MSE", bty = "n", xaxt = 'n', xlim = c(0.8, KsCnt+0.2), main=groupNames[g])
+    lines(colIdxs, T.MSE[colIdxs], type = "o", lwd = 2, lty = 1, col = "deepskyblue", pch = 19)
+    axis(side = 1, at = colIdxs, labels = names(T)[colIdxs])
+    dev.off()
+
+    ##
+    ## Mean Absolute Error line plot as a function of k
+    ##
+    T.MAE = lapply(T, function(x) {
+        sum(abs(x), na.rm = TRUE) / sum(!is.na(x))
+    })
+
+    pdf(file = paste0(plotOutDir, "/t_mae_plot_g", g, ".pdf"))
+    plot(colIdxs, T.MAE[colIdxs], type="h", xlab= "", col = "gray", lty=2,
+      ylab="T-stats MAE", bty = "n", xaxt ='n', xlim = c(0.8, KsCnt+0.2), main = groupNames[g])
+
     colIdxs=c(1:KsCnt)
-    lines(colIdxs, T.MSE[colIdxs], type="o", lwd=2, lty=1, col="deepskyblue", pch=19)
-    axis(side=1, at = colIdxs, labels = names(T)[colIdxs])
-	#axis(side=2, at=c(1.4,1.5,1.6))
-	#abline(h=means[2], col="pink", lwd=1,lty=3)
-	dev.off()
+    lines(colIdxs, T.MAE[colIdxs], type = "o", lwd = 2, lty = 1, col = "deepskyblue", pch = 19)
+    axis(side = 1, at = colIdxs, labels = names(T)[colIdxs])
+    dev.off()
+
+    TMAE.gk[[g]] = T.MAE
 }
 
 
+##
+## Median Abosulte Error comparison for different Ks
+##
+KF_runId = length(config_names)
+noRuv_runId = 1
+RuvK1_runId = 2
+RuvK2_runId = 3
+RuvK3_runId = 4
 
+runIDs = c(noRuv_runId, KF_runId, RuvK1_runId, RuvK2_runId, RuvK3_runId)
+groupCnt = length(groupPairList)
+for(i in 1:(length(runIDs)-1)) {
+    for(j in (i+1):length(runIDs)) {
+        run_A = runIDs[i]
+        run_B = runIDs[j]
+        name_A = names(Tstats)[run_A]
+        name_B = names(Tstats)[run_B]
 
+        TMAEs_A = rep(0, groupCnt)
+        TMAEs_B = rep(0, groupCnt)
 
+        for(g in 1:groupCnt) {
+            TMAEs_A[g] = TMAE.gk[[g]][[run_A]]
+            TMAEs_B[g] = TMAE.gk[[g]][[run_B]]
+        }
+        print(TMAEs_A)
+        print(TMAEs_B)
 
-
-
-
-
-
-
-
+        max_v = max(c(TMAEs_A, TMAEs_B)) *1.1
+        min_v = min(c(TMAEs_A, TMAEs_B)) *1.1
+        lessCnt = sum(TMAEs_B < TMAEs_A)
+        btest = binom.test(lessCnt, length(TMAEs_A), p = 0.5, alternative="two.sided")
+        pVal = btest$p.value
+        pdf(file = paste0(plotOutDir, "/t_mae_x_", name_A, "_y_", name_B, ".pdf"))
+        plot(c(min_v,max_v), c(min_v,max_v), type="n", xlab=name_A, ylab=name_B, main=paste0("p-val ", pVal))
+        abline(a=0, b=1, col="gray", lwd=1, lty = 2)
+        points(TMAEs_A, TMAEs_B, col = adjustcolor("deepskyblue",1), pch=20, cex=2.5)
+        dev.off()
+    }
+}
