@@ -124,7 +124,7 @@ for (g in 1:length(groupPairList)) {
     T = lapply(Tstats, function(Tk, g) {
         sapply(Tk, function(Tki, g) {
             Tki$tstats[g]
-        }, g = g, use.names = FALSE)
+        }, g = g, USE.NAMES = FALSE)
     }, g = g)
     
     # generate T stats box plot
@@ -132,6 +132,26 @@ for (g in 1:length(groupPairList)) {
     plotdata <- boxplot(T, ylab = "T-statistic", outline = FALSE, main=groupNames[g])
     abline(h=0, col="pink", lwd=1)
     dev.off()
+
+    ##
+    ## Mean Square Error  plot
+    ##
+
+    T.MSE = lapply(T, function(x) {
+        sum(x^2, na.rm = TRUE) / sum(!is.na(x))
+    })
+    
+    pdf(file = paste0(plotOutDir,"/t_mse_plot_g", g, ".pdf"))
+    #plot bars first
+    colIdxs = c(1:KsCnt)
+    plot(colIdxs, T.MSE[colIdxs], type = "h", xlab = "", col = "gray", lty=2,
+        ylab = "T-stats MSE", bty = "n", xaxt = 'n', xlim = c(0.8, KsCnt+0.2), main=groupNames[g])
+    colIdxs=c(1:KsCnt)
+    lines(colIdxs, T.MSE[colIdxs], type="o", lwd=2, lty=1, col="deepskyblue", pch=19)
+    axis(side=1, at = colIdxs, labels = names(T)[colIdxs])
+	#axis(side=2, at=c(1.4,1.5,1.6))
+	#abline(h=means[2], col="pink", lwd=1,lty=3)
+	dev.off()
 }
 
 
