@@ -93,6 +93,8 @@ for (i in 1:KsCnt) {
     }, mc.cores = num_threads)
 }
 
+Fstats = lapply(Fstats, unlist, use.names = FALSE)
+
 Fstats.mean = lapply(Fstats, mean, na.rm = TRUE)
 Fstats.median = lapply(Fstats, median, na.rm = TRUE)
 
