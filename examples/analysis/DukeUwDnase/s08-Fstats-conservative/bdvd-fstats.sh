@@ -5,4 +5,4 @@ thisScriptPath=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 Rscript \
 	--no-restore \
 	--no-save \
-	${thisScriptPath}/bdvd-export.R
+	${thisScriptPath}/bdvd-fstats.R
