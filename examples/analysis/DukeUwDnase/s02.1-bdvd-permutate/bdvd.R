@@ -225,7 +225,7 @@ if (need_run_bdvd) {
     bdvdRet = readBdvdOutput(paste0(thisScriptDir, "/out"))
 }
 
-plotOutDir = paste0(thisScriptDir, "/01-out")
+plotOutDir = paste0(thisScriptDir, "/out")
 
 
 eigenValues = readVec(bdvdRet$eigenValues)
