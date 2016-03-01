@@ -106,7 +106,7 @@ sampleColors = sapply(sampleLabs, function(x) {
     }
 
     return (col)
-}, use.names = FALSE);
+}, USE.NAMES = FALSE);
 
 # export randomly selected 250K bins with signal
 num_threads = 24
