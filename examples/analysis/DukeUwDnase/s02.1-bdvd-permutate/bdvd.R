@@ -203,19 +203,74 @@ dukeSampleCnt = 218
 uwSampleCnt = 207
 knownFactors = list(c(rep.int(1, dukeSampleCnt), rep.int(0, uwSampleCnt)))
 
-ret = bdvd(
-    bdt_home = bdtHome,
-    thread_num = 40,
-    mem_size = 16000,
-    data_input = paste0('bigmat@', thisScriptDir, '/../s01-bam2mat/out'),
-    pre_normalization = 'column-sum',
-    common_column_sum = 60000000,
-    sample_groups = sampleGroups,
-    known_factors = knownFactors,
-    ruv_type = 'ruvs',
-    control_rows_method = 'weak-signal',
-    weak_signal_lb = 1,
-    weak_signal_ub = 1000,
-    ruv_rowwise_adjust = 'unitary-length',
-    permutation_num = 4,
-    out = paste0(thisScriptDir,"/out"))
+need_run_bdvd = FALSE
+if (need_run_bdvd) {
+    bdvdRet = bdvd(
+        bdt_home = bdtHome,
+        thread_num = 40,
+        mem_size = 16000,
+        data_input = paste0('bigmat@', thisScriptDir, '/../s01-bam2mat/out'),
+        pre_normalization = 'column-sum',
+        common_column_sum = 60000000,
+        sample_groups = sampleGroups,
+        known_factors = knownFactors,
+        ruv_type = 'ruvs',
+        control_rows_method = 'weak-signal',
+        weak_signal_lb = 1,
+        weak_signal_ub = 1000,
+        ruv_rowwise_adjust = 'unitary-length',
+        permutation_num = 4,
+        out = paste0(thisScriptDir, "/out"))
+} else {
+    bdvdRet = readBdvdOutput(paste0(thisScriptDir, "/out"))
+}
+
+plotOutDir = paste0(thisScriptDir, "/01-out")
+
+
+eigenValues = readVec(bdvdRet$eigenValues)
+eigenVectors = readMat(bdvdRet$eigenVectors)
+permutatedEigenValues = readMat(bdvdRet$permutatedEigenValues)
+Wt = readMat(bdvdRet$Wt)
+
+e = 0.000001
+eigenValues[which(eigenValues<=e)]=0
+
+L = nrow(eigenValues)
+
+T = rep(0, L)
+for(k in 1:L){
+	T[k] = eigenValues[k] / sum(eigenValues)
+}
+
+maxK = 20
+pdf(file = paste0(plotOutDir, "/k_evalueation.pdf"))
+plotdata <- plot(1:L, T, type = "h", xlab = "", col = "gray", lty = 2,
+     ylab = "Proportion", bty = "n", xaxt = 'n', xlim = c(0.8, maxK))
+
+lines(1:L, T, type = "o", lwd = 2, lty = 1, col = "deepskyblue", pch = 19)
+axis(side = 1, at = 1:L, labels = as.character(1:L))
+
+##
+## null statistics
+##
+
+B = ncol(permutatedEigenValues)
+T_0= vector(mode="list", length=L)
+for(k in 1:L) {
+    T_0[[k]] = rep(0, B);
+}
+
+for(b in 1:B){
+    pev = permutatedEigenValues[,b];
+    pev[which(eigenValues<=e)]=0
+    for(k in 1:L) {
+        T_0[[k]][b] = pev[k] / sum(pev)
+    }
+}
+
+##
+## box plot for null statistics
+##
+plotdata <- boxplot(T_0, add=TRUE, outline = FALSE)
+dev.off()

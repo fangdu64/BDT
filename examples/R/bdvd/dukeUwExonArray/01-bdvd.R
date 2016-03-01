@@ -291,25 +291,33 @@ sample_groups = list(
   c(330,331),
   c(332,333,334))
 
-ret = bdvd(
-    bdt_home = bdtHome,
-    data_input = paste0("text-mat@",bdtDatasetsDir,"/DukeUWExon/GeneBASE_DukeUWExon_qn.csv"),
-    data_nrow = 18524,
-    data_ncol = 334,
-    data_col_names = data_col_names,
-    data_skip_cols = 1,
-    data_skip_rows = 1,
-    data_col_sep = ",",
-    sample_groups = sample_groups,
-    ruv_type = 'ruvs',
-    control_rows_method = 'all',
-    permutation_num = 50,
-    out = paste0(thisScriptDir,"/01-out"))
+need_run_bdvd = FALSE
+if (need_run_bdvd) {
+    bdvdRet = bdvd(
+        bdt_home = bdtHome,
+        data_input = paste0("text-mat@",bdtDatasetsDir,"/DukeUWExon/GeneBASE_DukeUWExon_qn.csv"),
+        data_nrow = 18524,
+        data_ncol = 334,
+        data_col_names = data_col_names,
+        data_skip_cols = 1,
+        data_skip_rows = 1,
+        data_col_sep = ",",
+        sample_groups = sample_groups,
+        ruv_type = 'ruvs',
+        control_rows_method = 'all',
+        permutation_num = 50,
+        out = paste0(thisScriptDir,"/01-out"))
+} else {
+    bdvdRet = readBdvdOutput(paste0(thisScriptDir,"/01-out"))
+}
 
-eigenValues = readVec(ret$eigenValues)
-eigenVectors = readMat(ret$eigenVectors)
-permutatedEigenValues = readMat(ret$permutatedEigenValues)
-Wt = readMat(ret$Wt)
+plotOutDir = paste0(thisScriptDir, "/01-out")
+
+eigenValues = readVec(bdvdRet$eigenValues)
+eigenVectors = readMat(bdvdRet$eigenVectors)
+permutatedEigenValues = readMat(bdvdRet$permutatedEigenValues)
+Wt = readMat(bdvdRet$Wt)
+
 e = 0.000001
 eigenValues[which(eigenValues<=e)]=0
 
@@ -320,18 +328,39 @@ for(k in 1:L){
 	T[k] = eigenValues[k] / sum(eigenValues)
 }
 
-plot(T)
+maxK = 20
+pdf(file = paste0(plotOutDir, "/k_profile.pdf"))
+plotdata <- plot(1:L, T, type = "h", xlab = "", col = "gray", lty = 2,
+     ylab = "Proportion", bty = "n", xaxt = 'n', xlim = c(0.8, maxK))
+
+lines(1:L, T, type = "o", lwd = 2, lty = 1, col = "deepskyblue", pch = 19)
+axis(side = 1, at = 1:L, labels = as.character(1:L))
+
+
+
+##
+## null statistics
+##
+
 B = ncol(permutatedEigenValues)
-T_0 = matrix(0, L, B)
-for(b in 1:B){
-	pev = permutatedEigenValues[,b];
-	pev[which(eigenValues<=e)]=0
-	for(k in 1:L){
-		T_0[k,b] = pev[k] / sum(pev)
-	}
-	
-	lines(1:L, T_0[,b])
+T_0= vector(mode="list", length=L)
+for(k in 1:L) {
+    T_0[[k]] = rep(0, B);
 }
+
+for(b in 1:B){
+    pev = permutatedEigenValues[,b];
+    pev[which(eigenValues<=e)]=0
+    for(k in 1:L) {
+        T_0[[k]][b] = pev[k] / sum(pev)
+    }
+}
+
+##
+## box plot for null statistics
+##
+plotdata <- boxplot(T_0, add=TRUE, outline = FALSE)
+dev.off()
 
 p = rep(0, L)
 for(k in 1:L){
