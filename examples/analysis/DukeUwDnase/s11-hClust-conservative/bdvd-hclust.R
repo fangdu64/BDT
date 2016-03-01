@@ -135,7 +135,9 @@ KsCnt = length(unwanted_factors)
 clustScores= vector(mode="list", length=KsCnt)
 names(clustScores) = config_names
 
+
 plotOutDir = paste0(thisScriptDir, "/out")
+dir.create(plotOutDir, showWarnings = FALSE)
 
 for (i in 1:KsCnt) {
     mat = exportRet$mats[[i]]
