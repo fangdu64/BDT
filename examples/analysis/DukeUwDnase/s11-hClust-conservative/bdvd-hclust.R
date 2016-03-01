@@ -106,7 +106,7 @@ sampleColors = sapply(sampleLabs, function(x) {
     }
 
     return (col)
-}, USE.NAMES = FALSE);
+}, use.names = FALSE);
 
 # export randomly selected 250K bins with signal
 num_threads = 24
@@ -209,7 +209,7 @@ for (i in 1:KsCnt) {
 }
 
 sink(paste0(plotOutDir, "/hclust_scores.txt"))
-clustScores = lapply(clustScores, unlist, USE.NAMES = FALSE)
+clustScores = lapply(clustScores, unlist, use.names = FALSE)
 
 clustScores.mean = lapply(clustScores, mean, na.rm = TRUE)
 clustScores.correctNum = lapply(clustScores, function(x) {
