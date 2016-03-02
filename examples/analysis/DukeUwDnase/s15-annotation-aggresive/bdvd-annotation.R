@@ -149,7 +149,7 @@ readVectorFromTxt <- function(txtFile) {
     return (vec)
 }
 
-need_export = FALSE
+need_export = TRUE
 num_threads = 24
 ## 132 cell types both in DNase and Exon dataset
 
@@ -182,7 +182,7 @@ if (need_export) {
         column_ids = dnaseSampleIds,
         bdvd_dir = paste0(thisScriptDir, '/../s02-bdvd/out'),
         component = 'signal', #cell type level measurement 
-        artifact_detection = 'conservative',
+        artifact_detection = 'aggressive',
         unwanted_factors = unwanted_factors_dnase,
         known_factors = known_factors_dnase,
         rowidxs_input = paste0("text-rowids@", bdtDatasetsDir, "/DNaseExonCorrelation/100bp/s04-NearbyTSS/DNase_UniqueFeatureIdxs.txt"),
@@ -221,7 +221,7 @@ if (need_export) {
         column_ids = exonSampleIds,
         bdvd_dir = paste0(thisScriptDir, '/../../DukeUwExonArray/s01-bdvd/out'),
         component = 'signal', #cell type level measurement 
-        artifact_detection = 'conservative',
+        artifact_detection = 'aggressive',
         unwanted_factors = unwanted_factors_exon,
         known_factors = known_factors_exon,
         rowidxs_input = paste0("text-rowids@", bdtDatasetsDir, "/DNaseExonCorrelation/100bp/s04-NearbyTSS/Exon_UniqueFeatureIdxs.txt"),
@@ -244,20 +244,20 @@ locationRowIDs_Y = readVectorFromTxt(paste0(bdtDatasetsDir, "/DNaseExonCorrelati
 rowIDs = 1:length(rowIDs_X)
 
 # a subset of configs are to be used for analysis
-#KsY = c(0, 0, 1, 2, 2, 3, 3, 10)
-#NsY = c(0, 1, 0, 0, 0, 0, 0, 0)
+KsY = c(0, 0, 1, 2, 2, 3, 3, 10)
+NsY = c(0, 1, 0, 0, 0, 0, 0, 0)
 
-#KsX = c(0, 0, 1, 2, 3, 2, 3, 10)
-#NsX = c(0, 1, 0, 0, 0, 0, 0, 0)
+KsX = c(0, 0, 1, 2, 3, 2, 3, 10)
+NsX = c(0, 1, 0, 0, 0, 0, 0, 0)
 
-#OnewayConfig = TRUE
+OnewayConfig = TRUE
 
-KsY = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0)
-NsY = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1)
-KsX = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0)
-NsX = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1)
+#KsY = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0)
+#NsY = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1)
+#KsX = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0)
+#NsX = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1)
 
-OnewayConfig = FALSE
+#OnewayConfig = FALSE
 
 N = length(KsY) * length(KsX)
 
