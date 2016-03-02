@@ -184,20 +184,20 @@ rowIDs = 1:length(rowIDs_s1)
 
 
 # a subset of configs are to be used for analysis
-#KsMate1 = c(0, 0, 1, 2, 2, 3, 3)
-#NsMate1 = c(0, 1, 0, 0, 0, 0, 0)
+KsMate1 = c(0, 0, 1, 2, 2, 3, 3, 10)
+NsMate1 = c(0, 1, 0, 0, 0, 0, 0, 0)
 
-#KsMate2 = c(0, 0, 1, 2, 3, 2, 3)
-#NsMate2 = c(0, 1, 0, 0, 0, 0, 0)
+KsMate2 = c(0, 0, 1, 2, 3, 2, 3, 10)
+NsMate2 = c(0, 1, 0, 0, 0, 0, 0, 0)
 
-#OnewayConfig = TRUE
+OnewayConfig = TRUE
 
-KsMate1 = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0)
-NsMate1 = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1)
-KsMate2 = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0)
-NsMate2 = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1)
+#KsMate1 = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0)
+#NsMate1 = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1)
+#KsMate2 = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0)
+#NsMate2 = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1)
 
-OnewayConfig = FALSE
+#OnewayConfig = FALSE
 
 N = length(KsMate1) * length(KsMate2)
 
@@ -367,7 +367,7 @@ for(i in 1:N) {
 legend(200, 94, legend = legendTxts, cex = 1, col = colors, pch = plotchar, lty = linetype, bty = "n")
 dev.off()
 
-#q(save="no")
+q(save="no")
 
 ##
 ## AUC Table

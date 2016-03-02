@@ -64,8 +64,12 @@
     <None Include="analysis\DukeUwDnase\s10-Tstats-aggressive\bdvd-tstats.sh" />
     <None Include="analysis\DukeUwDnase\s11-hClust-conservative\bdvd-hclust.R" />
     <None Include="analysis\DukeUwDnase\s11-hClust-conservative\bdvd-hclust.sh" />
+    <None Include="analysis\DukeUwDnase\s13-correlation-aggresive\bdvd-correlation.R" />
+    <None Include="analysis\DukeUwDnase\s13-correlation-aggresive\bdvd-correlation.sh" />
     <None Include="analysis\DukeUwDnase\s12-correlation-conservative\bdvd-correlation.R" />
     <None Include="analysis\DukeUwDnase\s12-correlation-conservative\bdvd-correlation.sh" />
+    <None Include="analysis\DukeUwDnase\s14-annotation-conservative\bdvd-annotation.R" />
+    <None Include="analysis\DukeUwDnase\s14-annotation-conservative\bdvd-annotation.sh" />
     <None Include="analysis\DukeUwExonArray\s01-bdvd\bdvd.R" />
     <None Include="analysis\DukeUwExonArray\s01-bdvd\bdvd.sh" />
     <None Include="analysis\DukeUwExonArray\s02-Fstats-conservative\bdvd-fstats.R" />
