@@ -63,6 +63,58 @@ getConfigTexts <- function(ks, ns) {
 }
 
 #
+# Nearest K locations
+#
+nearestKRowIDs <- function(locationTbl, K, centerRowID) {
+    ref=locationTbl[centerRowID,4]
+    dataRowIDs=rep(0,K)
+    RowCnt=nrow(locationTbl)
+    MAX_ROWID=centerRowID
+    MIN_ROWID=centerRowID
+    minRowID=centerRowID
+    maxRowID=centerRowID
+    k=1
+    dataRowIDs[k]=locationTbl[centerRowID,2] #data rowID
+    while(TRUE) {
+        rowID=0
+        if (minRowID>1 && locationTbl[minRowID-1,4]==ref) {
+            MIN_ROWID=minRowID-1
+        }
+
+        if (maxRowID<RowCnt && locationTbl[maxRowID+1,4]==ref) {
+            MAX_ROWID=maxRowID+1
+        }
+
+        if (minRowID>MIN_ROWID&&maxRowID==MAX_ROWID) {
+            minRowID=minRowID-1
+            rowID=minRowID
+        } else if (minRowID==MIN_ROWID&&maxRowID<MAX_ROWID) {
+            maxRowID=maxRowID+1
+            rowID=maxRowID
+        } else if (minRowID>MIN_ROWID&&maxRowID<MAX_ROWID) {
+            d_min=abs(locationTbl[minRowID,1]-locationTbl[centerRowID,1])
+            d_max=abs(locationTbl[maxRowID,1]-locationTbl[centerRowID,1])
+            if(d_min<d_max) {
+                minRowID=minRowID-1
+                rowID=minRowID
+            } else {
+                maxRowID=maxRowID+1
+                rowID=maxRowID
+            }
+        }
+
+        if(rowID==0)
+            break
+        k=k+1
+        dataRowIDs[k]=locationTbl[rowID,2]
+        if(k==K)
+            break
+    }
+
+    return (dataRowIDs[1:k])
+}
+
+#
 # annotation
 #
 twoMatAnnotation <- function(i, mat_X, mat_Y, rowIDs_X, rowIDs_Y, locationTbl_Y, locationRowIDs_Y, nearbyCnt) {
@@ -97,8 +149,7 @@ readVectorFromTxt <- function(txtFile) {
     return (vec)
 }
 
-
-need_export = TRUE
+need_export = FALSE
 num_threads = 24
 ## 132 cell types both in DNase and Exon dataset
 
