@@ -48,7 +48,7 @@ getConfigOrder <- function(ks, ns, k, n) {
     return (0)
 }
 
-getRConfigTexts <- function(ks, ns) {
+getConfigTexts <- function(ks, ns) {
     oval=unique(ks+ns*1000) #put known factors to rightmost
     oval=oval[order(oval)]
     txts=rep("", length(oval))
@@ -75,7 +75,7 @@ readVectorFromTxt <- function(txtFile) {
 
 
 need_export = FALSE
-num_threads = 36
+num_threads = 24
 ## 132 cell types both in DNase and Exon dataset
 
 ## export DNase data
@@ -192,10 +192,10 @@ rowIDs = 1:length(rowIDs_s1)
 
 #OnewayConfig = TRUE
 
-KsMate1 = unwanted_factors_dnase
-NsMate1 = known_factors_dnase
-KsMate2 = unwanted_factors_exon
-NsMate2 = known_factors_exon
+KsMate1 = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0)
+NsMate1 = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1)
+KsMate2 = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0)
+NsMate2 = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  1)
 
 OnewayConfig = FALSE
 
@@ -367,7 +367,7 @@ for(i in 1:N) {
 legend(200, 94, legend = legendTxts, cex = 1, col = colors, pch = plotchar, lty = linetype, bty = "n")
 dev.off()
 
-q(save="no")
+#q(save="no")
 
 ##
 ## AUC Table
