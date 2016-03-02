@@ -33,8 +33,33 @@ pairInTwoConfig <- function(x1, y1, xs1, ys1, x2, y2, xs2, ys2) {
 }
 
 getConfigCnt <- function(ks, ns) {
-	oval = unique(ks+ns*1000) #put known factors to rightmost
-	return (length(oval))
+    oval = unique(ks+ns*1000) #put known factors to rightmost
+    return (length(oval))
+}
+
+getConfigOrder <- function(ks, ns, k, n) {
+    oval = unique(ks+ns*1000) #put known factors to rightmost
+    oval = oval[order(oval)]
+    v = k + n*1000
+    for( i in 1:length(oval)) {
+        if(v==oval[i])
+            return (i)
+    }
+    return (0)
+}
+
+getRConfigTexts <- function(ks, ns) {
+    oval=unique(ks+ns*1000) #put known factors to rightmost
+    oval=oval[order(oval)]
+    txts=rep("", length(oval))
+    for( i in 1:length(oval)) {
+        if(oval[i] >= 1000) {
+            txts[i]="KF"
+        } else {
+            txts[i] = as.character(oval[i]%%1000)
+        }
+    }
+    return (txts)
 }
 
 twoMatRowCor <- function(i, mat1, mat2, rowIDs1, rowIDs2) {
@@ -49,8 +74,8 @@ readVectorFromTxt <- function(txtFile) {
 }
 
 
-need_export = TRUE
-num_threads = 24
+need_export = FALSE
+num_threads = 36
 ## 132 cell types both in DNase and Exon dataset
 
 ## export DNase data
@@ -159,13 +184,20 @@ rowIDs = 1:length(rowIDs_s1)
 
 
 # a subset of configs are to be used for analysis
-KsMate1 = c(0, 0, 1, 2, 2, 3, 3)
-NsMate1 = c(0, 1, 0, 0, 0, 0, 0)
+#KsMate1 = c(0, 0, 1, 2, 2, 3, 3)
+#NsMate1 = c(0, 1, 0, 0, 0, 0, 0)
 
-KsMate2 = c(0, 0, 1, 2, 3, 2, 3)
-NsMate2 = c(0, 1, 0, 0, 0, 0, 0)
+#KsMate2 = c(0, 0, 1, 2, 3, 2, 3)
+#NsMate2 = c(0, 1, 0, 0, 0, 0, 0)
 
-OnewayConfig = TRUE
+#OnewayConfig = TRUE
+
+KsMate1 = unwanted_factors_dnase
+NsMate1 = known_factors_dnase
+KsMate2 = unwanted_factors_exon
+NsMate2 = known_factors_exon
+
+OnewayConfig = FALSE
 
 N = length(KsMate1) * length(KsMate2)
 
@@ -183,6 +215,9 @@ runInfos = data.frame(
     k2 = rep(0, N),
     n2 = rep(0, N),
     stringsAsFactors = FALSE)
+
+H1H0Ratio = 1
+MAX_FDR = 0.05
 
 ##
 ## compute correlations for signal pairs
@@ -330,4 +365,148 @@ for(i in 1:N) {
 
 # add a legend 
 legend(200, 94, legend = legendTxts, cex = 1, col = colors, pch = plotchar, lty = linetype, bty = "n")
+dev.off()
+
+q(save="no")
+
+##
+## AUC Table
+##
+print(N)
+for(n in 1:N) {
+    scores=c(unlist(corSignals[[n]]), unlist(corNoises[[n]]))
+    lbs = c(rep(1,FullRowCnt), rep(0,FullRowCnt))
+    oRowIDs = order(scores, decreasing = TRUE)
+    scores = scores[oRowIDs[1:TopCnt]]
+    lbs = lbs[oRowIDs[1:TopCnt]]
+    pred <- prediction(scores, lbs)
+    perf <- performance(pred,"auc")
+    runRowID = getConfigOrder(
+        runInfos[,"k1"], runInfos[,"n1"],
+        runInfos[n,"k1"], runInfos[n,"n1"])
+    runColID = getConfigOrder(
+        runInfos[,"k2"], runInfos[,"n2"],
+        runInfos[n,"k2"], runInfos[n,"n2"])
+    runAUCs[runRowID, runColID] = as.numeric(perf@y.values)
+
+    perf <- performance(pred,"tpr","fpr")
+    xs = as.numeric(unlist(perf@x.values)) #fpr
+    ys = as.numeric(unlist(perf@y.values)) #tpr
+    fdr = xs/(xs+ys*H1H0Ratio)
+    runTPRs[runRowID, runColID] = max(ys[fdr<MAX_FDR], na.rm = TRUE)
+}
+
+xlabls = getConfigTexts(runInfos[,"k1"], runInfos[,"n1"])
+xats=1:length(xlabls)
+ylabls = getConfigTexts(runInfos[,"k2"], runInfos[,"n2"])
+yats=1:length(ylabls)
+
+##
+## AUC matrix plot
+##
+minAUC = min(runAUCs)
+maxAUC = max(runAUCs)
+pdf(file = paste0(plotOutDir,"/aucs.pdf"))
+levelplot(runAUCs,
+    scales = list(x = list(at=xats, labels=xlabls), y = list(at=yats, labels=ylabls),tck = c(1,0)),
+    main="AUC",
+    colorkey = FALSE,
+    xlab="DNase",
+    ylab="Exon",
+    at=unique(c(seq(minAUC-0.01, maxAUC+0.01,length=100))),
+    col.regions = colorRampPalette(c("white", "red"))(1e2),
+    panel=function(x,y,z,...) {
+        panel.levelplot(x,y,z,...)
+        panel.text(x, y, round(z,2))})
+dev.off()
+
+
+##
+## TPR matrix plot
+##
+minTPR = min(runTPRs)
+maxTPR = max(runTPRs)
+pdf(file = paste0(plotOutDir, "/tprs.pdf"))
+levelplot(runTPRs,
+    scales = list(x = list(at=xats, labels=xlabls), y = list(at=yats, labels=ylabls),tck = c(1,0)),
+    main=paste("Max TPR with FDR <",MAX_FDR,sep=""),
+    colorkey = FALSE,
+    xlab="DNase",
+    ylab="Exon",
+    at = unique(c(seq(minTPR-0.01, maxTPR+0.01,length=100))),
+    col.regions = colorRampPalette(c("white", "red"))(1e2),
+    panel=function(x,y,z,...) {
+        panel.levelplot(x,y,z,...)
+        panel.text(x, y, round(z,2))})
+dev.off()
+
+##
+## ROC plot
+##
+pdf(file = paste0(plotOutDir,"/roc.pdf"))
+plot(c(0,1), c(0,1), type="n", xlab="False positive rate", ylab="True positive rate", xlim=c(0,1))
+abline(a=0, b=1, col="gray", lwd=1, lty = 2)
+colors =c("salmon4", "red2", "dodgerblue3", "darkorange1", "green2", "black")
+colors=rep(colors,as.integer(N/length(colors))+1)
+linetype <- rep(1,N) 
+plotchar <- rep(19,N)
+aucs = rep(0,N)
+legendTxts = rep("",N)
+FullRowCnt = length(corSignals[[1]])
+TopCnt = min(50000, FullRowCnt)
+for(i in 1:N) {
+    scores=c(unlist(corSignals[[i]]), unlist(corNoises[[i]]))
+    lbs=c(rep(1,FullRowCnt), rep(0,FullRowCnt))
+
+    oRowIDs = order(scores,decreasing = TRUE)
+    scores=scores[oRowIDs[1:TopCnt]]
+    lbs=lbs[oRowIDs[1:TopCnt]]
+    pred <- prediction( scores, lbs)
+    perf <- performance(pred,"tpr","fpr")
+    xs=as.numeric(unlist(perf@x.values))
+    ys=as.numeric(unlist(perf@y.values))
+    perf <- performance(pred,"auc")
+    aucs[i]=perf@y.values
+    lines(xs, ys, type="l", lwd=2, lty=linetype[i], col=colors[i], pch=plotchar[i])
+    legendTxts[i]=paste("[",runInfos[i,"name"],"], auc ",sprintf("%.2f",aucs[i]),sep="")
+}
+
+# add a legend 
+legend(0.6,0.6, legend=legendTxts,
+ cex=1, col=colors, pch=plotchar, lty=linetype, bty ="n")
+dev.off()
+
+##
+## FDR plot
+##
+pdf(file = paste0(plotOutDir, "/fdr.pdf", sep=""))
+plot(c(0,1), c(0,1), type="n", xlab="False discovery rate", ylab="True positive rate", xlim=c(0,1))
+abline(a=0,b=1, col="gray", lwd=1, lty = 2)
+#colors <- 1:N
+linetype <- rep(1,N) 
+plotchar <- rep(19,N)
+aucs = rep(0,N)
+legendTxts=rep("",N)
+for(i in 1:N) {
+    scores = c(unlist(corSignals[[i]]), unlist(corNoises[[i]]))
+    lbs=c(rep(1,FullRowCnt), rep(0,FullRowCnt))
+    oRowIDs = order(scores,decreasing = TRUE)
+    scores=scores[oRowIDs[1:TopCnt]]
+    lbs=lbs[oRowIDs[1:TopCnt]]
+    pred <- prediction( scores, lbs)
+    perf <- performance(pred,"tpr","fpr")
+    xs=as.numeric(unlist(perf@x.values)) #fpr
+    ys=as.numeric(unlist(perf@y.values)) #tpr
+    fdr=xs/(xs+ys*H1H0Ratio)
+    maxTPR=max(ys[fdr<MAX_FDR],na.rm = TRUE)
+    aucs[i]=maxTPR
+    xs=fdr
+    #perf <- performance(pred,"auc")
+    #aucs[i]=perf@y.values
+    lines(xs, ys, type="l", lwd=2, lty=linetype[i], col=colors[i], pch=plotchar[i])
+    legendTxts[i]=paste("[",runInfos[i,"name"],"], TPR ",sprintf("%.2f",aucs[i]),sep="")
+}
+# add a legend 
+legend(0.6,1.05, legend=legendTxts,
+ cex=1, col=colors, pch=plotchar, lty=linetype, bty ="n")
 dev.off()
