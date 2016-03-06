@@ -72,6 +72,8 @@
     <None Include="analysis\DukeUwDnase\s15-annotation-aggresive\bdvd-annotation.sh" />
     <None Include="analysis\DukeUwDnase\s14-annotation-conservative\bdvd-annotation.R" />
     <None Include="analysis\DukeUwDnase\s14-annotation-conservative\bdvd-annotation.sh" />
+    <None Include="analysis\DukeUwDnase\s17-plotModel-aggresive\bdvd-plotModel.R" />
+    <None Include="analysis\DukeUwDnase\s17-plotModel-aggresive\bdvd-plotModel.sh" />
     <None Include="analysis\DukeUwDnase\s16-plotModel-conservative\bdvd-plotModel.R" />
     <None Include="analysis\DukeUwDnase\s16-plotModel-conservative\bdvd-plotModel.sh" />
     <None Include="analysis\DukeUwExonArray\s01-bdvd\bdvd.R" />

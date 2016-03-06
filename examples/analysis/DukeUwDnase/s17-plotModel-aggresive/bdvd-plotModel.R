@@ -35,7 +35,7 @@ for (i in 1:length(exportList)) {
             column_ids = exportSampleIds,
             bdvd_dir = paste0(thisScriptDir, '/../s02-bdvd/out'),
             component = export$component,
-            artifact_detection = 'conservative',
+            artifact_detection = 'aggressive',
             unwanted_factors = export$unwanted_factors,
             known_factors = export$known_factors,
             rowidx_from = rowIdxFrom,
