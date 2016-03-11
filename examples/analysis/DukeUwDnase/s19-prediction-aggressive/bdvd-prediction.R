@@ -123,7 +123,7 @@ if (need_export) {
         column_ids = dnaseSampleIds,
         bdvd_dir = paste0(thisScriptDir, '/../s02-bdvd/out'),
         component = 'signal', #cell type level measurement 
-        artifact_detection = 'conservative',
+        artifact_detection = 'aggressive',
         unwanted_factors = unwanted_factors_dnase,
         known_factors = known_factors_dnase,
         rowidxs_input = paste0("text-rowids@", bdtDatasetsDir, "/DNaseExonCorrelation/100bp/s01-TSS-PairIdxs/DNase_UniqueFeatureIdxs.txt"),
@@ -161,7 +161,7 @@ if (need_export) {
         column_ids = exonSampleIds,
         bdvd_dir = paste0(thisScriptDir, '/../../DukeUwExonArray/s01-bdvd/out'),
         component = 'signal', #cell type level measurement 
-        artifact_detection = 'conservative',
+        artifact_detection = 'aggressive',
         unwanted_factors = unwanted_factors_exon,
         known_factors = known_factors_exon,
         rowidxs_input = paste0("text-rowids@", bdtDatasetsDir, "/DNaseExonCorrelation/100bp/s01-TSS-PairIdxs/Exon_UniqueFeatureIdxs.txt"),
@@ -321,4 +321,3 @@ pdf(file = paste0(plotOutDir, "/paired_testerrors_boxplot.pdf"))
 plotdata <- boxplot(pairedErrors[2:length(pairedErrors)], ylab = "Relative Errors", outline = FALSE)
 abline(h=0, col="pink", lwd=2,lty=3)
 dev.off()
-
