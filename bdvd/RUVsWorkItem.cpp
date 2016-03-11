@@ -20,7 +20,7 @@ CRUVsComputeABC::DoWork()
 			false, m_colIdxPermutation, m_As);
 	}
 
-	m_ruvBuilder.UpdateYcfYcscfT(m_Y,  m_featureIdxFrom,m_featureIdxTo,m_controlFeatureFlags, m_C);
+	m_ruvBuilder.UpdateYcfYcscfT(m_Y, m_featureIdxFrom, m_featureIdxTo, m_controlFeatureFlags, m_C);
 	
 }
 

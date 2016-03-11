@@ -52,6 +52,7 @@ public:
 
 private:
     RandomShuffleFunc m_shuffleFunc;
+    const iBS::IntVecVec& m_groupedIdxs;
     iBS::IntVec m_groupSizes;
     iBS::IntVec m_idxs;
 };
