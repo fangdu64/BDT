@@ -3664,22 +3664,27 @@ void CRUVBuilder::GetNormalizedCnts(Ice::Long rowCnt, Ice::Double *Y, Ice::Doubl
     }
     else if (m_outputMode == iBS::RUVOutputModeYminusZY)
     {
+        // component: 'signal+random', artifact_detection: 'aggressive'
         GetNormalizedCnts_ModeYminusZY(rowCnt, Y, rowMeans);
     }
     else if (m_outputMode == iBS::RUVOutputModeZY)
     {
+        // component: 'artifact', artifact_detection: 'aggressive'
         GetNormalizedCnts_ModeZY(rowCnt, Y, rowMeans);
     }
     else if (m_outputMode == iBS::RUVOutputModeZYthenGroupMean)
     {
+        // component: 'signal', artifact_detection: 'aggressive'
         GetNormalizedCnts_ModeZYthenGroupMean(rowCnt, Y, rowMeans);
     }
     else if (m_outputMode == iBS::RUVOutputModeYminusWa)
     {
+        // component:'signal+random',  artifact_detection: 'conservative'
         GetNormalizedCnts_ModeG(rowCnt, Y, rowMeans);
     }
     else if (m_outputMode == iBS::RUVOutputModeXb)
     {
+        // component: 'signal', artifact_detection: 'conservative'
         GetNormalizedCnts_ModeBeta(rowCnt, Y, rowMeans);
     }
     else if (m_outputMode == iBS::RUVOutputModeGroupMean)
@@ -3688,10 +3693,12 @@ void CRUVBuilder::GetNormalizedCnts(Ice::Long rowCnt, Ice::Double *Y, Ice::Doubl
     }
     else if (m_outputMode == RUVOutputModeWa)
     {
+        // component: 'artifact', artifact_detection: 'conservative':
         GetNormalizedCnts_ModeWa(rowCnt, Y, rowMeans);
     }
     else if (m_outputMode == RUVOutputModeZYGetE)
     {
+        // component: 'random', artifact_detection: 'conservative'
         GetNormalizedCnts_ModeZYGetE(rowCnt, Y, rowMeans);
     }
     else if (m_outputMode == RUVOutputModeYminusWaXb)
