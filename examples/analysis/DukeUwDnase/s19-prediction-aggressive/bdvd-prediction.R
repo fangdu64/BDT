@@ -161,7 +161,7 @@ if (need_export) {
         column_ids = exonSampleIds,
         bdvd_dir = paste0(thisScriptDir, '/../../DukeUwExonArray/s01-bdvd/out'),
         component = 'signal', #cell type level measurement 
-        artifact_detection = 'aggressive',
+        artifact_detection = 'conservative', # Y always use conservative for fair comparison
         unwanted_factors = unwanted_factors_exon,
         known_factors = known_factors_exon,
         rowidxs_input = paste0("text-rowids@", bdtDatasetsDir, "/DNaseExonCorrelation/100bp/s01-TSS-PairIdxs/Exon_UniqueFeatureIdxs.txt"),
