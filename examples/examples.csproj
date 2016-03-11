@@ -68,6 +68,8 @@
     <None Include="analysis\DukeUwDnase\s13-correlation-aggresive\bdvd-correlation.sh" />
     <None Include="analysis\DukeUwDnase\s12-correlation-conservative\bdvd-correlation.R" />
     <None Include="analysis\DukeUwDnase\s12-correlation-conservative\bdvd-correlation.sh" />
+    <None Include="analysis\DukeUwDnase\s18-prediction-conservative\bdvd-prediction.R" />
+    <None Include="analysis\DukeUwDnase\s18-prediction-conservative\bdvd-prediction.sh" />
     <None Include="analysis\DukeUwDnase\s15-annotation-aggresive\bdvd-annotation.R" />
     <None Include="analysis\DukeUwDnase\s15-annotation-aggresive\bdvd-annotation.sh" />
     <None Include="analysis\DukeUwDnase\s14-annotation-conservative\bdvd-annotation.R" />
@@ -76,11 +78,17 @@
     <None Include="analysis\DukeUwDnase\s17-plotModel-aggresive\bdvd-plotModel.sh" />
     <None Include="analysis\DukeUwDnase\s16-plotModel-conservative\bdvd-plotModel.R" />
     <None Include="analysis\DukeUwDnase\s16-plotModel-conservative\bdvd-plotModel.sh" />
+    <None Include="analysis\DukeUwExonArray\s03-Fstats-aggressive\bdvd-fstats.R" />
+    <None Include="analysis\DukeUwExonArray\s03-Fstats-aggressive\bdvd-fstats.sh" />
+    <None Include="analysis\DukeUwExonArray\s03-Fstats-aggressive\bdvd-fstats.bat" />
     <None Include="analysis\DukeUwExonArray\s01-bdvd\bdvd.bat" />
     <None Include="analysis\DukeUwExonArray\s01-bdvd\bdvd.R" />
     <None Include="analysis\DukeUwExonArray\s01-bdvd\bdvd.sh" />
     <None Include="analysis\DukeUwExonArray\s02-Fstats-conservative\bdvd-fstats.R" />
     <None Include="analysis\DukeUwExonArray\s02-Fstats-conservative\bdvd-fstats.sh" />
+    <None Include="analysis\DukeUwExonArray\s04-hClust-conservative\bdvd-hclust.bat" />
+    <None Include="analysis\DukeUwExonArray\s04-hClust-conservative\bdvd-hclust.R" />
+    <None Include="analysis\DukeUwExonArray\s04-hClust-conservative\bdvd-hclust.sh" />
     <None Include="analysis\Zebrafish\s01-comparison\analysis.R" />
     <None Include="config\bdt_path.R" />
     <None Include="config\bdt_path_linux.sh" />
