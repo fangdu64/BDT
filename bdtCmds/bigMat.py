@@ -218,6 +218,9 @@ def outputR():
     if (hasattr(obj, 'BigMat')):
         bigMat = obj.BigMat
 
+    if (hasattr(obj, 'BinMap')):
+        binMap = obj.BinMap
+
     if (not hasattr(obj, 'BinMap')):
         binMap = iBSDefines.RefNoneoverlapBinMap()
         binMap.as_emtpy()
