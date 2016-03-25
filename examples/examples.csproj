@@ -91,6 +91,9 @@
     <None Include="analysis\DukeUwExonArray\s04-hClust-conservative\bdvd-hclust.bat" />
     <None Include="analysis\DukeUwExonArray\s04-hClust-conservative\bdvd-hclust.R" />
     <None Include="analysis\DukeUwExonArray\s04-hClust-conservative\bdvd-hclust.sh" />
+    <None Include="analysis\HistoneBroadUwH3K4me3\s01-bam2mat\bam2mat.sh" />
+    <None Include="analysis\HistoneBroadUwH3K4me3\s02-bdvd\bdvd.R" />
+    <None Include="analysis\HistoneBroadUwH3K4me3\s02-bdvd\bdvd.sh" />
     <None Include="analysis\Zebrafish\s01-comparison\analysis.R" />
     <None Include="config\bdt_path.R" />
     <None Include="config\bdt_path_linux.sh" />
@@ -123,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="analysis\DukeUwDnase\s01-bam2mat\bam_files.txt" />
+    <Content Include="analysis\HistoneBroadUwH3K4me3\s01-bam2mat\bam_files.txt" />
     <Content Include="linux\bigMat\03_bam_files.txt" />
     <Content Include="R\bdvd\dukeUwExonArray\03-rowidxs.txt" />
     <Content Include="windows\bigMat\03_bam_files.txt" />
