@@ -1074,7 +1074,8 @@ Freeze::BackgroundSaveEvictorI::run()
                         else
                         {
                             DatabaseException ex(__FILE__, __LINE__);
-                            ex.message = string(typeid(*element->rec.servant).name()) 
+                            Ice::Object& svnt = *element->rec.servant;
+                            ex.message = string(typeid(svnt).name()) 
                                 + " does not implement IceUtil::AbstractMutex";
                             throw ex;
                         }
