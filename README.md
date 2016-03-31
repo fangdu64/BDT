@@ -39,11 +39,11 @@ BDT runs on the following platforms:
 - Windows
 
 ## Installation on Linux
-1. Download the latest source code:  [v0.1.3.tar.gz](https://github.com/fangdu64/BDT/archive/v0.1.3.tar.gz)
+1. Download the latest source code:  [v0.1.4.tar.gz](https://github.com/fangdu64/BDT/archive/v0.1.4.tar.gz)
 2. Extract and go to the extracted directory:
 
-        $ tar xfz v0.1.3.tar.gz
-        $ cd BDT-v0.1.3
+        $ tar xfz v0.1.4.tar.gz
+        $ cd BDT-v0.1.4
 3. Build and install BDT:
 
         $ make bdt_home={install_path}
@@ -54,11 +54,11 @@ where {install_path} is an installation directory (has to be an absolute path). 
 
         $ xcode-select --install
 A pop-up windows will appears asking you about install tools.
-2. Download the latest source code:  [v0.1.3.tar.gz](https://github.com/fangdu64/BDT/archive/v0.1.3.tar.gz)
+2. Download the latest source code:  [v0.1.4.tar.gz](https://github.com/fangdu64/BDT/archive/v0.1.4.tar.gz)
 3. Extract and go to the extracted directory:
 
-        $ tar xfz v0.1.3.tar.gz
-        $ cd BDT-v0.1.3
+        $ tar xfz v0.1.4.tar.gz
+        $ cd BDT-v0.1.4
 4. Build and install BDT:
 
         $ make bdt_home={install_path}
@@ -67,7 +67,7 @@ where {install_path} is an installation directory (has to be an absolute path). 
 ## Installation on Windows
 1. Ensure that the Python3.3.3 (64-bit) is installed. Otherwise download [Windows X86-64 MSI Installer (3.3.3)](https://www.python.org/ftp/python/3.3.3/python-3.3.3.amd64.msi) and install it.
 2. Ensure that the [Visual C++ Redistributable Packages for Visual Studio 2013](https://www.microsoft.com/en-us/download/details.aspx?id=40784) is installed. Otherwise download [vcredist_x64.exe](https://www.microsoft.com/en-us/download/details.aspx?id=40784) and install it.
-3. Download BDT executable zip [BDT-v0.1.3-win64.zip](https://github.com/fangdu64/BDT/releases/download/v0.1.3/BDT-v0.1.3-win64.zip).
+3. Download BDT executable zip [BDT-v0.1.4-win64.zip](https://github.com/fangdu64/BDT/releases/download/v0.1.4/BDT-v0.1.4-win64.zip).
 4. Extract it and all the required executables/scripts will be in the extracted directory.
 
 ## R package
