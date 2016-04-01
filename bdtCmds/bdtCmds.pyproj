@@ -26,6 +26,8 @@
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="bdvd-ruv-rowselection.py" />
+    <Compile Include="bdvdRowSelection.py" />
     <Compile Include="bigmat-export.py" />
     <Compile Include="bigMatExport.py" />
     <Compile Include="bdvdExport.py" />

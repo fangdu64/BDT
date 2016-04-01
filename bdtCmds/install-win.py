@@ -102,7 +102,8 @@ def main(argv=None):
         'bdvdExport.py',
         'bigMat.py',
         'bigKmeansC.py',
-        'bigMatExport.py']
+        'bigMatExport.py',
+        'bdvdRowSelection.py']
     for cmdFile in cmdFiles:
         if cmdFile[-3:] != '.py':
             continue

@@ -181,6 +181,36 @@ bdvd_export_usage = '''
 bdvd-export
 '''
 
+def get_ruv_output_mode(
+    component,
+    artifact_detection):
+    RUVOutputMode = None
+    if component == 'signal' and artifact_detection == 'aggressive':
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeZYthenGroupMean
+    elif component == 'signal' and artifact_detection == 'conservative':
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeXb
+    elif component == 'artifact' and artifact_detection == 'aggressive':
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeZY
+    elif component == 'artifact' and artifact_detection == 'conservative':
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeWa
+    elif component == 'random' and artifact_detection == 'aggressive':
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeZYGetE
+    elif component == 'random' and artifact_detection == 'conservative':
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeYminusWaXb
+    elif component == 'signal+random' and artifact_detection == 'aggressive':
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeYminusZY
+    elif component == 'signal+random' and artifact_detection == 'conservative':
+        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeYminusWa
+    return RUVOutputMode
+
+def get_ruv_output_scale(scale):
+    RUVOutputScale = None
+    if scale == 'mlog':
+        RUVOutputScale = iBS.RUVOutputScaleEnum.RUVOutputScaleLog
+    elif scale == 'original':
+        RUVOutputScale = iBS.RUVOutputScaleEnum.RUVOutputScaleRaw
+    return RUVOutputScale
+
 def run_bdvd_ruv_export(
     gRunner,
     platform,
@@ -229,29 +259,9 @@ def run_bdvd_ruv_export(
     if bdvd_obj.RuvOut is not None:
         bigmat_dir = bdvd_obj.RuvOut.BigMatDir
 
-    RUVOutputMode = None
-    if component == 'signal' and artifact_detection == 'aggressive':
-        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeZYthenGroupMean
-    elif component == 'signal' and artifact_detection == 'conservative':
-        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeXb
-    elif component == 'artifact' and artifact_detection == 'aggressive':
-        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeZY
-    elif component == 'artifact' and artifact_detection == 'conservative':
-        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeWa
-    elif component == 'random' and artifact_detection == 'aggressive':
-        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeZYGetE
-    elif component == 'random' and artifact_detection == 'conservative':
-        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeYminusWaXb
-    elif component == 'signal+random' and artifact_detection == 'aggressive':
-        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeYminusZY
-    elif component == 'signal+random' and artifact_detection == 'conservative':
-        RUVOutputMode = iBS.RUVOutputModeEnum.RUVOutputModeYminusWa
+    RUVOutputMode = get_ruv_output_mode(component, artifact_detection)
 
-    RUVOutputScale = None
-    if scale == 'mlog':
-        RUVOutputScale = iBS.RUVOutputScaleEnum.RUVOutputScaleLog
-    elif scale == 'original':
-        RUVOutputScale = iBS.RUVOutputScaleEnum.RUVOutputScaleRaw
+    RUVOutputScale = get_ruv_output_scale(scale)
 
     design_params=(export_names,
                    unwanted_factors,
@@ -286,6 +296,100 @@ def run_bdvd_ruv_export(
     if rowIdxsPickle is not None:
         node_cmd.extend(["--export-rows", rowIdxsPickle])
     
+    node_cmd.append(design_fn)
+
+    gRunner.logp("run subtask at: {0}".format(nodeDir))
+    proc = subprocess.call(node_cmd)
+    gRunner.logp("end subtask \n")
+    return (nodeDir,out_picke_file)
+
+def run_bdvd_ruv_rowselection(
+    gRunner,
+    platform,
+    bdtHomeDir,
+    nodeName,
+    runDir,
+    dryRun,
+    removeBeforeRun,
+    row_selector,
+    rowidx_from,
+    rowidx_to,
+    column_ids,
+    workercnt,
+    memory_size,
+    bdvd_dir,
+    component,
+    scale,
+    artifact_detection,
+    unwanted_factors,
+    known_factors,
+    with_signal_threshold,
+    with_signal_col_cnt,
+    with_signal_sampling_row_cnt,
+    output_file):
+
+    nodeDir = os.path.abspath("{0}/{1}".format(runDir, nodeName))
+
+    out_picke_file = os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
+    if dryRun:
+        return out_picke_file
+
+    if removeBeforeRun and os.path.exists(nodeDir):
+        gRunner.logp("remove existing dir: {0}".format(nodeDir))
+        shutil.rmtree(nodeDir)
+    
+    nodeScriptDir = nodeDir + "-script"
+    if not os.path.exists(nodeScriptDir):
+        os.mkdir(nodeScriptDir)
+
+    #
+    # prepare design file
+    #
+
+    bdvd_obj = iBSDefines.loadPickle(
+        iBSDefines.derivePickleFile(bdvd_dir))
+    bigmat_dir = None
+    if bdvd_obj.RuvOut is not None:
+        bigmat_dir = bdvd_obj.RuvOut.BigMatDir
+
+    RUVOutputMode = get_ruv_output_mode(component, artifact_detection)
+
+    RUVOutputScale = get_ruv_output_scale(scale)
+
+    design_params=(unwanted_factors,
+                   known_factors,
+                   RUVOutputMode,
+                   RUVOutputScale,
+                   workercnt,
+                   column_ids,
+                   rowidx_from,
+                   rowidx_to,
+                   row_selector,
+                   with_signal_threshold,
+                   with_signal_col_cnt,
+                   with_signal_sampling_row_cnt,
+                   output_file)
+    params_pickle_fn=os.path.abspath("{0}/design_params.pickle".format(nodeScriptDir))
+    iBSDefines.dumpPickle(design_params, params_pickle_fn)
+
+    design_file=os.path.abspath(bdtHomeDir+"/bdt/bdtPy/PipelineDesigns/bdvdRuvRowSelectionDesign.py")
+    shutil.copy(design_file,nodeScriptDir)
+
+    #
+    # Run node
+    #
+    design_fn=os.path.abspath(nodeScriptDir)+"/bdvdRuvRowSelectionDesign.py"
+    cmdpath=os.path.abspath("{0}/bdt/bdtCmds/bdvd-ruv-rowselection".format(bdtHomeDir))
+    if platform == "Windows":
+        node_cmd = ["py", cmdpath]
+    else:
+        node_cmd = [cmdpath]
+    node_cmd.extend(["--node", nodeName,
+                "--num-threads", str(workercnt),
+                "--max-mem", str(memory_size),
+                "--out", nodeDir,
+                "--bigmat-dir", bigmat_dir])
+
     node_cmd.append(design_fn)
 
     gRunner.logp("run subtask at: {0}".format(nodeDir))
