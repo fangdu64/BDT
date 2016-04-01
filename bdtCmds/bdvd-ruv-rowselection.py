@@ -142,6 +142,7 @@ def launchRowSelectionTask(fcdcPrx, bdvdFacetAdminPrx, computePrx):
 
     (rt, featureIdxs) = computePrx.WithSignalFeatures(task)
 
+    gRunner.log("%d rows selected" %  len(featureIdxs))
     outFile = design.RowIdxsOutFile
     with open(outFile, 'w') as f:
         for idx in featureIdxs:
