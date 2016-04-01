@@ -12,4 +12,4 @@ ret = bigKmeans(
     dist_type = 'Correlation',
     max_iter = 100,
     min_expchange = 0.0001,
-    out = paste0(thisScriptDir,"/out"))
+    out = paste0(thisScriptDir,'/out'))
