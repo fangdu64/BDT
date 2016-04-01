@@ -127,8 +127,13 @@ def launchRowSelectionTask(fcdcPrx, bdvdFacetAdminPrx, computePrx):
     task = computePrx.GetBlankWithSignalFeaturesTask()
     task.reader=ruvPrx
     task.SampleIDs= sampleIDs
-    task.FeatureIdxFrom = design.FeatureIdxFrom
-    task.FeatureIdxTo = design.FeatureIdxTo
+    rowCnt = ofis[0].DomainSize
+    task.FeatureIdxFrom = 0
+    task.FeatureIdxTo = rowCnt
+    if design.FeatureIdxFrom is not None:
+        task.FeatureIdxFrom = design.FeatureIdxFrom
+    if design.FeatureIdxTo is not None:
+        task.FeatureIdxTo = design.FeatureIdxTo
     task.SignalThreshold = design.WithSignalThreshold
     if design.WithSignalColCnt is not None:
         task.SampleCntAboveThreshold = design.WithSignalColCnt
