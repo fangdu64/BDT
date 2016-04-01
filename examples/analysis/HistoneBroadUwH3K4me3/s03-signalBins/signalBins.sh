@@ -5,7 +5,7 @@ ${bdtHome}/bdvdRowSelection \
     --thread-num 4 \
     --memory-size 8000 \
     --row-selector  with-signal \
-    --bdvd-dir ${thisScriptPath}/../s01-bdvd\out \
+    --bdvd-dir ${thisScriptPath}/../s02-bdvd/out \
     --with-signal-threshold 1.8 \
     --with-signal-col-cnt 3 \
     --component signal+random \
