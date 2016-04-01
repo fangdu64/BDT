@@ -94,6 +94,13 @@
     <None Include="analysis\HistoneBroadUwH3K4me3\s01-bam2mat\bam2mat.sh" />
     <None Include="analysis\HistoneBroadUwH3K4me3\s02-bdvd\bdvd.R" />
     <None Include="analysis\HistoneBroadUwH3K4me3\s02-bdvd\bdvd.sh" />
+    <None Include="analysis\HistoneBroadUwH3K4me3\s03-signalBins-Uw\signalBins.sh" />
+    <None Include="analysis\HistoneBroadUwH3K4me3\s04-export-Uw\bdvd-export.R" />
+    <None Include="analysis\HistoneBroadUwH3K4me3\s04-export-Uw\bdvd-export.sh" />
+    <None Include="analysis\HistoneBroadUwH3K4me3\s05-bigKmeans\bigKmeans.R" />
+    <None Include="analysis\HistoneBroadUwH3K4me3\s05-bigKmeans\bigKmeans.sh" />
+    <None Include="analysis\HistoneBroadUwH3K4me3\s05-bigKmeans\loadMat.R" />
+    <None Include="analysis\HistoneBroadUwH3K4me3\s05-bigKmeans\loadMat.sh" />
     <None Include="analysis\Zebrafish\s01-comparison\analysis.R" />
     <None Include="config\bdt_path.R" />
     <None Include="config\bdt_path_linux.sh" />
