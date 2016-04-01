@@ -2797,7 +2797,7 @@ void CWithSignalFeaturesBuilder::TestByFeatureMajor(::Ice::Long ramMb)
 			int aboveThresholdCnt=0;
 			for (Ice::Long j = 0; j<colCnt; j++)
 			{
-				if (Y[i*colCnt + j]>m_task.SampleCntAboveThreshold)
+                if (Y[i*colCnt + j] > m_task.SignalThreshold)
 				{
 					aboveThresholdCnt++;
 					if (aboveThresholdCnt >= m_task.SampleCntAboveThreshold)
