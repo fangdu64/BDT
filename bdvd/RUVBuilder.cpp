@@ -364,7 +364,18 @@ bool CRUVBuilder::GetY(::Ice::Long featureIdxFrom, ::Ice::Long featureIdxTo, ::I
         {
             //not check negative
             cidx = i*colCnt + j;
-            pY[cidx] = log(rawCnts[cidx] * m_libraryFactors[j] + 1);
+            if (m_RUVInfo.InputAdjust == iBS::RUVInputDoLogE)
+            {
+                pY[cidx] = log(rawCnts[cidx] * m_libraryFactors[j] + 1);
+            }
+            else if (m_RUVInfo.InputAdjust == iBS::RUVInputDoLog2)
+            {
+                pY[cidx] = log2(rawCnts[cidx] * m_libraryFactors[j] + 1);
+            }
+            else
+            {
+                pY[cidx] = rawCnts[cidx] * m_libraryFactors[j];
+            }
             rowMean += pY[cidx];
         }
 
@@ -464,7 +475,18 @@ bool CRUVBuilder::SampleYandRowMeans(iBS::LongVec featureIdxs,
         {
             //not check negative
             cidx = i*colCnt + j;
-            pY[cidx] = log(rawCnts[cidx] * m_libraryFactors[j] + 1);
+            if (m_RUVInfo.InputAdjust == iBS::RUVInputDoLogE)
+            {
+                pY[cidx] = log(rawCnts[cidx] * m_libraryFactors[j] + 1);
+            }
+            else if (m_RUVInfo.InputAdjust == iBS::RUVInputDoLog2)
+            {
+                pY[cidx] = log2(rawCnts[cidx] * m_libraryFactors[j] + 1);
+            }
+            else
+            {
+                pY[cidx] = rawCnts[cidx] * m_libraryFactors[j];
+            }
             rowMean += pY[cidx];
         }
 
