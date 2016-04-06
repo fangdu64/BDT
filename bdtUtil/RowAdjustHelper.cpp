@@ -90,6 +90,20 @@ void CRowAdjustHelper::ConvertFromLogToRawCnt(Ice::Double *values,
 	}
 }
 
+void CRowAdjustHelper::ConvertFromLog2ToRawCnt(Ice::Double *values,
+    Ice::Long rowCnt, Ice::Long colCnt)
+{
+    Ice::Long idx = 0;
+    for (Ice::Long i = 0; i < rowCnt; i++)
+    {
+        for (Ice::Long j = 0; j < colCnt; j++)
+        {
+            idx = i*colCnt + j;
+            values[idx] = exp2(values[idx]) - 1.0;
+        }
+    }
+}
+
 void CRowAdjustHelper::AddRowMeansBackToY(Ice::Long rowCnt, Ice::Long colCnt,
 	Ice::Double *Y, Ice::Double *rowMeans)
 {

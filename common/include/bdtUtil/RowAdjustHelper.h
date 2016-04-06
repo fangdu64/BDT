@@ -24,6 +24,9 @@ public:
 	static void ConvertFromLogToRawCnt(Ice::Double *values,
 		Ice::Long rowCnt, Ice::Long colCnt);
 
+    static void ConvertFromLog2ToRawCnt(Ice::Double *values,
+        Ice::Long rowCnt, Ice::Long colCnt);
+
 	static void AddRowMeansBackToY(Ice::Long rowCnt, Ice::Long colCnt, 
 		Ice::Double *Y, Ice::Double *rowMeans);
 

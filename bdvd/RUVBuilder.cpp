@@ -408,7 +408,19 @@ bool CRUVBuilder::GetYandRowMeans(::Ice::Long featureIdxFrom, ::Ice::Long featur
         {
             //not check negative
             cidx = i*colCnt + j;
-            pY[cidx] = log(rawCnts[cidx] * m_libraryFactors[j] + 1);
+            if (m_RUVInfo.InputAdjust == iBS::RUVInputDoLogE)
+            {
+                pY[cidx] = log(rawCnts[cidx] * m_libraryFactors[j] + 1);
+            }
+            else if (m_RUVInfo.InputAdjust == iBS::RUVInputDoLog2)
+            {
+                pY[cidx] = log2(rawCnts[cidx] * m_libraryFactors[j] + 1);
+            }
+            else
+            {
+                pY[cidx] = rawCnts[cidx] * m_libraryFactors[j];
+            }
+
             rowMean += pY[cidx];
         }
 
@@ -3515,9 +3527,13 @@ CRUVBuilder::GetNormalizedCnts(::Ice::Long featureIdxFrom, ::Ice::Long featureId
     }
 
 
-    if (m_outputScale == iBS::RUVOutputScaleRaw)
+    if (m_outputScale == iBS::RUVOutputScaleRaw && m_RUVInfo.InputAdjust == iBS::RUVInputDoLogE)
     {
         CRowAdjustHelper::ConvertFromLogToRawCnt(Y, rowCnt, resultColCnt);
+    }
+    else if (m_outputScale == iBS::RUVOutputScaleRaw && m_RUVInfo.InputAdjust == iBS::RUVInputDoLog2)
+    {
+        CRowAdjustHelper::ConvertFromLog2ToRawCnt(Y, rowCnt, resultColCnt);
     }
 
     return saY.release();
@@ -3803,9 +3819,13 @@ CRUVBuilder::SampleNormalizedCnts(const iBS::LongVec& featureIdxs, ::Ice::Long& 
     }
 
 
-    if (m_outputScale == iBS::RUVOutputScaleRaw)
+    if (m_outputScale == iBS::RUVOutputScaleRaw && m_RUVInfo.InputAdjust == iBS::RUVInputDoLogE)
     {
         CRowAdjustHelper::ConvertFromLogToRawCnt(Y, rowCnt, resultColCnt);
+    }
+    else if (m_outputScale == iBS::RUVOutputScaleRaw && m_RUVInfo.InputAdjust == iBS::RUVInputDoLog2)
+    {
+        CRowAdjustHelper::ConvertFromLog2ToRawCnt(Y, rowCnt, resultColCnt);
     }
 
     return saY.release();
