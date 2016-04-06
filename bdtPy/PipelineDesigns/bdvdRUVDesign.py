@@ -10,6 +10,7 @@ desing_params=desing_params.replace("/script/design_params.pickle","-script/desi
  KnownFactors,
  CommonLibrarySize,
  RUVMode,
+ RUVScale,
  ControlFeaturePolicy,
  ControlFeatureMaxCntLowBound,
  ControlFeatureMaxCntUpBound,

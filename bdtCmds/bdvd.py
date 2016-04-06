@@ -41,7 +41,7 @@ gSteps = ['1-data-mat', '2-ctrl-rows','3-run-ruv','4-run-vd']
 gCtrlRowsMethods = ["all","weak-signal","lower-quantile", "specified-rows"]
 gPreNormalizationMethods = ["column-sum"]
 gRuvTypes = ["ruvs","ruvg"]
-gRuvScaleMethods = ["mlog"] #current version always applies mlog transforamtion to the input data
+gRuvScaleMethods = ['mlog', 'mlog2', 'original'] #current version always applies mlog transforamtion to the input data
 gRowwiseAdjustMethods = ['unitary-length']
 class BDVDParams:
     def __init__(self):
@@ -58,7 +58,7 @@ class BDVDParams:
         self.pre_normalization = None
         self.common_column_sum = None
         self.sample_groups = None
-        self.ruv_scale = None
+        self.ruv_scale = gRuvScaleMethods[0]
         self.ruv_mlog_c = 1.0
         self.ruv_type = None
         self.control_rows_method = gCtrlRowsMethods[0]
@@ -244,6 +244,7 @@ def s03_RUV(datamatPickle, ctrlRowPickle):
         gParams.pre_normalization,
         gParams.common_column_sum,
         gParams.ruv_type,
+        gParams.ruv_scale,
         gParams.ruv_rowwise_adjust,
         gParams.control_rows_method,
         gParams.weak_signal_lb,

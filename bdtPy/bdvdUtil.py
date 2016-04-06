@@ -67,6 +67,7 @@ def run_bdvd_ruv(
     pre_normalization,
     common_column_sum,
     ruv_type,
+    ruv_scale,
     ruv_rowwise_adjust,
     control_rows_method,
     weak_signal_lb,
@@ -113,6 +114,12 @@ def run_bdvd_ruv(
     elif ruv_type == "ruvg" and ruv_rowwise_adjust == "unitary-length":
         RUVMode = iBS.RUVModeEnum.RUVModeRUVgForVariation
 
+    RUVScale = iBS.RUVInputAdjustEnum.RUVInputDoLogE
+    if ruv_scale == "mlog2":
+        RUVScale = iBS.RUVInputAdjustEnum.RUVInputDoLog2
+    elif ruv_scale == "original":
+        RUVScale = iBS.RUVInputAdjustEnum.RUVInputDoNothing
+
     ControlFeaturePolicy = iBS.RUVControlFeaturePolicyEnum.RUVControlFeaturePolicyNone
     ControlFeatureMaxCntLowBound = None
     ControlFeatureMaxCntUpBound = None
@@ -137,6 +144,7 @@ def run_bdvd_ruv(
                    KnownFactors,
                    CommonLibrarySize,
                    RUVMode,
+                   RUVScale,
                    ControlFeaturePolicy,
                    ControlFeatureMaxCntLowBound,
                    ControlFeatureMaxCntUpBound,

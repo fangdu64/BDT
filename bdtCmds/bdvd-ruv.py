@@ -202,7 +202,7 @@ def setupRUVFacet(fcdcPrx, bdvdFacetAdminPrx, sampleIDs, ctrlOIDs):
     
     if bdvdRUVDesign.KnownFactors is not None:
         rfi.KnownFactors=bdvdRUVDesign.KnownFactors
-        
+
     if bdvdRUVDesign.ControlFeaturePolicy is not None:
         rfi.ControlFeaturePolicy=bdvdRUVDesign.ControlFeaturePolicy
     if  rfi.ControlFeaturePolicy==iBS.RUVControlFeaturePolicyEnum.RUVControlFeaturePolicyMaxCntLow:
@@ -215,6 +215,9 @@ def setupRUVFacet(fcdcPrx, bdvdFacetAdminPrx, sampleIDs, ctrlOIDs):
 
     if bdvdRUVDesign.RUVMode is not None:
         rfi.RUVMode=bdvdRUVDesign.RUVMode
+
+    if bdvdRUVDesign.RUVScale is not None:
+        rfi.InputAdjust = bdvdRUVDesign.RUVScale
 
     if bdvdRUVDesign.MaxK is not None:
         rfi.MaxK=bdvdRUVDesign.MaxK
