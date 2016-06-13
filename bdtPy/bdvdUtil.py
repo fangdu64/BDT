@@ -404,3 +404,82 @@ def run_bdvd_ruv_rowselection(
     proc = subprocess.call(node_cmd)
     gRunner.logp("end subtask \n")
     return (nodeDir,out_picke_file)
+
+def run_bdvd_ruv_vd(
+    gRunner,
+    platform,
+    bdtHomeDir,
+    nodeName,
+    runDir,
+    dryRun,
+    removeBeforeRun,
+    rowidx_from,
+    rowidx_to,
+    workercnt,
+    memory_size,
+    bdvd_dir,
+    artifact_detection,
+    unwanted_factors,
+    known_factors,
+    output_file
+    ):
+
+    nodeDir = os.path.abspath("{0}/{1}".format(runDir, nodeName))
+
+    out_picke_file = os.path.abspath("{0}/{1}.pickle".format(nodeDir,nodeName))
+    if dryRun:
+        return out_picke_file
+
+    if removeBeforeRun and os.path.exists(nodeDir):
+        gRunner.logp("remove existing dir: {0}".format(nodeDir))
+        shutil.rmtree(nodeDir)
+    
+    nodeScriptDir = nodeDir + "-script"
+    if not os.path.exists(nodeScriptDir):
+        os.mkdir(nodeScriptDir)
+
+    #
+    # prepare design file
+    #
+
+    bdvd_obj = iBSDefines.loadPickle(
+        iBSDefines.derivePickleFile(bdvd_dir))
+    bigmat_dir = None
+    if bdvd_obj.RuvOut is not None:
+        bigmat_dir = bdvd_obj.RuvOut.BigMatDir
+
+    RUVOutputMode = get_ruv_output_mode('signal+random', artifact_detection)
+
+    design_params=(output_file,
+                   unwanted_factors,
+                   known_factors,
+                   RUVOutputMode,
+                   rowidx_from,
+                   rowidx_to)
+    params_pickle_fn=os.path.abspath("{0}/design_params.pickle".format(nodeScriptDir))
+    iBSDefines.dumpPickle(design_params, params_pickle_fn)
+
+    design_file=os.path.abspath(bdtHomeDir+"/bdt/bdtPy/PipelineDesigns/bdvdRuvVdDesign.py")
+    shutil.copy(design_file,nodeScriptDir)
+
+    #
+    # Run node
+    #
+    design_fn=os.path.abspath(nodeScriptDir)+"/bdvdRuvVdDesign.py"
+    cmdpath=os.path.abspath("{0}/bdt/bdtCmds/bdvd-ruv-vd".format(bdtHomeDir))
+    if platform == "Windows":
+        node_cmd = ["py", cmdpath]
+    else:
+        node_cmd = [cmdpath]
+    node_cmd.extend(["--node", nodeName,
+                "--num-threads", str(workercnt),
+                "--max-mem", str(memory_size),
+                "--out", nodeDir,
+                "--bigmat-dir", bigmat_dir])
+
+    node_cmd.append(design_fn)
+
+    gRunner.logp("run subtask at: {0}".format(nodeDir))
+    proc = subprocess.call(node_cmd)
+    gRunner.logp("end subtask \n")
+    return (nodeDir,out_picke_file)

@@ -26,14 +26,15 @@
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="bdvd-ruv-vd.py" />
     <Compile Include="bdvd-ruv-rowselection.py" />
+    <Compile Include="bdvdVd.py" />
     <Compile Include="bdvdRowSelection.py" />
     <Compile Include="bigmat-export.py" />
     <Compile Include="bigMatExport.py" />
     <Compile Include="bdvdExport.py" />
     <Compile Include="bdvd-ruv-export.py" />
     <Compile Include="bdvd-ruv.py" />
-    <Compile Include="bdvd-vd.py" />
     <Compile Include="bdvd.py" />
     <Compile Include="bigKmeansC.py" />
     <Compile Include="bigclust-kmeans++.py" />

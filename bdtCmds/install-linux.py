@@ -33,7 +33,8 @@ def main(argv=None):
         'bigMat.py',
         'bigKmeansC.py',
         'bigMatExport.py',
-        'bdvdRowSelection.py']
+        'bdvdRowSelection.py',
+        'bdvdVd.py']
 
 	print(bdtCmdsDir)
 	print(cmdFiles)
