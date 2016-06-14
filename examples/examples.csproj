@@ -88,6 +88,9 @@
     <None Include="analysis\DukeUwExonArray\s01-bdvd\bdvd.sh" />
     <None Include="analysis\DukeUwExonArray\s02-Fstats-conservative\bdvd-fstats.R" />
     <None Include="analysis\DukeUwExonArray\s02-Fstats-conservative\bdvd-fstats.sh" />
+    <None Include="analysis\DukeUwExonArray\s05-vd-conservative\bdvd-vd.bat" />
+    <None Include="analysis\DukeUwExonArray\s05-vd-conservative\bdvd-vd.R" />
+    <None Include="analysis\DukeUwExonArray\s05-vd-conservative\bdvd-vd.sh" />
     <None Include="analysis\DukeUwExonArray\s04-hClust-conservative\bdvd-hclust.bat" />
     <None Include="analysis\DukeUwExonArray\s04-hClust-conservative\bdvd-hclust.R" />
     <None Include="analysis\DukeUwExonArray\s04-hClust-conservative\bdvd-hclust.sh" />

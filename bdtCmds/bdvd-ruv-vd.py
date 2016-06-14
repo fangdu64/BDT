@@ -116,6 +116,8 @@ def launchVdTask(fcdcPrx, bdvdFacetAdminPrx, computePrx):
     featureIdxFrom = 0
     featureIdxTo = 0
 
+    sampleIDs = rfi.SampleIDs
+
     (rt,ofis) = fcdcPrx.GetFeatureObservers(sampleIDs)
     if design.FeatureIdxFrom is not None:
         featureIdxFrom = design.FeatureIdxFrom

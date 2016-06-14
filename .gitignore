@@ -130,3 +130,4 @@ __pycache__/
 # analysis out dir
 # ================================
 /examples/analysis/**/*out
+.Rproj.user
